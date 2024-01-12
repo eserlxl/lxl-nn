@@ -1,9 +1,9 @@
-# lxl-nn - A simple Neural Network architecture
+## lxl-nn - A simple Neural Network architecture
 
 A feedforward-backpropagation neural network model was used with small modifications.
 Multiple hidden layers are supported.
 
-#Info
+##Info
 Network definition: { Input Layer, Hidden Layer, Output Layer }
 #####Example: {6,12,6} or {3,5,5,3} etc.
 
