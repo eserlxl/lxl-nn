@@ -3,8 +3,8 @@
 A feedforward-backpropagation neural network model was used with small modifications.
 Multiple hidden layers are supported.
 
-##Info
-Network definition: { Input Layer, Hidden Layer, Output Layer }
+## Info
+Network definition: _{ Input Layer, Hidden Layer, Output Layer }_
 
 _Example: {6,12,6} or {3,5,5,3} etc._
 
