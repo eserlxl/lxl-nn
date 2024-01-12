@@ -1,0 +1,5 @@
+NO_RANDOMIZATION tests, single thread on 12th Gen Intel(R) Core(TM) i7-12700H, CPU max speed: 4.7 GHz
+
+Training/Test Error:
+ * 0.195%/1.72%, Hidden Layer: {250}, loopMax=30, Time: 2193.33 seconds
+ * 1.25%/2.54%, Hidden Layer: {100}, loopMax=10, Time: 264.328 seconds
