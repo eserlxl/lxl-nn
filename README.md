@@ -8,7 +8,7 @@ Network definition: _{ Input Layer, Hidden Layer, Output Layer }_
 
 _Example: {6,12,6} or {3,5,5,3} etc._
 
-##Testing
+## Testing
 The MNIST database was used for testing the algorithm. 
 More information about MNIST database and recent files can be obtained from [here](http://yann.lecun.com/exdb/mnist/).
 
