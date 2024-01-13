@@ -19,7 +19,7 @@ More information about MNIST database and recent files can be obtained from [her
 ## Performance
 MNIST database tests were conducted on a 12th Gen Intel(R) Core(TM) i7-12700H CPU (single thread only).
 
-**Training/Test data error:** 0.005%/1.69%, Hidden Layer: {300}, loopMax=20, Time: 1808.21 seconds
+**Training/Test data error:** 0%/1.64%, Hidden Layer: {300}, loopMax=30, Time: 2653.99 seconds
 
 Please check results.txt for additional information.
 

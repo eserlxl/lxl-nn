@@ -15,7 +15,7 @@ int main() {
     }
 
     auto *NN = new nn({784, 300, 10}, trainingData.input, trainingData.output);
-    NN->train(20);
+    NN->train(30);
     NN->checkTrainingData();
     NN->checkTestData(&testData);
     delete (NN);
