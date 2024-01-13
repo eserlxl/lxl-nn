@@ -5,10 +5,13 @@
 #include <random>
 #include <nn/perceptron.h>
 #include <dataLoader.h>
+#include "timer.h"
+#include "test.h"
 
 #define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 #define USE_BP_BETA
 
+//#define ANALYSE_TRAINING
 /**
  * Sigmoid
  * Simple logistic function, It is a smooth, S-shaped curve.
@@ -40,6 +43,9 @@ public:
 
     nn(std::vector<uzi> model, const std::vector<std::vector<float>> &input,
        const std::vector<std::vector<float>> &output) {
+        clock = new Timer();
+        chronometer = new Timer();
+
         source = input;
         target = output;
         sourceSize = source.size();
@@ -83,7 +89,8 @@ public:
     }
 
     ~nn() {
-        //delete(P);
+        delete(clock);
+        delete(chronometer);
     }
 
     void create();
@@ -100,9 +107,9 @@ public:
 
     void train(uzi loopMax);
 
-    void checkTrainingData();
+    testData checkTrainingData();
 
-    void checkTestData(MNISTData *testData);
+    testData checkTestData(MNISTData *testData);
 
     void loadWeights();
 
@@ -124,6 +131,8 @@ private:
     float pid_I;
     float pid_D;
 #endif
+    Timer *clock;
+    Timer *chronometer;
 };
 
 #endif // lxl_nn_NN_H_

@@ -14,7 +14,10 @@ Multiple hidden layers are supported.
 
 ## Testing
 The MNIST database was used for testing the algorithm. 
+
 More information about MNIST database and recent files can be obtained from [here](http://yann.lecun.com/exdb/mnist/).
+
+Use _ANALYSE_TRAINING_ macro for a detailed output.
 
 ## Performance
 MNIST database tests were conducted on a 12th Gen Intel(R) Core(TM) i7-12700H CPU (single thread only).

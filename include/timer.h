@@ -4,21 +4,29 @@
 #include <iostream>
 #include <chrono>
 
-// Source: https://github.com/yaroslavbohonos/Handwritten-Digit-Recognition
+typedef std::chrono::high_resolution_clock::time_point timer;
 
-struct Timer {
-    explicit Timer(const char *label) {
-        m_start = std::chrono::high_resolution_clock::now();
-        m_label = label;
+class Timer {
+    timer T;
+
+public:
+    explicit Timer() {
+        initTimer();
     }
+    void initTimer() {
+        T=std::chrono::high_resolution_clock::now();
+    }
+
+    double getElapsedTime() {
+        timer N = std::chrono::high_resolution_clock::now();
+        return (std::chrono::duration_cast<std::chrono::nanoseconds>(N - T).count()) / 1.e9;
+    }
+
 
     ~Timer() {
-        std::chrono::duration<float> seconds = std::chrono::high_resolution_clock::now() - m_start;
-        std::cout << m_label << seconds.count() << " seconds" << std::endl;
     }
 
-    std::chrono::high_resolution_clock::time_point m_start;
-    const char *m_label;
+
 };
 
 #endif //lxl_nn_TIMER_H

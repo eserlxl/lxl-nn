@@ -20,4 +20,4 @@ add_executable(lxl-nn
         src/nn/perceptron.cpp
         src/nn/train.cpp
         src/nn/weights.cpp
-        src/main.cpp)
+        src/main.cpp include/test.h)
