@@ -71,6 +71,9 @@ void nn::train(uzi loopMax) {
 #ifndef NO_RANDOMIZATION
         e2.seed(rd());
 #endif
+#ifdef USE_BP_BETA
+        //errorSumBP.clear();
+#endif
         for (uzi p = 0; p < sourceSize; p++) { //sourceSize
 
             uzi u = e2() % sourceSize;

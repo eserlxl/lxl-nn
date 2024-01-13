@@ -8,12 +8,7 @@
 
 #define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 #define USE_BP_BETA
-//#define USE_BP_BETA_INTEGRAL_TERM
 
-
-#ifndef USE_BP_BETA
-#undef USE_BP_BETA_INTEGRAL_TERM
-#endif
 /**
  * Sigmoid
  * Simple logistic function, It is a smooth, S-shaped curve.
@@ -81,9 +76,7 @@ public:
 #ifdef USE_BP_BETA
         errorSumBP.resize(outputSize);
         pid_P=0.25f;
-#ifdef USE_BP_BETA_INTEGRAL_TERM
         pid_I=0.005f/(float)sourceSize;
-#endif
         pid_D=1.f;// 0.5*2=1
 #endif
         initEtaAlpha();
@@ -128,9 +121,7 @@ private:
 #ifdef USE_BP_BETA
     std::vector<float> errorSumBP;
     float pid_P;
-#ifdef USE_BP_BETA_INTEGRAL_TERM
     float pid_I;
-#endif
     float pid_D;
 #endif
 };

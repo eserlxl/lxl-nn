@@ -12,12 +12,8 @@ void nn::backPropagate() {
         }
 #ifdef USE_BP_BETA
         float error = pValue - targetValue;
-#ifdef USE_BP_BETA_INTEGRAL_TERM
         float pidValue = pid_P * error + pid_I * errorSumBP[j] + error * pValue * (1.0f - pValue); //pid_D = 1
         errorSumBP[j] += error;
-#else
-        float pidValue = pid_P * error + error * pValue * (1.0f - pValue); //pid_D = 1
-#endif
         errorBPV[outputIndex].push_back(pidValue);
 #else
         errorBPV[outputIndex].push_back(2 * (pValue - targetValue) * pValue * (1.0f - pValue));
