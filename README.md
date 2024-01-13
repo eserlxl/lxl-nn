@@ -1,12 +1,8 @@
 ## lxl-nn - A simple Neural Network architecture
 
 A feedforward-backpropagation neural network model is used with small modifications.
+
 Multiple hidden layers are supported.
-
-## Info
-Network definition: _{ Input Layer, Hidden Layer, Output Layer }_
-
-_Example: {6,12,6} or {3,5,5,3} etc._
 
 ## Modifications
 * Backpropagation weight updating improvements
@@ -29,6 +25,10 @@ Please check results.txt for additional information.
 
 ## Usage
 Use CMAKE for compiling, unzip the Data.zip file for the required training and testing data.
+
+Network definition: _{ Input Layer, Hidden Layer, Output Layer }_
+
+_Example: {6,12,6} or {3,5,5,3} etc._
 
 ## License
 This project is licensed under the [GPLv3](LICENSE).
