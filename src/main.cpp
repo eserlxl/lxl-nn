@@ -18,8 +18,8 @@ int main() {
     NN->train(10);
 
 #ifndef ANALYSE_TRAINING
-    struct testData trainingResult = NN->checkTrainingData();
-    struct testData testResult = NN->checkTestData(&testData);
+    TestResult trainingResult = NN->checkTrainingData();
+    TestResult testResult = NN->checkTestData(&testData);
     std::cout<<"Error: "<<trainingResult.errorPercentage<<"%/"<<testResult.errorPercentage<<"% Time: "<<mainClock->getElapsedTime()<<" s"<<std::endl;
 #else
     NN->checkTestData(&testData);
