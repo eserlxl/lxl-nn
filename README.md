@@ -2,7 +2,17 @@
 
 A feedforward-backpropagation neural network model is used with small modifications.
 
-Multiple hidden layers are supported.
+Multiple hidden layers are supported. [MNIST database](http://yann.lecun.com/exdb/mnist/) is used for development process.
+
+Learning process of a 300 x 300 network:
+
+<Code>Loop: 0         Correct: 6742/60000             Error: 88.7633%         Training Time: 137.765          Check Time: 36.6922</Code>
+<br>
+<Code>Loop: 1         Correct: 50221/60000            Error: 16.2983%         Training Time: 137.328          Check Time: 36.4762</Code>
+<br>
+<Code>Loop: 2         Correct: 57008/60000            Error: 4.98667%         Training Time: 137.325          Check Time: 38.1043</Code>
+<br>
+<Code>Loop: 3         Correct: 58286/60000            Error: 2.85667%         Training Time: 143.242          Check Time: 35.628</Code>
 
 ## Modifications
 * Backpropagation weight updating improvements
