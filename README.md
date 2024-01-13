@@ -21,7 +21,7 @@ The MNIST database was used for testing the algorithm.
 More information about MNIST database and recent files can be obtained from [here](http://yann.lecun.com/exdb/mnist/).
 
 ## Performance
-MNIST database tests were conducted on 12th Gen Intel(R) Core(TM) i7-12700H CPU (single thread only).
+MNIST database tests were conducted on a 12th Gen Intel(R) Core(TM) i7-12700H CPU (single thread only).
 
 **Training/Test data error:** 0.005%/1.69%, Hidden Layer: {300}, loopMax=20, Time: 1808.21 seconds
 
