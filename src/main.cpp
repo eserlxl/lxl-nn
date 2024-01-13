@@ -14,10 +14,10 @@ int main() {
         return 1;
     }
 
-    auto *NN = new nn({784,10,10},trainingData.input, trainingData.output);
-    NN->train(10);
+    auto *NN = new nn({784, 300, 10}, trainingData.input, trainingData.output);
+    NN->train(20);
     NN->checkTrainingData();
     NN->checkTestData(&testData);
-    //safeDelete(NN);
+    delete (NN);
     return 0;
 }

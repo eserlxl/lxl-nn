@@ -10,10 +10,18 @@ void nn::backPropagate() {
         if (network[outputIndex][j] < 0) {
             targetValue = 0;
         }
-        float deltaCost_deltaO = 2 * (pValue - targetValue);
-        float deltaO_deltaZ = pValue * (1.0f - pValue);
-
-        errorBPV[outputIndex].push_back(deltaCost_deltaO * deltaO_deltaZ);
+#ifdef USE_BP_BETA
+        float error = pValue - targetValue;
+#ifdef USE_BP_BETA_INTEGRAL_TERM
+        float pidValue = pid_P * error + pid_I * errorSumBP[j] + error * pValue * (1.0f - pValue); //pid_D = 1
+        errorSumBP[j] += error;
+#else
+        float pidValue = pid_P * error + error * pValue * (1.0f - pValue); //pid_D = 1
+#endif
+        errorBPV[outputIndex].push_back(pidValue);
+#else
+        errorBPV[outputIndex].push_back(2 * (pValue - targetValue) * pValue * (1.0f - pValue));
+#endif
     }
 
     for (int i = outputIndex - 1; i > 0; i--) {
@@ -31,7 +39,7 @@ void nn::backPropagate() {
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < model[i + 1]; j++) {
 
-            //TODO: P[i][j], hiddenLayerNum < outputLayerNum size error
+            //TODO: P[i][j], hiddenLayerNum < outputLayerNum gives size error
             deltaShadow[i][j] = eta * errorBPV[i + 1][j] * P[i][j]->value + alpha * deltaShadow[i][j];
             shadow[i][j] += 0.875 * deltaShadow[i][j];
 
@@ -39,7 +47,7 @@ void nn::backPropagate() {
                 P[i][k]->Link[j]->deltaWeight = eta * P[i][k]->value * errorBPV[i + 1][j]
                                                 + alpha * P[i][k]->Link[j]->deltaWeight;
 
-                P[i][k]->Link[j]->weight -=P[i][k]->Link[j]->deltaWeight;
+                P[i][k]->Link[j]->weight -= P[i][k]->Link[j]->deltaWeight;
             }
         }
     }

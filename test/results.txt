@@ -1,5 +1,14 @@
 NO_RANDOMIZATION tests, single thread on 12th Gen Intel(R) Core(TM) i7-12700H, CPU max speed: 4.7 GHz
 
+
+Active macros: USE_BP_BETA, USE_BP_BETA_INTEGRAL_TERM
 Training/Test Error:
+ * 0.005%/1.69%, Hidden Layer: {300}, loopMax=20, Time: 1808.21 seconds
+
+
+No active macros, default model:
+Training/Test Error:
+ * 0.25%/1.65%, Hidden Layer: {300}, loopMax=20, Time: 1822.16 seconds
+ * 0.166667%/1.72%, Hidden Layer: {250}, loopMax=50, Time: 2820.51 seconds
  * 0.195%/1.72%, Hidden Layer: {250}, loopMax=30, Time: 2193.33 seconds
  * 1.25%/2.54%, Hidden Layer: {100}, loopMax=10, Time: 264.328 seconds

@@ -22,7 +22,7 @@ public:
 
     ~perceptron() {
         for (auto &link : Link) {
-            delete(link);
+            delete (link);
         }
         Link.clear();
     }

@@ -6,16 +6,22 @@
 #include <nn/perceptron.h>
 #include <dataLoader.h>
 
-//#define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
+#define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
+#define USE_BP_BETA
+//#define USE_BP_BETA_INTEGRAL_TERM
 
+
+#ifndef USE_BP_BETA
+#undef USE_BP_BETA_INTEGRAL_TERM
+#endif
 /**
  * Sigmoid
  * Simple logistic function, It is a smooth, S-shaped curve.
  * Input: [0,1], Output: [0,1]
  */
 template<typename Float>
-Float sigmoid(Float x, Float a=1) {
-    return (Float) 1 / ((Float) 1 + std::exp(-a*x));
+Float sigmoid(Float x, Float a = 1) {
+    return (Float) 1 / ((Float) 1 + std::exp(-a * x));
 }
 
 #define logic sigmoid
@@ -37,9 +43,10 @@ public:
     uzi outputSize;
     std::vector<uzi> model;
 
-    nn(std::vector<uzi> model, const std::vector<std::vector<float>>& input, const std::vector<std::vector<float>>& output) {
-        source=input;
-        target=output;
+    nn(std::vector<uzi> model, const std::vector<std::vector<float>> &input,
+       const std::vector<std::vector<float>> &output) {
+        source = input;
+        target = output;
         sourceSize = source.size();
         targetSize = target.size();
 
@@ -71,7 +78,14 @@ public:
             shadow[k].resize(model[k + 1]);
             deltaShadow[k].resize(model[k + 1]);
         }
-
+#ifdef USE_BP_BETA
+        errorSumBP.resize(outputSize);
+        pid_P=0.25f;
+#ifdef USE_BP_BETA_INTEGRAL_TERM
+        pid_I=0.005f/(float)sourceSize;
+#endif
+        pid_D=1.f;// 0.5*2=1
+#endif
         initEtaAlpha();
     }
 
@@ -104,12 +118,21 @@ public:
     void initValues();
 
     void initEtaAlpha();
+
 private:
     std::vector<std::vector<float>> source;
     std::vector<std::vector<float>> target;
     std::vector<std::vector<float>> network;
     std::vector<std::vector<float>> shadow;
     std::vector<std::vector<float>> deltaShadow;
+#ifdef USE_BP_BETA
+    std::vector<float> errorSumBP;
+    float pid_P;
+#ifdef USE_BP_BETA_INTEGRAL_TERM
+    float pid_I;
+#endif
+    float pid_D;
+#endif
 };
 
 #endif // lxl_nn_NN_H_

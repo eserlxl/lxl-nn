@@ -2,6 +2,7 @@
 #define lxl_nn_NN_SYNAPSE_H_
 
 typedef std::size_t uzi;
+
 class synapse {
 public:
     uzi inputID;
