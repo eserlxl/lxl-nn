@@ -1,4 +1,4 @@
-## lxl-nn - A simple Neural Network architecture
+## lxl-nn - A Simple Neural Network Architecture
 
 A feedforward-backpropagation neural network model is used with small modifications.
 
