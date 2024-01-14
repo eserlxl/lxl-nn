@@ -3,10 +3,10 @@
 void nn::randWeights() {
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < P[i + 1].size(); j++) {
-            shadow[i][j] = e2()/(float)std::mt19937::max();
+            shadow[i][j] = 2.f*(e2()/(float)std::mt19937::max()-0.5f);
 
             for (uzi k = 0; k < P[i].size(); k++) {
-                P[i][k]->Link[j]->weight = e2()/(float)std::mt19937::max();;
+                P[i][k]->Link[j]->weight = 2.f*(e2()/(float)std::mt19937::max()-0.5f);
             }
         }
     }
