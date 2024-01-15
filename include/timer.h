@@ -13,8 +13,9 @@ public:
     explicit Timer() {
         initTimer();
     }
+
     void initTimer() {
-        T=std::chrono::high_resolution_clock::now();
+        T = std::chrono::high_resolution_clock::now();
     }
 
     double getElapsedTime() {
