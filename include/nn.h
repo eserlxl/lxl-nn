@@ -9,20 +9,43 @@
 #include "test.h"
 
 #define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
-#define USE_BP_BETA
 
-//#define ANALYSE_TRAINING
+//#define BP_BELLMAN_OPT
+//#define BP_USE_PID
+//#define ADAPTIVE_TRAINING
+
+#define ANALYSE_TRAINING
+
 /**
  * Sigmoid
  * Simple logistic function, It is a smooth, S-shaped curve.
- * Input: [0,1], Output: [0,1]
+ * Output: [0,1]
  */
 template<typename Float>
 Float sigmoid(Float x, Float a = 1) {
     return (Float) 1 / ((Float) 1 + std::exp(-a * x));
 }
 
+// Rectified Linear Unit
+// x<0?0:(x>1?1:x)
+template<typename Float>
+Float reLU(Float x) {
+    return std::min(std::max((Float) 0., x),(Float)1);
+}
 #define logic sigmoid
+
+template<typename T>
+T rms(std::vector<T> &array) {
+    T temp = 0.;
+
+    int n = array.size();
+
+    for (int i = 0; i < n; i++) {
+        temp += std::pow(array[i], (T) 2);
+    }
+
+    return std::sqrt(temp / (T) n);
+}
 
 typedef std::size_t uzi;
 
@@ -37,6 +60,7 @@ public:
     float alpha;
     uzi sourceSize;
     uzi targetSize;
+    uzi hiddenLayerSize;
     uzi inputSize;
     uzi outputSize;
     std::vector<uzi> model;
@@ -68,7 +92,8 @@ public:
 #endif
         std::normal_distribution<float> dist(0, 1);
 
-        outputIndex = network.size() - 1;
+        hiddenLayerSize = network.size();
+        outputIndex = hiddenLayerSize - 1;
         inputSize = model[0];
         outputSize = model[outputIndex];
 
@@ -79,18 +104,21 @@ public:
             shadow[k].resize(model[k + 1]);
             deltaShadow[k].resize(model[k + 1]);
         }
-#ifdef USE_BP_BETA
+
+        errorBP.resize(network.size());
+        prevError.resize(outputSize);
+#ifdef BP_USE_PID
         errorSumBP.resize(outputSize);
-        pid_P=0.25f;
-        pid_I=0.005f/(float)sourceSize;
-        pid_D=1.f;// 0.5*2=1
+        pid_P = 0.25f;
+        pid_I = 0.005f / (float) sourceSize;
+        pid_D = 0.1f;// 0.5*2=1
 #endif
         initEtaAlpha();
     }
 
     ~nn() {
-        delete(clock);
-        delete(chronometer);
+        delete (clock);
+        delete (chronometer);
     }
 
     void create();
@@ -101,15 +129,17 @@ public:
 
     void feedForward();
 
+    void backPropagateInit();
+
     void backPropagate();
 
     void setIO(std::vector<float> input, std::vector<float> output);
 
-    void train(uzi loopMax);
+    void train(uzi loopMax, MNISTData *testData);
 
-    testData checkTrainingData();
+    TestResult checkTrainingData();
 
-    testData checkTestData(MNISTData *testData);
+    TestResult checkTestData(MNISTData *testData);
 
     void loadWeights();
 
@@ -119,20 +149,33 @@ public:
 
     void initEtaAlpha();
 
+    void printInfo();
+
 private:
     std::vector<std::vector<float>> source;
     std::vector<std::vector<float>> target;
     std::vector<std::vector<float>> network;
     std::vector<std::vector<float>> shadow;
     std::vector<std::vector<float>> deltaShadow;
-#ifdef USE_BP_BETA
+#ifdef BP_USE_PID
     std::vector<float> errorSumBP;
     float pid_P;
     float pid_I;
     float pid_D;
 #endif
+#ifdef BP_BELLMAN_OPT
+    float gamma=1; // 0 < gamma <= 1
+#endif
+    float zeta=0.875;
     Timer *clock;
     Timer *chronometer;
+    float rmsErrorBP;
+    std::vector<std::vector<float>> errorBP;
+    std::vector<float> prevError;
+
+    void smoothWeights(float backupRatio);
+
+    uzi correctChoice;
 };
 
 #endif // lxl_nn_NN_H_

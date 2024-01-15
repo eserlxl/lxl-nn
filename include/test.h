@@ -1,10 +1,10 @@
 #ifndef lxl_nn_TEST_H
 #define lxl_nn_TEST_H
 
-typedef struct testData{
+typedef struct TestResult {
     unsigned int correct;
     float errorPercentage;
     double elapsedTime;
-}testData;
+} TestResult;
 
 #endif //lxl_nn_TEST_H

@@ -1,6 +1,6 @@
 #include <nn.h>
 
-testData nn::checkTestData(MNISTData *testData) {
+TestResult nn::checkTestData(MNISTData *testData) {
     chronometer->initTimer();
 
     uzi correct = 0;
@@ -31,20 +31,14 @@ testData nn::checkTestData(MNISTData *testData) {
         }
     }
 
-    struct testData test{};
+    TestResult test{};
     test.correct = correct;
     test.errorPercentage = 100.f * (1.f - (float) correct / testData->m_imageCount);
     test.elapsedTime = chronometer->getElapsedTime();
-
-#ifdef ANALYSE_TRAINING
-    std::cout<<std::endl<<"Test Data"<<std::endl<<"\t\tCorrect: "<<test.correct<<"/"<<testData->m_imageCount<<"\t\tError: "<<test.errorPercentage
-             <<"%\t\tCheck Time: "<<test.elapsedTime
-             <<std::endl;
-#endif
     return test;
 }
 
-testData nn::checkTrainingData() {
+TestResult nn::checkTrainingData() {
     chronometer->initTimer();
     uzi correct = 0;
     for (uzi p = 0; p < sourceSize; p++) {
@@ -70,32 +64,38 @@ testData nn::checkTrainingData() {
         }
     }
 
-    testData ret;
+    TestResult ret{};
     ret.correct = correct;
     ret.errorPercentage = 100.f * (1.f - (float) correct / sourceSize);
     ret.elapsedTime = chronometer->getElapsedTime();
     return ret;
 }
 
-void nn::train(uzi loopMax) {
+void nn::train(uzi loopMax, MNISTData *testData) {
 #ifdef ANALYSE_TRAINING
-    double loopDuration, checkDataDuration, trainingDuration;
+    double loopDuration, checkTrainingResultDuration, checkTestResultDuration, trainingDuration;
     double loopDurationSum = 0;
     double checkDataDurationSum = 0;
+    float minRMSError = 1000;
 #endif
     randWeights();
 
     clock->initTimer();
+#ifdef ADAPTIVE_TRAINING
+    float k = 1;
+    float etaStable = eta;
+    float prevEta = eta;
+#endif
     for (uzi loop = 0; loop < loopMax; loop++) {
 #ifndef NO_RANDOMIZATION
         e2.seed(rd());
 #endif
-#ifdef USE_BP_BETA
-        //errorSumBP.clear();
-#endif
+
 #ifdef ANALYSE_TRAINING
         chronometer->initTimer();
 #endif
+        std::vector<float> rmseVec;
+        correctChoice = 0;
         for (uzi p = 0; p < sourceSize; p++) {
 
             uzi u = e2() % sourceSize;
@@ -105,25 +105,85 @@ void nn::train(uzi loopMax) {
             feedForward();
 
             backPropagate();
+
+            rmseVec.push_back(rmsErrorBP);
         }
+
+        correctChoice -= 1;
+        feedForward();
+
+        backPropagateInit();
+
+        rmseVec[sourceSize - 1] = rmsErrorBP;
+
+        float rmse = rms(rmseVec);
+#ifdef ADAPTIVE_TRAINING
+        prevEta = eta;
+#endif
+
 #ifdef ANALYSE_TRAINING
         loopDuration = chronometer->getElapsedTime();
-        loopDurationSum+=loopDuration;
+        loopDurationSum += loopDuration;
+
+        TestResult trainingResult{};
+        trainingResult.correct = correctChoice;
+        trainingResult.errorPercentage = 100.f * (1.f - (float) correctChoice / sourceSize);
+
         chronometer->initTimer();
-        testData trainingData = checkTrainingData();
-        checkDataDuration = chronometer->getElapsedTime();
-        checkDataDurationSum+=checkDataDuration;
-        std::cout<<"Loop: "<<loop<<"\t\tCorrect: "<<trainingData.correct<<"/"<<sourceSize<<"\t\tError: "<<trainingData.errorPercentage
-        <<"%\t\tTraining Time: "<<loopDuration
-        <<"\t\tCheck Time: "<<checkDataDuration
-        <<std::endl;
+        TestResult testResult = checkTestData(testData);
+        checkTestResultDuration = chronometer->getElapsedTime();
+
+        checkDataDurationSum += checkTrainingResultDuration + checkTestResultDuration;
+
+        if (rmse < minRMSError) {
+            minRMSError = rmse;
+        }
+
+        std::cout << loop << " > η: " << eta << ", RMSE: " << rmse << "/" << minRMSError << ", Training => [ ✓: "
+                  << trainingResult.correct << "/" << sourceSize << ", !: "
+                  << trainingResult.errorPercentage << "% ]"
+                  << ", Test => [ ✓: " << testResult.correct << "/" << testData->m_imageCount
+                  << ", !: " << testResult.errorPercentage << "% ]"
+                  << ", Time => [ Training: " << loopDuration
+                  //<< ", ✓Training: " << checkTrainingResultDuration
+                  << ", ✓Test: " << checkTestResultDuration << " ]"
+                  << std::endl;
+#endif
+        if (rmse <= minRMSError) {
+            minRMSError = rmse;
+#ifdef ADAPTIVE_TRAINING
+            //saveWeights();
+            if(eta<etaStable){
+                etaStable = eta;
+            }
+
+            if((prevEta>eta && k<0)||(prevEta<eta && k>0)){
+                eta *= (1.f+k*1e-3f);
+            }
+            else {
+                eta *= (1.f-k*1e-3f);
+            }
+#endif
+        }
+#ifdef ADAPTIVE_TRAINING
+        else {
+            if((k>0 && prevEta>eta)||(k<0 && prevEta<eta))k*=-1.f;
+            eta = std::min(etaStable * 1.25f, eta*(1.f-k*1e-3f));
+            /*if(std::fabs(eta-etaStable)/etaStable<0.1){
+                loadWeights();
+            }
+            else {
+                smoothWeights(0.5);
+            }*/
+        }
 #endif
     }
 #ifdef ANALYSE_TRAINING
     trainingDuration = clock->getElapsedTime();
-    std::cout<<std::endl<<"Total training time: "<<loopDurationSum<<" s"<<std::endl;
-    std::cout<<"Time loss due to checking data: "<<checkDataDurationSum<<" s"<<std::endl;
-    std::cout<<"Time loss due to measuring time: "<<trainingDuration-loopDurationSum-checkDataDurationSum<<" s"<<std::endl;
-    std::cout<<"Final training time: "<<trainingDuration<<" s"<<std::endl;
+    std::cout << std::endl << "Total training time: " << loopDurationSum << " s" << std::endl;
+    std::cout << "Time loss due to checking data: " << checkDataDurationSum << " s" << std::endl;
+    std::cout << "Time loss due to measuring time: " << trainingDuration - loopDurationSum - checkDataDurationSum
+              << " s" << std::endl;
+    std::cout << "Final training time: " << trainingDuration << " s" << std::endl;
 #endif
 }
