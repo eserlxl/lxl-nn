@@ -36,11 +36,15 @@ void nn::backPropagateInit() {
 #endif
 
 #ifdef BP_USE_PID
+        error *= 2 * pValue * (1.0f - pValue);
         errorSumBP[j] += error;
-        error = pid_P * error + pid_I * errorSumBP[j] + pid_D*(error-prevError[j]); //pid_D = 1
-        prevError[j]=error;
-#endif
+        float pidValue = pid_P * error + pid_I * errorSumBP[j] + pid_D * (error - prevError[j]);
+        errorBP[outputIndex].push_back(pidValue);
+        prevError[j] = error;
+#else
         errorBP[outputIndex].push_back(2 * error * pValue * (1.0f - pValue));
+#endif
+
     }
     rmsErrorBP = rms(errorBP[outputIndex]);
 }

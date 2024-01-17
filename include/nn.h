@@ -30,8 +30,9 @@ Float sigmoid(Float x, Float a = 1) {
 // x<0?0:(x>1?1:x)
 template<typename Float>
 Float reLU(Float x) {
-    return std::min(std::max((Float) 0., x),(Float)1);
+    return std::min(std::max((Float) 0., x), (Float) 1);
 }
+
 #define logic sigmoid
 
 template<typename T>
@@ -107,11 +108,16 @@ public:
 
         errorBP.resize(network.size());
         prevError.resize(outputSize);
+
+#ifdef BP_BELLMAN_OPT
+        gamma=0.25; // 0 < gamma <= 1
+#endif
+        zeta = 0.875;
 #ifdef BP_USE_PID
         errorSumBP.resize(outputSize);
-        pid_P = 0.25f;
-        pid_I = 0.005f / (float) sourceSize;
-        pid_D = 0.1f;// 0.5*2=1
+        pid_P = 1.005f;
+        pid_I = 0.00125f / (float) sourceSize;
+        pid_D = 0.1f;
 #endif
         initEtaAlpha();
     }
@@ -164,9 +170,9 @@ private:
     float pid_D;
 #endif
 #ifdef BP_BELLMAN_OPT
-    float gamma=1; // 0 < gamma <= 1
+    float gamma; // 0 < gamma <= 1
 #endif
-    float zeta=0.875;
+    float zeta;
     Timer *clock;
     Timer *chronometer;
     float rmsErrorBP;
