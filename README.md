@@ -6,6 +6,8 @@ Multiple hidden layers are supported. [MNIST database](http://yann.lecun.com/exd
 
 ![image](https://drive.google.com/uc?export=view&id=1nm3mMZdw_agfxkFInk1zcs4oMge3gNBg)
 
+<div style="text-align: center;"><b>The minimum test data error for the MNIST database is 1.57%.</b></div>
+
 ## Modifications
 * Backpropagation weight updating improvements
 * PID design for error feeding in backpropagation.
