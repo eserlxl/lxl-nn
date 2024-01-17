@@ -85,6 +85,8 @@ void nn::train(uzi loopMax, MNISTData *testData) {
     float k = 1;
     float etaStable = eta;
     float prevEta = eta;
+    float minEta = 0.1f;
+    float deltaEta = 1e-2f;//std::min(std::max(1e-2f*5e-3f/minRMSError,5.f*minRMSError),1e-1f);//2.5e-2;
 #endif
     for (uzi loop = 0; loop < loopMax; loop++) {
 #ifndef NO_RANDOMIZATION
@@ -153,22 +155,26 @@ void nn::train(uzi loopMax, MNISTData *testData) {
             minRMSError = rmse;
 #ifdef ADAPTIVE_TRAINING
             //saveWeights();
-            if(eta<etaStable){
+            /*if(eta<etaStable){
                 etaStable = eta;
+            }*/
+
+            if((prevEta<eta && k<0)||(prevEta>eta && k>0)){
+                k*=-1;
             }
 
-            if((prevEta>eta && k<0)||(prevEta<eta && k>0)){
-                eta *= (1.f+k*1e-3f);
-            }
-            else {
-                eta *= (1.f-k*1e-3f);
-            }
+            eta = std::min(12.5f,std::max(0.75f*etaStable,1.f+k*deltaEta));
 #endif
         }
 #ifdef ADAPTIVE_TRAINING
         else {
-            if((k>0 && prevEta>eta)||(k<0 && prevEta<eta))k*=-1.f;
-            eta = std::min(etaStable * 1.25f, eta*(1.f-k*1e-3f));
+
+            if((prevEta<eta && k>0)||(prevEta>eta && k<0)){
+                k*=-1;
+            }
+
+            eta = std::min(12.5f,std::max(0.75f*etaStable,1.f-k*deltaEta));
+
             /*if(std::fabs(eta-etaStable)/etaStable<0.1){
                 loadWeights();
             }
@@ -176,6 +182,7 @@ void nn::train(uzi loopMax, MNISTData *testData) {
                 smoothWeights(0.5);
             }*/
         }
+         etaStable=eta;
 #endif
     }
 #ifdef ANALYSE_TRAINING
