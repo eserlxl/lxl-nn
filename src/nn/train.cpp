@@ -163,7 +163,7 @@ void nn::train(uzi loopMax, MNISTData *testData) {
                 k*=-1;
             }
 
-            eta = std::min(12.5f,std::max(0.95f*etaStable,1.f+k*deltaEta));
+            eta = std::min(12.5f,std::max(0.99f*etaStable,1.f+k*deltaEta));
 #endif
         }
 #ifdef ADAPTIVE_TRAINING
@@ -173,7 +173,7 @@ void nn::train(uzi loopMax, MNISTData *testData) {
                 k*=-1;
             }
 
-            eta = std::min(12.5f,std::max(0.95f*etaStable,1.f-k*deltaEta));
+            eta = std::min(12.5f,std::max(0.99f*etaStable,1.f-k*deltaEta));
 
             /*if(std::fabs(eta-etaStable)/etaStable<0.1){
                 loadWeights();
