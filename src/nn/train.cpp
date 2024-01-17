@@ -81,7 +81,7 @@ void nn::train(uzi loopMax, MNISTData *testData) {
     randWeights();
 
     clock->initTimer();
-#ifdef ADAPTIVE_TRAINING
+#ifdef ADAPTIVE_LEARNING
     float k = 1;
     float etaStable = eta;
     float prevEta = eta;
@@ -119,7 +119,7 @@ void nn::train(uzi loopMax, MNISTData *testData) {
         rmseVec[sourceSize - 1] = rmsErrorBP;
 
         float rmse = rms(rmseVec);
-#ifdef ADAPTIVE_TRAINING
+#ifdef ADAPTIVE_LEARNING
         prevEta = eta;
 #endif
 
@@ -153,7 +153,7 @@ void nn::train(uzi loopMax, MNISTData *testData) {
 #endif
         if (rmse <= minRMSError) {
             minRMSError = rmse;
-#ifdef ADAPTIVE_TRAINING
+#ifdef ADAPTIVE_LEARNING
             //saveWeights();
             /*if(eta<etaStable){
                 etaStable = eta;
@@ -166,7 +166,7 @@ void nn::train(uzi loopMax, MNISTData *testData) {
             eta = std::min(12.5f,std::max(0.99f*etaStable,1.f+k*deltaEta));
 #endif
         }
-#ifdef ADAPTIVE_TRAINING
+#ifdef ADAPTIVE_LEARNING
         else {
 
             if((prevEta<eta && k>0)||(prevEta>eta && k<0)){

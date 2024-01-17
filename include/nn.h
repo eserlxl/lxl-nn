@@ -10,9 +10,9 @@
 
 #define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 
-//#define BP_BELLMAN_OPT
+#define BP_BELLMAN_OPT
 //#define BP_USE_PID
-//#define ADAPTIVE_TRAINING
+#define ADAPTIVE_LEARNING
 
 #define ANALYSE_TRAINING
 
