@@ -6,6 +6,9 @@ Multiple hidden layers are supported. [MNIST database](http://yann.lecun.com/exd
 <style>
   table td {
     border: none !important;
+  };
+  td, th {
+      border: none!important;
   }
 </style>
 <table>
