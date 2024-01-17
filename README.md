@@ -3,14 +3,18 @@
 A feedforward-backpropagation neural network model is used with small modifications.
 
 Multiple hidden layers are supported. [MNIST database](http://yann.lecun.com/exdb/mnist/) is used for development process.
+
 <style>
   table td {
+  text-align: center;
     border: none !important;
   };
   td, th {
+  text-align: center;
       border: none!important;
   }
 </style>
+
 <table>
   <tr>
     <th><img src="https://drive.google.com/uc?export=view&id=1nm3mMZdw_agfxkFInk1zcs4oMge3gNBg"/></th>
