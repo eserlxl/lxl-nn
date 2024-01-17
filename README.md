@@ -4,14 +4,12 @@ A feedforward-backpropagation neural network model is used with small modificati
 
 Multiple hidden layers are supported. [MNIST database](http://yann.lecun.com/exdb/mnist/) is used for development process.
 
-<div style="text-align: center;">
-  <div style="text-align: center;">
-    <img src="https://drive.google.com/uc?export=view&id=1nm3mMZdw_agfxkFInk1zcs4oMge3gNBg"/>
-  </div>
-  <div style="text-align: center;">
-    <b>The minimum test data error for the MNIST database is 1.57%.</b>
-  </div>
-</div>
+<img src="https://drive.google.com/uc?export=view&id=1nm3mMZdw_agfxkFInk1zcs4oMge3gNBg"/>
+
+<p align="center">
+
+    The minimum test data error for the MNIST database is 1.57%.
+</p>
 
 ## Modifications
 * Backpropagation weight updating improvements
