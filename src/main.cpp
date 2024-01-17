@@ -9,15 +9,15 @@ int main() {
 
     // Loading the MNIST data
     if (!trainingData.load(true) || !testData.load(false)) {
-        std::cout<<"Could not load the MNIST data!"<<std::endl;
+        std::cout << "Could not load the MNIST data!" << std::endl;
         return 1;
     }
 
-    auto *NN = new nn({784, 300, 10}, trainingData.input, trainingData.output);
+    auto *NN = new nn({784, 300, 300, 10}, trainingData.input, trainingData.output);
 
     NN->printInfo();
 
-    NN->train(100, &testData);
+    NN->train(250, &testData);
 
 #ifndef ANALYSE_TRAINING
     TestResult trainingResult = NN->checkTrainingData();
