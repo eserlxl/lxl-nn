@@ -159,21 +159,21 @@ void nn::train(uzi loopMax, MNISTData *testData) {
                 etaStable = eta;
             }*/
 
-            if ((prevEta < eta && k < 0) || (prevEta > eta && k > 0)) {
-                k *= -1;
+            if((prevEta<eta && k<0)||(prevEta>eta && k>0)){
+                k*=-1;
             }
 
-            eta = std::min(12.5f, std::max(0.95f * etaStable, 1.f + k * deltaEta));
+            eta = std::min(12.5f,std::max(0.95f*etaStable,1.f+k*deltaEta));
 #endif
         }
 #ifdef ADAPTIVE_TRAINING
         else {
 
-            if ((prevEta < eta && k > 0) || (prevEta > eta && k < 0)) {
-                k *= -1;
+            if((prevEta<eta && k>0)||(prevEta>eta && k<0)){
+                k*=-1;
             }
 
-            eta = std::min(12.5f, std::max(0.75f * etaStable, 1.f - k * deltaEta));
+            eta = std::min(12.5f,std::max(0.95f*etaStable,1.f-k*deltaEta));
 
             /*if(std::fabs(eta-etaStable)/etaStable<0.1){
                 loadWeights();
@@ -182,7 +182,7 @@ void nn::train(uzi loopMax, MNISTData *testData) {
                 smoothWeights(0.5);
             }*/
         }
-        etaStable = eta;
+         etaStable=eta;
 #endif
     }
 #ifdef ANALYSE_TRAINING
