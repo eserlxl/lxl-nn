@@ -13,8 +13,10 @@ Multiple hidden layers are supported. [MNIST database](http://yann.lecun.com/exd
 </p>
 
 ## Modifications
+* Adaptive learning
+* Bellman's optimality for reinforcement learning
+* PID design for error feeding.
 * Backpropagation weight updating improvements
-* PID design for error feeding in backpropagation.
 
 ## Bugs / TODO
 * Multiple hidden layer design problem: hiddenLayerNum < outputLayerNum gives size error
