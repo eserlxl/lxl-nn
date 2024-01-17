@@ -31,8 +31,8 @@ void nn::backPropagateInit() {
         }
         float error = pValue - targetValue;
 #ifdef BP_BELLMAN_OPT
-        if(maxIndex == j)error -= gamma*std::max(0.f,0.75f-pValue); // Bellman's optimality simulation
-        else error -= gamma*std::max(0.f,pValue-0.25f); // Bellman's optimality equation simulation
+        if (maxIndex == j)error -= gamma * std::max(0.f, 0.75f - pValue); // Bellman's optimality simulation
+        else error -= gamma * std::max(0.f, pValue - 0.25f); // Bellman's optimality equation simulation
 #endif
 
 #ifdef BP_USE_PID

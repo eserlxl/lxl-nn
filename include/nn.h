@@ -110,7 +110,7 @@ public:
         prevError.resize(outputSize);
 
 #ifdef BP_BELLMAN_OPT
-        gamma=0.25; // 0 < gamma <= 1
+        gamma = 0.25; // 0 < gamma <= 1
 #endif
         zeta = 0.875;
 #ifdef BP_USE_PID

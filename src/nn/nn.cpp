@@ -40,11 +40,12 @@ void nn::printInfo() {
               << pid_D << std::endl;
 #endif
 #ifdef BP_BELLMAN_OPT
-    std::cout<<"Using Bellman's optimization for backpropagation. Gamma: "<<gamma<<std::endl;
+    std::cout << "Using Bellman's optimization for backpropagation. Gamma: " << gamma << std::endl;
 #endif
     std::cout << "Backpropagation shadow updating gain: " << zeta << std::endl;
 #ifdef ADAPTIVE_TRAINING
-    std::cout<<"Adaptive training is active! Learning rate (η) will be updated to minimize the RMS error. "<<std::endl;
+    std::cout << "Adaptive training is active! Learning rate (η) will be updated to minimize the RMS error. "
+              << std::endl;
 #endif
     std::cout << std::endl;
 }
