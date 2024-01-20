@@ -31,7 +31,7 @@ Use _ANALYSE_TRAINING_ macro for a detailed output.
 ## Performance
 MNIST database tests were conducted on a 12th Gen Intel(R) Core(TM) i7-12700H CPU (single thread only).
 
-**Training/Test data error:** 0%/1.64%, Hidden Layer: {300}, loopMax=30, Time: 2653.99 seconds
+**Training / Test data error:** 0.52%/2.86%, Network: {784,60,10}, 100 loops, Time: 840 seconds
 
 Please check results.txt for additional information.
 
