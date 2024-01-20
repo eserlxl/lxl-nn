@@ -19,8 +19,7 @@ Multiple hidden layers are supported. [MNIST database](http://yann.lecun.com/exd
 * Backpropagation weight updating improvements
 
 ## Bugs / TODO
-* Multiple hidden layer design problem: hiddenLayerNum < outputLayerNum gives size error
-* Backpropagation algorithm should be updated for multiple hidden layers.
+* Large networks like 900x900 gives memory error.
 
 ## Testing
 The MNIST database was used for testing the algorithm. 
