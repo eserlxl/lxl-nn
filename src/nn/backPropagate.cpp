@@ -38,7 +38,11 @@ void nn::backPropagateInit() {
 #ifdef BP_USE_PID
         error *= 2 * pValue * (1.0f - pValue);
         errorSumBP[j] += error;
-        float pidValue = pid_P * error + pid_I * errorSumBP[j] + pid_D * (error - prevError[j]);
+        if(std::fabs(errorSumBP[j])>10)
+        {
+            errorSumBP[j]*=0.9;
+        }
+        float pidValue = (pid_P+1) * error + pid_I * errorSumBP[j] + pid_D * (error - prevError[j]);
         errorBP[outputIndex].push_back(pidValue);
         prevError[j] = error;
 #else
@@ -53,7 +57,7 @@ void nn::backPropagate() {
 
     backPropagateInit();
 
-    for (int i = outputIndex - 1; i > 0; i--) {
+    for (int i = outputIndex - 1; i >= 0; i--) {
         errorBP[i].clear();
         for (uzi j = 0; j < model[i]; j++) {
             float tempSum = 0.f;
@@ -62,22 +66,19 @@ void nn::backPropagate() {
             }
 
             float pValue = P[i][j]->value;
-            errorBP[i].push_back((tempSum / model[i + 1]) * (pValue * (1.0 - pValue)));//
+            errorBP[i].push_back((tempSum / model[i + 1]) * (pValue * (1.0 - pValue)));
         }
     }
 
     for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < model[i + 1]; j++) {
+        for (uzi k = 0; k < model[i]; k++) {
+            deltaShadow[i][k] = eta * P[i][k]->value * errorBP[i][k];
+            shadow[i][k] += zeta * deltaShadow[i][k];
 
-            //TODO: P[i][j], hiddenLayerNum < outputLayerNum gives size error
-            deltaShadow[i][j] = eta * errorBP[i + 1][j] * P[i][j]->value + alpha * deltaShadow[i][j];
-            shadow[i][j] += zeta * deltaShadow[i][j];
+            for (uzi j = 0; j < model[i + 1]; j++) {
 
-            for (uzi k = 0; k < model[i]; k++) {
-                P[i][k]->Link[j]->deltaWeight = eta * P[i][k]->value * errorBP[i + 1][j]
-                                                + alpha * P[i][k]->Link[j]->deltaWeight;
-
-                P[i][k]->Link[j]->weight -= P[i][k]->Link[j]->deltaWeight;
+                // Adding P[i][k]->Link[j]->deltaWeight term, sign is minus due to differentiation of error calculation
+                P[i][k]->Link[j]->weight -= eta * P[i][k]->value * errorBP[i + 1][j];
             }
         }
     }

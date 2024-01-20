@@ -14,7 +14,7 @@ void nn::create() {
 }
 
 void nn::connect() {
-    for (uzi i = 0; i < model.size() - 1; i++) {
+    for (uzi i = 0; i < layerCount - 1; i++) {
         for (uzi j = 0; j < model[i]; j++) {
             for (uzi k = 0; k < model[i + 1]; k++) {
                 P[i][j]->connect(P[i + 1][k]->id);
@@ -26,10 +26,13 @@ void nn::connect() {
 void nn::printInfo() {
     std::cout << "Learning MNIST Database\n" << std::endl;
     std::cout << "Network: {" << inputSize << ",";
-    for (uzi i = 0; i < hiddenLayerSize - 2; i++) { std::cout << model[i + 1] << ","; }
+    for (uzi i = 0; i < layerCount - 2; i++) { std::cout << model[i + 1] << ","; }
     std::cout << outputSize << "}\n" << std::endl;
 
     // Listing configurations
+    std::cout << "Learning Rate (η): " << eta << std::endl;
+    //std::cout << "Learning Momentum (α): " << alpha << std::endl;
+    std::cout << "Backpropagation Rate (ζ): " << zeta << std::endl;
     if (logic(0.25) == sigmoid(0.25) && logic(0.5) == sigmoid(0.5)) {
         std::cout << "Logic function: sigmoid" << std::endl;
     } else if (logic(0.25) == reLU(0.25) && logic(0.5) == reLU(0.5)) {
@@ -40,7 +43,7 @@ void nn::printInfo() {
               << pid_D << std::endl;
 #endif
 #ifdef BP_BELLMAN_OPT
-    std::cout << "Using Bellman's optimization for backpropagation. Gamma: " << gamma << std::endl;
+    std::cout << "Using Bellman's optimization for backpropagation. Bellman's gain (γ): " << gamma << std::endl;
 #endif
     std::cout << "Backpropagation shadow updating gain: " << zeta << std::endl;
 #ifdef ADAPTIVE_LEARNING

@@ -81,12 +81,14 @@ void nn::train(uzi loopMax, MNISTData *testData) {
     randWeights();
 
     clock->initTimer();
+
 #ifdef ADAPTIVE_LEARNING
     float k = 1;
     float etaStable = eta;
     float prevEta = eta;
     float minEta = 0.75f;
-    float deltaEta = std::min(std::max(minRMSError,1e-2f),1e-1f);
+    float maxEta = 12.5f;
+    float deltaEta = std::min(std::max(minRMSError,1.25e-2f),2.5e-2f);
 #endif
     for (uzi loop = 0; loop < loopMax; loop++) {
 #ifndef NO_RANDOMIZATION
@@ -155,31 +157,34 @@ void nn::train(uzi loopMax, MNISTData *testData) {
             minRMSError = rmse;
 #ifdef ADAPTIVE_LEARNING
             //saveWeights();
-            /*if(eta<etaStable){
-                etaStable = eta;
-            }*/
-
-            if((prevEta<eta && k<0)||(prevEta>eta && k>0)){
+            //saveNetwork();
+            //saveWeights(4);
+            if((prevEta<=eta && k<0)||(prevEta>=eta && k>0)){
                 k*=-1;
             }
-
-            eta = std::min(12.5f,std::max(minEta,eta*(1.f+k*deltaEta)));
             etaStable=eta;
 #endif
         }
 #ifdef ADAPTIVE_LEARNING
         else {
-            if((prevEta<eta && k>0)||(prevEta>eta && k<0)){
+            //smoothWeights(0.25);
+            //predictWeights();
+
+            if((prevEta<=eta && k>0)||(prevEta>=eta && k<0)){
                 k*=-1;
             }
 
-            eta = std::min(12.5f,std::max(minEta,eta*(1.f-k*deltaEta)));
+            //loadWeights();
+            //loadNetwork();
+            //eta=etaStable;
 
-            if(eta<5)
+            /*if(eta<5)
             {
                 eta=10.f;
-            }
+            }*/
         }
+
+        eta = std::min(maxEta,std::max(minEta,eta*(1.f+k*deltaEta)));
 #endif
     }
 #ifdef ANALYSE_TRAINING

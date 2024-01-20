@@ -12,7 +12,7 @@
 
 #define BP_BELLMAN_OPT
 //#define BP_USE_PID
-#define ADAPTIVE_LEARNING
+//#define ADAPTIVE_LEARNING
 
 #define ANALYSE_TRAINING
 
@@ -55,10 +55,8 @@ public:
     std::random_device rd;
     std::mt19937 e2;
     std::vector<std::vector<perceptron *>> P;
-    std::vector<float> weightBackup;
     uzi outputIndex;
     float eta;
-    float alpha;
     uzi sourceSize;
     uzi targetSize;
     uzi hiddenLayerSize;
@@ -83,6 +81,12 @@ public:
             network[layerIndex++].resize(layer);
         }
 
+        layerCount = network.size();
+        hiddenLayerSize = layerCount - 2;
+        outputIndex = layerCount - 1;
+        inputSize = model[0];
+        outputSize = model[outputIndex];
+
         create();
         connect();
 
@@ -91,19 +95,12 @@ public:
 #else
         e2.seed(rd());
 #endif
-        std::normal_distribution<float> dist(0, 1);
-
-        hiddenLayerSize = network.size();
-        outputIndex = hiddenLayerSize - 1;
-        inputSize = model[0];
-        outputSize = model[outputIndex];
-
         shadow.resize(outputIndex);
         deltaShadow.resize(outputIndex);
 
         for (uzi k = 0; k < outputIndex; k++) {
-            shadow[k].resize(model[k + 1]);
-            deltaShadow[k].resize(model[k + 1]);
+            shadow[k].resize(model[k]);
+            deltaShadow[k].resize(model[k]);
         }
 
         errorBP.resize(network.size());
@@ -115,11 +112,15 @@ public:
         zeta = 0.875;
 #ifdef BP_USE_PID
         errorSumBP.resize(outputSize);
-        pid_P = 1.005f;
-        pid_I = 0.00125f / (float) sourceSize;
-        pid_D = 0.1f;
+        pid_P = -.5e-3f;
+        pid_I = -0.125f / (float) sourceSize;
+        pid_D = 0;//-0.01;//0.1;//0.5f;
 #endif
         initEtaAlpha();
+
+#ifdef ADAPTIVE_LEARNING
+        weightBackupCount=0;
+#endif
     }
 
     ~nn() {
@@ -147,10 +148,6 @@ public:
 
     TestResult checkTestData(MNISTData *testData);
 
-    void loadWeights();
-
-    void saveWeights();
-
     void initValues();
 
     void initEtaAlpha();
@@ -158,6 +155,7 @@ public:
     void printInfo();
 
 private:
+    uzi layerCount;
     std::vector<std::vector<float>> source;
     std::vector<std::vector<float>> target;
     std::vector<std::vector<float>> network;
@@ -179,9 +177,22 @@ private:
     std::vector<std::vector<float>> errorBP;
     std::vector<float> prevError;
 
-    void smoothWeights(float backupRatio);
-
     uzi correctChoice;
+#ifdef ADAPTIVE_LEARNING
+    std::vector<std::vector<float>> pBackup;
+    void saveNetwork();
+    void loadNetwork();
+    std::vector<std::vector<float>> weightBackup;
+    std::vector<float> lastWeightBackup;
+    uzi weightBackupCount;
+    void saveWeights();
+    void saveWeights(uzi maxBackupCount);
+    void loadWeights();
+    void loadWeights(uzi backupIndex);
+    void smoothWeights(float backupRatio);
+    void smoothLastWeights();
+    void predictWeights();
+#endif
 };
 
 #endif // lxl_nn_NN_H_

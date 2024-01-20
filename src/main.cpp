@@ -13,11 +13,11 @@ int main() {
         return 1;
     }
 
-    auto *NN = new nn({784, 300, 300, 10}, trainingData.input, trainingData.output);
+    auto *NN = new nn({784, 10, 10}, trainingData.input, trainingData.output);
 
     NN->printInfo();
 
-    NN->train(250, &testData);
+    NN->train(100, &testData);
 
 #ifndef ANALYSE_TRAINING
     TestResult trainingResult = NN->checkTrainingData();

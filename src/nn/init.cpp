@@ -28,5 +28,4 @@ void nn::setIO(std::vector<float> input, std::vector<float> output) {
 
 void nn::initEtaAlpha() {
     eta = 10;
-    alpha = -0.002;
 }
