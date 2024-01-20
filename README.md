@@ -19,7 +19,7 @@ Multiple hidden layers are supported. [MNIST database](http://yann.lecun.com/exd
 * Backpropagation weight updating improvements
 
 ## Bugs / TODO
-* Large networks like 900x900 gives memory error.
+* Large networks like 900x900 give memory error.
 
 ## Testing
 The MNIST database was used for testing the algorithm. 
