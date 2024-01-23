@@ -4,7 +4,6 @@ void nn::create() {
     uzi id = 0;
     for (uzi i : model) {
         std::vector<perceptron *> tempVec;
-
         for (uzi j = 0; j < i; j++) {
             auto *temp = new perceptron(id++, 0.f);
             tempVec.push_back(temp);
@@ -32,12 +31,16 @@ void nn::printInfo() {
     // Listing configurations
     std::cout << "Learning Rate (η): " << eta << std::endl;
     //std::cout << "Learning Momentum (α): " << alpha << std::endl;
-    std::cout << "Backpropagation Rate (ζ): " << zeta << std::endl;
-    if (logic(0.25) == sigmoid(0.25) && logic(0.5) == sigmoid(0.5)) {
-        std::cout << "Logic function: sigmoid" << std::endl;
-    } else if (logic(0.25) == reLU(0.25) && logic(0.5) == reLU(0.5)) {
-        std::cout << "Logic function: reLU" << std::endl;
-    }
+#ifdef BP_USE_BIAS
+    std::cout << "Backpropagation Bias Gain (ζ): " << zeta << std::endl;
+#endif
+
+#ifdef LOGIC_SIGMOID
+    std::cout << "Logic function: sigmoid" << std::endl;
+#elif defined(LOGIC_RELU)
+    std::cout << "Logic function: reLU" << std::endl;
+#endif
+
 #ifdef BP_USE_PID
     std::cout << "Using PID for backpropagation. Kp: " << pid_P << ", Ki:" << pid_I << ", Kd: "
               << pid_D << std::endl;
@@ -45,10 +48,10 @@ void nn::printInfo() {
 #ifdef BP_BELLMAN_OPT
     std::cout << "Using Bellman's optimization for backpropagation. Bellman's gain (γ): " << gamma << std::endl;
 #endif
-    std::cout << "Backpropagation shadow updating gain: " << zeta << std::endl;
 #ifdef ADAPTIVE_LEARNING
-    std::cout << "Adaptive training is active! Learning rate (η) will be updated to minimize the RMS error. "
-              << std::endl;
+    std::cout
+            << "Adaptive training is active! Learning rate of weights (η) and learning rate of biases (ζ) will be updated to minimize the RMS error. "
+            << "\nAdaptive Learning Gain (α): " << alpha << std::endl;
 #endif
     std::cout << std::endl;
 }

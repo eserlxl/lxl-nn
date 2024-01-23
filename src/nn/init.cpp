@@ -25,7 +25,3 @@ void nn::setIO(std::vector<float> input, std::vector<float> output) {
         network[outputIndex][i] = output[i];
     }
 }
-
-void nn::initEtaAlpha() {
-    eta = 10;
-}

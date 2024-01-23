@@ -1,6 +1,6 @@
 #include <nn.h>
 
-void nn::backPropagateInit() {
+void nn::backPropagateOutputLayer() {
     errorBP[outputIndex].clear();
     float maxOutput = -1;
     uzi maxIndex = 0;
@@ -46,7 +46,17 @@ void nn::backPropagateInit() {
         errorBP[outputIndex].push_back(pidValue);
         prevError[j] = error;
 #else
-        errorBP[outputIndex].push_back(2 * error * pValue * (1.0f - pValue));
+        float dLogic = 1;
+#ifdef LOGIC_SIGMOID
+        dLogic = pValue * (1.0f - pValue);
+#elif defined(LOGIC_TANH)
+        dLogic = 1.f - pValue * pValue;
+#elif defined(LOGIC_SWISH)
+        dLogic = pValue + logit(pValue) * (pValue * (1.f - pValue)); // (x*sigmoid(x))' = x'*sigmoid(x)+x*sigmoid(x)', inv(sigmoid) = logit
+#elif defined(LOGIC_RELU)
+        dLogic = dReLU(pValue);
+#endif
+        errorBP[outputIndex].push_back(2 * error * dLogic);
 #endif
 
     }
@@ -55,7 +65,7 @@ void nn::backPropagateInit() {
 
 void nn::backPropagate() {
 
-    backPropagateInit();
+    backPropagateOutputLayer();
 
     for (int i = outputIndex - 1; i >= 0; i--) {
         errorBP[i].clear();
@@ -66,20 +76,26 @@ void nn::backPropagate() {
             }
 
             float pValue = P[i][j]->value;
-            errorBP[i].push_back((tempSum / model[i + 1]) * (pValue * (1.0 - pValue)));
-        }
-    }
+            float bPValue = tempSum / model[i + 1];
+#ifdef LOGIC_SIGMOID
+            bPValue *= pValue * (1.f - pValue);
+#elif defined(LOGIC_TANH)
+            bPValue *= (1.f - pValue * pValue);
+#elif defined(LOGIC_SWISH)
+           bPValue *= pValue + logit(pValue) * (pValue * (1.f - pValue)); // (x*sigmoid(x))' = x'*sigmoid(x)+x*sigmoid(x)', inv(sigmoid) = logit
+#elif defined(LOGIC_RELU)
+            bPValue *= dReLU(pValue);
+#endif
+            errorBP[i].push_back(bPValue);
 
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi k = 0; k < model[i]; k++) {
-            deltaShadow[i][k] = eta * P[i][k]->value * errorBP[i][k];
-            shadow[i][k] += zeta * deltaShadow[i][k];
-
-            for (uzi j = 0; j < model[i + 1]; j++) {
-
-                // Adding P[i][k]->Link[j]->deltaWeight term, sign is minus due to differentiation of error calculation
-                P[i][k]->Link[j]->weight -= eta * P[i][k]->value * errorBP[i + 1][j];
+            for (uzi k = 0; k < model[i + 1]; k++) {
+                P[i][j]->Link[k]->weight -= eta * pValue * errorBP[i + 1][k];
             }
         }
+#ifdef BP_USE_BIAS
+        for (uzi j = 0; j < model[i + 1]; j++) {
+            bias[i][j] -= zeta * errorBP[i + 1][j];
+        }
+#endif
     }
 }

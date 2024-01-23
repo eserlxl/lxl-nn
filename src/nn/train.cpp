@@ -83,12 +83,19 @@ void nn::train(uzi loopMax, MNISTData *testData) {
     clock->initTimer();
 
 #ifdef ADAPTIVE_LEARNING
-    float k = 1;
-    float etaStable = eta;
-    float prevEta = eta;
-    float minEta = 0.75f;
-    float maxEta = 12.5f;
-    float deltaEta = std::min(std::max(minRMSError,1.25e-2f),2.5e-2f);
+    float kEta = 1;
+    float prevEta = 0;
+    float minEta = 10.f;
+    float maxEta = 25.f;
+    float deltaEta;
+#ifdef BP_USE_BIAS
+    float kZeta = 1;
+    float prevZeta = 0;
+    float minZeta = 5.f;
+    float maxZeta = 25.f;
+    float deltaZeta;
+#endif
+
 #endif
     for (uzi loop = 0; loop < loopMax; loop++) {
 #ifndef NO_RANDOMIZATION
@@ -116,14 +123,11 @@ void nn::train(uzi loopMax, MNISTData *testData) {
         correctChoice -= 1;
         feedForward();
 
-        backPropagateInit();
+        backPropagateOutputLayer();
 
         rmseVec[sourceSize - 1] = rmsErrorBP;
 
-        float rmse = rms(rmseVec);
-#ifdef ADAPTIVE_LEARNING
-        prevEta = eta;
-#endif
+        float RMSE = rms(rmseVec);
 
 #ifdef ANALYSE_TRAINING
         loopDuration = chronometer->getElapsedTime();
@@ -139,11 +143,16 @@ void nn::train(uzi loopMax, MNISTData *testData) {
 
         checkDataDurationSum += checkTrainingResultDuration + checkTestResultDuration;
 
-        if (rmse < minRMSError) {
-            minRMSError = rmse;
+        if (RMSE < minRMSError) {
+            minRMSError = RMSE;
         }
 
-        std::cout << loop << " > η: " << eta << ", RMSE: " << rmse << "/" << minRMSError << ", Training => [ ✓: "
+        std::cout << loop << " > η: " << eta
+                  #ifdef BP_USE_BIAS
+                  << ", ζ: " << zeta
+                  #endif
+                  << ", RMSE: " << RMSE << "/" << minRMSError
+                  << ", Training => [ ✓: "
                   << trainingResult.correct << "/" << sourceSize << ", !: "
                   << trainingResult.errorPercentage << "% ]"
                   << ", Test => [ ✓: " << testResult.correct << "/" << testData->m_imageCount
@@ -153,38 +162,40 @@ void nn::train(uzi loopMax, MNISTData *testData) {
                   << ", ✓Test: " << checkTestResultDuration << " ]"
                   << std::endl;
 #endif
-        if (rmse <= minRMSError) {
-            minRMSError = rmse;
+        if (RMSE <= minRMSError) {
+            minRMSError = RMSE;
 #ifdef ADAPTIVE_LEARNING
-            //saveWeights();
-            //saveNetwork();
-            //saveWeights(4);
-            if((prevEta<=eta && k<0)||(prevEta>=eta && k>0)){
-                k*=-1;
+            if ((prevEta <= eta && kEta < 0) || (prevEta >= eta && kEta > 0)) {
+                kEta *= -1;
             }
-            etaStable=eta;
+#ifdef BP_USE_BIAS
+            if ((prevZeta <= eta && kZeta < 0) || (prevZeta >= eta && kZeta > 0)) {
+                kZeta *= -1;
+            }
+#endif
 #endif
         }
 #ifdef ADAPTIVE_LEARNING
         else {
-            //smoothWeights(0.25);
-            //predictWeights();
-
-            if((prevEta<=eta && k>0)||(prevEta>=eta && k<0)){
-                k*=-1;
+            if ((prevEta <= eta && kEta > 0) || (prevEta >= eta && kEta < 0)) {
+                kEta *= -1;
             }
-
-            //loadWeights();
-            //loadNetwork();
-            //eta=etaStable;
-
-            /*if(eta<5)
-            {
-                eta=10.f;
-            }*/
+#ifdef BP_USE_BIAS
+            if ((prevZeta <= eta && kZeta > 0) || (prevZeta >= eta && kZeta < 0)) {
+                kZeta *= -1;
+            }
+#endif
         }
 
-        eta = std::min(maxEta,std::max(minEta,eta*(1.f+k*deltaEta)));
+        deltaEta = (1.f + RMSE * RMSE / minRMSError * (eta - prevEta));
+        eta = std::min(maxEta, std::max(minEta, eta * (1.f + alpha * kEta * deltaEta)));
+        prevEta = eta;
+
+#ifdef BP_USE_BIAS
+        deltaZeta=(1.f+RMSE*RMSE/minRMSError*(zeta-prevZeta));
+        zeta = std::min(maxZeta, std::max(minZeta, zeta * (1.f +alpha*kZeta * deltaZeta)));
+        prevZeta = zeta;
+#endif
 #endif
     }
 #ifdef ANALYSE_TRAINING
