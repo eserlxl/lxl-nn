@@ -1,10 +1,10 @@
-#ifndef lxl_nn_NN_PERCEPTRON_H_
-#define lxl_nn_NN_PERCEPTRON_H_
+#ifndef lxl_nn_NN_NEURON_H_
+#define lxl_nn_NN_NEURON_H_
 
 #include <vector>
 #include <nn/synapse.h>
 
-class perceptron {
+class neuron {
 public:
     uzi id;
     float value;
@@ -14,13 +14,13 @@ public:
     void connect(uzi outputID);
 
     template<typename Float>
-    perceptron(uzi perceptronNo, Float initialValue) {
+    neuron(uzi perceptronNo, Float initialValue) {
         id = perceptronNo;
 
         value = initialValue;
     }
 
-    ~perceptron() {
+    ~neuron() {
         for (auto &link : Link) {
             delete (link);
         }
@@ -28,4 +28,4 @@ public:
     }
 };
 
-#endif // lxl_nn_NN_PERCEPTRON_H_
+#endif // lxl_nn_NN_NEURON_H_

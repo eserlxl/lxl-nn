@@ -3,9 +3,9 @@
 void nn::create() {
     uzi id = 0;
     for (uzi i : model) {
-        std::vector<perceptron *> tempVec;
+        std::vector<neuron *> tempVec;
         for (uzi j = 0; j < i; j++) {
-            auto *temp = new perceptron(id++, 0.f);
+            auto *temp = new neuron(id++, 0.f);
             tempVec.push_back(temp);
         }
         P.push_back(tempVec);

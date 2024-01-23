@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <random>
-#include <nn/perceptron.h>
+#include <nn/neuron.h>
 #include <dataLoader.h>
 #include "timer.h"
 #include "test.h"
@@ -76,7 +76,7 @@ class nn {
 public:
     std::random_device rd;
     std::mt19937 e2;
-    std::vector<std::vector<perceptron *>> P;
+    std::vector<std::vector<neuron *>> P;
     uzi outputIndex;
     float eta;
     uzi sourceSize;

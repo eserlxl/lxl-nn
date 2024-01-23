@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Ofast")
 include_directories(include)
 
 add_executable(lxl-nn
-        include/nn/perceptron.h
+        include/nn/neuron.h
         include/nn/synapse.h
         include/nn.h
         include/timer.h
@@ -18,7 +18,7 @@ add_executable(lxl-nn
         src/nn/feedForward.cpp
         src/nn/init.cpp
         src/nn/nn.cpp
-        src/nn/perceptron.cpp
+        src/nn/neuron.cpp
         src/nn/train.cpp
         src/nn/weights.cpp
         src/main.cpp include/test.h)

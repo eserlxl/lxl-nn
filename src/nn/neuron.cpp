@@ -1,6 +1,6 @@
-#include <nn/perceptron.h>
+#include <nn/neuron.h>
 
-void perceptron::connect(uzi outputID) {
+void neuron::connect(uzi outputID) {
     auto *tempLink = new synapse(id, outputID);
 
     Link.push_back(tempLink);
