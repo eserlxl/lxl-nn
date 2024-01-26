@@ -31,8 +31,12 @@ void nn::backPropagateOutputLayer() {
         }
         float error = pValue - targetValue;
 #ifdef BP_BELLMAN_OPT
-        if (maxIndex == j)error -= gamma * std::max(0.f, 0.75f - pValue); // Bellman's optimality simulation
-        else error -= gamma * std::max(0.f, pValue - 0.25f); // Bellman's optimality equation simulation
+        if (maxIndex == j)
+            error -= learningMatrix[bellmanLearningRateIndex] *
+                     std::max(0.f, 0.75f - pValue); // Bellman's optimality simulation
+        else
+            error -= learningMatrix[bellmanLearningRateIndex] *
+                     std::max(0.f, pValue - 0.25f); // Bellman's optimality equation simulation
 #endif
 
 #ifdef BP_USE_PID
@@ -89,12 +93,12 @@ void nn::backPropagate() {
             errorBP[i].push_back(bPValue);
 
             for (uzi k = 0; k < model[i + 1]; k++) {
-                P[i][j]->Link[k]->weight -= eta * pValue * errorBP[i + 1][k];
+                P[i][j]->Link[k]->weight -= learningMatrix[weightLearningRateIndex] * pValue * errorBP[i + 1][k];
             }
         }
 #ifdef BP_USE_BIAS
         for (uzi j = 0; j < model[i + 1]; j++) {
-            bias[i][j] -= zeta * errorBP[i + 1][j];
+            bias[i][j] -= learningMatrix[biasLearningRateIndex] * errorBP[i + 1][j];
         }
 #endif
     }

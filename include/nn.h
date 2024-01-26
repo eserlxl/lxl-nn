@@ -3,16 +3,17 @@
 
 #include <iostream>
 #include <random>
+#include <Eigen/Dense>
 #include <nn/neuron.h>
 #include <dataLoader.h>
 #include "timer.h"
 #include "test.h"
 
-#define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
+//#define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 
 #define BP_BELLMAN_OPT
-//#define BP_USE_BIAS
-//#define ADAPTIVE_LEARNING
+#define BP_USE_BIAS
+#define ADAPTIVE_LEARNING
 //#define BP_USE_PID
 
 #define ANALYSE_TRAINING
@@ -78,7 +79,6 @@ public:
     std::mt19937 e2;
     std::vector<std::vector<neuron *>> P;
     uzi outputIndex;
-    float eta;
     uzi sourceSize;
     uzi targetSize;
     uzi hiddenLayerSize;
@@ -117,26 +117,58 @@ public:
         connect();
 
 #ifdef NO_RANDOMIZATION
-        e2.seed(1);
+        seed=1;
 #else
-        e2.seed(rd());
+        seed = rd();
 #endif
-        eta = 10;
+        e2.seed(seed);
 #ifdef BP_USE_BIAS
         bias.resize(outputIndex);
-        deltaShadow.resize(outputIndex);
 
         for (uzi k = 0; k < outputIndex; k++) {
             bias[k].resize(model[k + 1]);
-            deltaShadow[k].resize(model[k + 1]);
         }
-        zeta = 8.75;
 #endif
         errorBP.resize(layerCount);
         prevError.resize(outputSize);
 
+        learningMatrix.push_back(10.f); // Learning Rate of weights
+
+        uzi learningRateIndex = 0;
+        weightLearningRateIndex = learningRateIndex;
+        learningRateIndex++;
+#ifdef BP_USE_BIAS
+        learningMatrix.push_back(8.75f); // Learning Rate of biases
+        biasLearningRateIndex = learningRateIndex;
+        learningRateIndex++;
+#endif
 #ifdef BP_BELLMAN_OPT
-        gamma = 0.25f; // 0 < gamma <= 1, 0.25 is optimum
+        learningMatrix.push_back(0.25f); // Bellman's optimality gain
+        bellmanLearningRateIndex = learningRateIndex;
+        learningRateIndex++;
+#endif
+#ifdef ADAPTIVE_LEARNING
+        learningMatrix.push_back(0.125f); // Adaptive learning gain
+        adaptiveLearningRateIndex = learningRateIndex;
+
+        learningMatrix.push_back(0.01f); // Adaptive learning rate limit
+        rateLimitLearningRateIndex = learningRateIndex;
+
+        learningMatrixLowerLimits.push_back(7.5f); // min Learning Rate of weights
+        learningMatrixUpperLimits.push_back(15.f); // max Learning Rate of weights
+#ifdef BP_USE_BIAS
+        learningMatrixLowerLimits.push_back(2.5f); // min Learning Rate of biases
+        learningMatrixUpperLimits.push_back(20.f); // max Learning Rate of biases
+#endif
+#ifdef BP_BELLMAN_OPT
+        learningMatrixLowerLimits.push_back(0.125f); // min Bellman's optimality gain
+        learningMatrixUpperLimits.push_back(0.33f); // max Bellman's optimality gain
+#endif
+        learningMatrixLowerLimits.push_back(0.125f); // min adaptive learning gain
+        learningMatrixUpperLimits.push_back(0.25f);// max adaptive learning gain
+
+        learningMatrixLowerLimits.push_back(0.01f); // min adaptive learning rate limit
+        learningMatrixUpperLimits.push_back(0.05f);// max adaptive learning rate limit
 #endif
 
 #ifdef BP_USE_PID
@@ -147,7 +179,6 @@ public:
 #endif
 
 #ifdef ADAPTIVE_LEARNING
-        alpha = 0.125f;
         weightBackupCount = 0;
 #endif
     }
@@ -188,18 +219,12 @@ private:
     std::vector<std::vector<float>> target;
     std::vector<std::vector<float>> network;
     std::vector<std::vector<float>> bias;
-    std::vector<std::vector<float>> deltaShadow;
+    std::vector<float> learningMatrix;
 #ifdef BP_USE_PID
     std::vector<float> errorSumBP;
     float pid_P;
     float pid_I;
     float pid_D;
-#endif
-#ifdef BP_BELLMAN_OPT
-    float gamma; // 0 < gamma <= 1, 0.25 is optimum
-#endif
-#ifdef BP_USE_BIAS
-    float zeta;
 #endif
     Timer *clock;
     Timer *chronometer;
@@ -208,9 +233,21 @@ private:
     std::vector<float> prevError;
 
     uzi correctChoice;
+    uzi weightLearningRateIndex;
+#ifdef BP_USE_BIAS
+    uzi biasLearningRateIndex;
+#endif
+#ifdef BP_BELLMAN_OPT
+    uzi bellmanLearningRateIndex;
+#endif
 #ifdef ADAPTIVE_LEARNING
-    float alpha;
+    uzi adaptiveLearningRateIndex;
+    uzi rateLimitLearningRateIndex;
+
     std::vector<std::vector<float>> pBackup;
+
+    std::vector<float> learningMatrixUpperLimits;
+    std::vector<float> learningMatrixLowerLimits;
 
     void saveNetwork();
 
@@ -235,6 +272,12 @@ private:
     void predictWeights();
 
 #endif
+
+    float randomNumber();
+
+    float randomNumberExtended();
+
+    uzi seed;
 };
 
 #endif // lxl_nn_NN_H_

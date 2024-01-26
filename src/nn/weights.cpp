@@ -4,10 +4,10 @@ void nn::randWeights() {
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < model[i + 1]; j++) {
 #ifdef BP_USE_BIAS
-            bias[i][j] = 0;//2.f * (e2() / (float) std::mt19937::max() - 0.5f);
+            bias[i][j] = 0;
 #endif
             for (uzi k = 0; k < model[i]; k++) {
-                P[i][k]->Link[j]->weight = 2.f * (e2() / (float) std::mt19937::max() - 0.5f);
+                P[i][k]->Link[j]->weight = randomNumberExtended();
             }
         }
     }
@@ -140,13 +140,6 @@ void nn::predictWeights() {
                 tempVec.push_back(bias[i][j] - weightBackup[w][h]);
             }
             bias[i][j] -= (tempVec[0] - 2 * tempVec[1] + tempVec[2]);
-            h++;
-
-            tempVec.clear();
-            for (uzi w = 0; w < weightBackup.size() - 1; w++) {
-                tempVec.push_back(deltaShadow[i][j] - weightBackup[w][h]);
-            }
-            deltaShadow[i][j] -= (tempVec[0] - 2 * tempVec[1] + tempVec[2]);
             h++;
         }
     }

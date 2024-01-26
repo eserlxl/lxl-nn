@@ -2,6 +2,7 @@
 #include "dataLoader.h"
 
 int main() {
+
     MNISTData trainingData;
     MNISTData testData;
 

@@ -72,35 +72,36 @@ TestResult nn::checkTrainingData() {
 }
 
 void nn::train(uzi loopMax, MNISTData *testData) {
+    float minRMSError = 1000;
 #ifdef ANALYSE_TRAINING
     double loopDuration, checkTrainingResultDuration, checkTestResultDuration, trainingDuration;
     double loopDurationSum = 0;
     double checkDataDurationSum = 0;
-    float minRMSError = 1000;
 #endif
     randWeights();
 
     clock->initTimer();
 
 #ifdef ADAPTIVE_LEARNING
-    float kEta = 1;
-    float prevEta = 0;
-    float minEta = 10.f;
-    float maxEta = 25.f;
-    float deltaEta;
-#ifdef BP_USE_BIAS
-    float kZeta = 1;
-    float prevZeta = 0;
-    float minZeta = 5.f;
-    float maxZeta = 25.f;
-    float deltaZeta;
-#endif
+    uzi learningSize = learningMatrix.size();
+    float perturbationRatio = 1e-2f;
+    std::vector<float> rmseHistory;
+    std::vector<std::vector<float>> coeffHistory;
+    std::vector<std::vector<float>> uHistory;
+    Eigen::Matrix<float, 5, 5> aMatrix;
+    Eigen::Matrix<float, 5, 1> rmseMatrix;
 
+    std::vector<float> learningMatrixInitial;
+    for (float &x : learningMatrix) {
+        learningMatrixInitial.push_back(x);
+    }
+    std::vector<float> learningMatrixPrev;
+    for (float &x : learningMatrix) {
+        learningMatrixPrev.push_back(x);
+    }
+    float rateLimit = learningMatrix[learningSize - 1];
 #endif
     for (uzi loop = 0; loop < loopMax; loop++) {
-#ifndef NO_RANDOMIZATION
-        e2.seed(rd());
-#endif
 
 #ifdef ANALYSE_TRAINING
         chronometer->initTimer();
@@ -125,10 +126,23 @@ void nn::train(uzi loopMax, MNISTData *testData) {
 
         backPropagateOutputLayer();
 
-        rmseVec[sourceSize - 1] = rmsErrorBP;
+        rmseVec[rmseVec.size() - 1] = rmsErrorBP;
 
         float RMSE = rms(rmseVec);
 
+        if (RMSE < minRMSError) {
+            minRMSError = RMSE;
+#ifdef ADAPTIVE_LEARNING
+            saveWeights();
+#endif
+        }
+#ifdef ADAPTIVE_LEARNING
+        else if(RMSE > 1.0125*minRMSError)
+        {
+            smoothWeights(0.9875);
+
+        }
+#endif
 #ifdef ANALYSE_TRAINING
         loopDuration = chronometer->getElapsedTime();
         loopDurationSum += loopDuration;
@@ -143,13 +157,18 @@ void nn::train(uzi loopMax, MNISTData *testData) {
 
         checkDataDurationSum += checkTrainingResultDuration + checkTestResultDuration;
 
-        if (RMSE < minRMSError) {
-            minRMSError = RMSE;
-        }
-
-        std::cout << loop << " > η: " << eta
+        uzi h = 0;
+        std::cout << loop
+                  << " > η: " << learningMatrix[h++]
                   #ifdef BP_USE_BIAS
-                  << ", ζ: " << zeta
+                  << ", ζ: " << learningMatrix[h++]
+                  #endif
+                  #ifdef BP_BELLMAN_OPT
+                  << ", γ: " << learningMatrix[h++]
+                  #endif
+                  #ifdef ADAPTIVE_LEARNING
+                  << ", α: " << learningMatrix[h++]
+                  << ", r: " << learningMatrix[h++]
                   #endif
                   << ", RMSE: " << RMSE << "/" << minRMSError
                   << ", Training => [ ✓: "
@@ -162,40 +181,55 @@ void nn::train(uzi loopMax, MNISTData *testData) {
                   << ", ✓Test: " << checkTestResultDuration << " ]"
                   << std::endl;
 #endif
-        if (RMSE <= minRMSError) {
-            minRMSError = RMSE;
+
 #ifdef ADAPTIVE_LEARNING
-            if ((prevEta <= eta && kEta < 0) || (prevEta >= eta && kEta > 0)) {
-                kEta *= -1;
-            }
-#ifdef BP_USE_BIAS
-            if ((prevZeta <= eta && kZeta < 0) || (prevZeta >= eta && kZeta > 0)) {
-                kZeta *= -1;
-            }
-#endif
-#endif
-        }
-#ifdef ADAPTIVE_LEARNING
-        else {
-            if ((prevEta <= eta && kEta > 0) || (prevEta >= eta && kEta < 0)) {
-                kEta *= -1;
-            }
-#ifdef BP_USE_BIAS
-            if ((prevZeta <= eta && kZeta > 0) || (prevZeta >= eta && kZeta < 0)) {
-                kZeta *= -1;
-            }
-#endif
+        rmseHistory.push_back(RMSE);
+        std::vector<float> tempVec;
+
+        for (uzi i = 0; i < learningSize; i++) {
+            tempVec.push_back(learningMatrix[i] / learningMatrixInitial[i]);
         }
 
-        deltaEta = (1.f + RMSE * RMSE / minRMSError * (eta - prevEta));
-        eta = std::min(maxEta, std::max(minEta, eta * (1.f + alpha * kEta * deltaEta)));
-        prevEta = eta;
+        coeffHistory.push_back(tempVec);
 
-#ifdef BP_USE_BIAS
-        deltaZeta=(1.f+RMSE*RMSE/minRMSError*(zeta-prevZeta));
-        zeta = std::min(maxZeta, std::max(minZeta, zeta * (1.f +alpha*kZeta * deltaZeta)));
-        prevZeta = zeta;
-#endif
+        if (loop >= learningSize - 1) {
+            for (uzi i = 0; i < learningSize; i++) {
+                for (uzi j = 0; j < learningSize; j++) {
+                    aMatrix(i, j) = coeffHistory[loop - i][j];
+                }
+                rmseMatrix(i, 0) = rmseHistory[loop - i] / minRMSError;
+            }
+
+            Eigen::FullPivLU<Eigen::Matrix<float, 5, 5>> lu(aMatrix);
+            Eigen::Matrix<float, 5, 1> u = lu.inverse() * rmseMatrix;
+
+            // Rate limit
+            for (uzi i = 0; i < learningSize; i++) {
+                learningMatrix[i] *= 1 - u(i, 0);
+
+                if (learningMatrix[i] > learningMatrixPrev[i] * (1 + rateLimit)) {
+                    learningMatrix[i] = learningMatrixPrev[i] * (1 + rateLimit);
+                } else if (learningMatrix[i] < learningMatrixPrev[i] * (1 - rateLimit)) {
+                    learningMatrix[i] = learningMatrixPrev[i] * (1 - rateLimit);
+                }
+            }
+        } else {
+            for (float &x : learningMatrix) {
+                x *= 1 + perturbationRatio * rateLimit * randomNumberExtended();
+            }
+        }
+
+        // Max-Min Bounds
+        for (uzi i = 0; i < learningSize; i++) {
+            learningMatrix[i] = std::min(
+                    learningMatrixUpperLimits[i] * (1 - perturbationRatio * rateLimit * randomNumber()),
+                    std::max(learningMatrixLowerLimits[i] * (1 + perturbationRatio * rateLimit * randomNumber()),
+                             learningMatrix[i]));
+        }
+
+        for (uzi i = 0; i < learningSize; i++) {
+            learningMatrixPrev[i] = learningMatrix[i];
+        }
 #endif
     }
 #ifdef ANALYSE_TRAINING
