@@ -151,10 +151,10 @@ public:
         learningMatrix.push_back(0.125f); // Adaptive learning gain
         adaptiveLearningRateIndex = learningRateIndex;
 
-        learningMatrix.push_back(0.01f); // Adaptive learning rate limit
+        learningMatrix.push_back(0.05f); // Adaptive learning rate limit
         rateLimitLearningRateIndex = learningRateIndex;
 
-        learningMatrixLowerLimits.push_back(7.5f); // min Learning Rate of weights
+        learningMatrixLowerLimits.push_back(10.f); // min Learning Rate of weights
         learningMatrixUpperLimits.push_back(15.f); // max Learning Rate of weights
 #ifdef BP_USE_BIAS
         learningMatrixLowerLimits.push_back(2.5f); // min Learning Rate of biases
@@ -167,8 +167,8 @@ public:
         learningMatrixLowerLimits.push_back(0.125f); // min adaptive learning gain
         learningMatrixUpperLimits.push_back(0.25f);// max adaptive learning gain
 
-        learningMatrixLowerLimits.push_back(0.01f); // min adaptive learning rate limit
-        learningMatrixUpperLimits.push_back(0.05f);// max adaptive learning rate limit
+        learningMatrixLowerLimits.push_back(0.025f); // min adaptive learning rate limit
+        learningMatrixUpperLimits.push_back(0.075f);// max adaptive learning rate limit
 #endif
 
 #ifdef BP_USE_PID
