@@ -22,7 +22,7 @@ TestResult nn::checkTestData(MNISTData *testData) {
         }
 
         for (uzi t = 0; t < model[outputIndex]; t++) {
-            if (maxIndex == t && testData->output[p][t] > 0) {
+            if (maxIndex == t && testData->output[p][t] > networkMidValue) {
                 correct++;
                 break;
             }
@@ -53,11 +53,9 @@ TestResult nn::checkTrainingData() {
         }
 
         for (uzi t = 0; t < model[outputIndex]; t++) {
-            if (target[p][t] >= 0) {
-                if (maxIndex == t) {
-                    correct++;
-                    break;
-                }
+            if (maxIndex == t && target[p][t] > networkMidValue) {
+                correct++;
+                break;
             }
         }
     }

@@ -4,72 +4,28 @@
 #include <iostream>
 #include <random>
 #include <Eigen/Dense>
+#include <lxl.h>
+
+using namespace lxl;
+
 #include <nn/neuron.h>
 #include <dataLoader.h>
-#include "timer.h"
 #include "test.h"
 
-//#define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
+#define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 
-#define BP_BELLMAN_OPT
-#define BP_USE_BIAS
-#define ADAPTIVE_LEARNING
+//#define BP_BELLMAN_OPT
+//#define BP_USE_BIAS
+//#define ADAPTIVE_LEARNING
 //#define BP_USE_PID
 
 #define ANALYSE_TRAINING
-
-/**
- * Sigmoid
- * Simple logistic function, It is a smooth, S-shaped curve.
- * Output: [0,1]
- */
-template<typename Float>
-Float sigmoid(Float x, Float a = 1) {
-    return (Float) 1 / ((Float) 1 + std::exp(-a * x));
-}
-
-template<typename Float>
-Float dSigmoid(Float x, Float a = 1) {
-    Float s = sigmoid(x, a);
-    return s * ((Float) 1 - s);
-}
-
-// Parametric Rectified Linear Unit ( Leaky ReLU )
-// x<0?0:(x>1?1:x)
-template<typename Float>
-Float reLU(Float x) {
-    return std::min(x > 0 ? x : Float(0.01) * x, (Float) 1);
-}
-
-template<typename Float>
-Float dReLU(Float x) {
-    return x > 0 ? x : 0.01;
-}
-
-// Inverse of sigmoid(x), x: [0,1]
-template<typename Float>
-Float logit(Float x, Float a = 0.995f) {
-    return std::log(x / (1.f - std::min(a, x)));
-}
 
 // LOGIC_SIGMOID, LOGIC_TANH or LOGIC_RELU
 #define LOGIC_SIGMOID [0,1]
 //#define LOGIC_TANH // [-1,1]
 //#define LOGIC_SWISH
 //#define LOGIC_RELU
-
-template<typename T>
-T rms(std::vector<T> &array) {
-    T temp = 0.;
-
-    int n = array.size();
-
-    for (int i = 0; i < n; i++) {
-        temp += std::pow(array[i], (T) 2);
-    }
-
-    return std::sqrt(temp / (T) n);
-}
 
 typedef std::size_t uzi;
 
@@ -88,13 +44,8 @@ public:
 
     nn(std::vector<uzi> model, const std::vector<std::vector<float>> &input,
        const std::vector<std::vector<float>> &output) {
-        clock = new Timer();
-        chronometer = new Timer();
-
-        source = input;
-        target = output;
-        sourceSize = source.size();
-        targetSize = target.size();
+        clock = new lxl::Timer();
+        chronometer = new lxl::Timer();
 
         this->model = model;
         network.resize(model.size());
@@ -113,11 +64,12 @@ public:
         inputSize = model[0];
         outputSize = model[outputIndex];
 
+        normIO(input, output);
         create();
         connect();
 
 #ifdef NO_RANDOMIZATION
-        seed=1;
+        seed = 1;
 #else
         seed = rd();
 #endif
@@ -226,8 +178,8 @@ private:
     float pid_I;
     float pid_D;
 #endif
-    Timer *clock;
-    Timer *chronometer;
+    lxl::Timer *clock;
+    lxl::Timer *chronometer;
     float rmsErrorBP;
     std::vector<std::vector<float>> errorBP;
     std::vector<float> prevError;
@@ -276,6 +228,34 @@ private:
     float randomNumberExtended();
 
     uzi seed;
+
+    std::vector<std::vector<float>> inputStructure; // { min, max }
+    std::vector<std::vector<float>> outputStructure; // { min, max }
+
+#ifdef LOGIC_SIGMOID
+    float networkMinValue = 0;
+    float networkMaxValue = 1;
+#elif defined(LOGIC_TANH)
+    float networkMinValue = -1;
+    float networkMaxValue = 1;
+#elif defined(LOGIC_SWISH)
+    float networkMinValue = 0;
+    float networkMaxValue = 1;
+#elif defined(LOGIC_RELU)
+    float networkMinValue = -1;
+    float networkMaxValue = 1;
+#endif
+    float networkRange = networkMaxValue - networkMinValue;
+    float networkMidRange = 0.5f * networkRange;
+    float networkMidValue = networkMidRange + networkMinValue;
+    float network3rdQuarterValue = 0.75f * networkRange + networkMinValue;
+    float network1stQuarterValue = 0.25f * networkRange + networkMinValue;
+
+    float convertSourceNorm(float x, uzi j);
+
+    float convertTargetNorm(float x, uzi j);
+
+    void normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output);
 };
 
 #endif // lxl_nn_NN_H_

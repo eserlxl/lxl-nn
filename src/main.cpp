@@ -6,7 +6,7 @@ int main() {
     MNISTData trainingData;
     MNISTData testData;
 
-    auto *mainClock = new Timer();
+    auto *mainClock = new lxl::Timer();
 
     // Loading the MNIST data
     if (!trainingData.load(true) || !testData.load(false)) {
@@ -28,7 +28,7 @@ int main() {
     NN->checkTestData(&testData);
     std::cout << std::endl << "Total time: " << mainClock->getElapsedTime() << " seconds" << std::endl;
 #endif
-    delete (NN);
-    delete (mainClock);
+    lxl::safeDelete (NN);
+    lxl::safeDelete (mainClock);
     return 0;
 }

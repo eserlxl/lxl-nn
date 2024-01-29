@@ -46,7 +46,7 @@ void nn::printInfo() {
 
     // Listing configurations
 #ifdef NO_RANDOMIZATION
-    std::cout << "Randomization is disabled!. Seed: "<<seed<< std::endl;
+    std::cout << "Randomization is disabled!. Seed: " << seed << std::endl;
 #else
     std::cout << "Randomization is enabled!. Seed: "<<seed<< std::endl;
 #endif
@@ -56,16 +56,16 @@ void nn::printInfo() {
             << "\nLearning rate of weights (η): " << learningMatrix[weightLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[weightLearningRateIndex] << ", "
             << learningMatrixUpperLimits[weightLearningRateIndex] << "]"
-            #ifdef BP_USE_BIAS
+#ifdef BP_USE_BIAS
             << "\nLearning rate of biases (ζ): " << learningMatrix[biasLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[biasLearningRateIndex] << ", "
             << learningMatrixUpperLimits[biasLearningRateIndex] << "]"
-            #endif
-            #ifdef BP_BELLMAN_OPT
+#endif
+#ifdef BP_BELLMAN_OPT
             << "\nBellman's optimality gain (γ): " << learningMatrix[bellmanLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[bellmanLearningRateIndex] << ", "
             << learningMatrixUpperLimits[bellmanLearningRateIndex] << "]"
-            #endif
+#endif
             << "\nAdaptive learning gain (α): " << learningMatrix[adaptiveLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[adaptiveLearningRateIndex] << ", "
             << learningMatrixUpperLimits[adaptiveLearningRateIndex] << "]"

@@ -15,23 +15,24 @@ void nn::backPropagateOutputLayer() {
     for (uzi j = 0; j < model[outputIndex]; j++) {
         float pValue = P[outputIndex][j]->value;
 
-        if (maxIndex != j && pValue > 0.25) // Bellman's optimality, assume that 0.25 is enough for learning 0
+        if (maxIndex != j &&
+            pValue > network1stQuarterValue) // Bellman's optimality, assume that 0.25 is enough for learning 0
         {
             skipChecking = true;
         }
 
         if (!skipChecking && maxIndex == j &&
-            pValue >= 0.75) { // Bellman's optimality, assume that 0.75 is enough for learning 1
+            pValue >= network3rdQuarterValue) { // Bellman's optimality, assume that 0.75 is enough for learning 1
             correctChoice++;
         }
         float error = pValue - network[outputIndex][j];
 #ifdef BP_BELLMAN_OPT
         if (maxIndex == j)
             error -= learningMatrix[bellmanLearningRateIndex] *
-                     std::max(0.f, 0.75f - pValue); // Bellman's optimality simulation
+                     std::max(0.f, network3rdQuarterValue - pValue); // Bellman's optimality simulation
         else
             error -= learningMatrix[bellmanLearningRateIndex] *
-                     std::max(0.f, pValue - 0.25f); // Bellman's optimality equation simulation
+                     std::max(0.f, pValue - network1stQuarterValue); // Bellman's optimality equation simulation
 #endif
 
 #ifdef BP_USE_PID
@@ -81,9 +82,9 @@ void nn::backPropagate() {
 #elif defined(LOGIC_TANH)
             bPValue *= (1.f - pValue * pValue);
 #elif defined(LOGIC_SWISH)
-           bPValue *= pValue + logit(pValue) * (pValue * (1.f - pValue)); // (x*sigmoid(x))' = x'*sigmoid(x)+x*sigmoid(x)', inv(sigmoid) = logit
+            bPValue *= pValue + logit(pValue) * (pValue * (1.f - pValue)); // (x*sigmoid(x))' = x'*sigmoid(x)+x*sigmoid(x)', inv(sigmoid) = logit
 #elif defined(LOGIC_RELU)
-            bPValue *= dReLU(pValue);
+             bPValue *= dReLU(pValue);
 #endif
             errorBP[i].push_back(bPValue);
 
