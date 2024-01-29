@@ -4,7 +4,7 @@ void NeuralNetwork::backPropagateOutputLayer() {
     errorBP[outputIndex].clear();
     std::vector<float> errorVec;
 
-#ifdef LEARNING_MNIST_DATA
+#ifdef LOGIC_NETWORK
     float maxOutput = -1;
     uzi maxIndex = 0;
     for (uzi t = 0; t < model[outputIndex]; t++) {
@@ -37,6 +37,7 @@ void NeuralNetwork::backPropagateOutputLayer() {
         else
             error -= learningMatrix[bellmanLearningRateIndex] *
                      std::max(0.f, pValue - network1stQuarterValue); // Bellman's optimality equation simulation
+#endif
 #else
         for (uzi j = 0; j < model[outputIndex]; j++) {
         float pValue = P[outputIndex][j]->value;
@@ -50,7 +51,6 @@ void NeuralNetwork::backPropagateOutputLayer() {
             error -= learningMatrix[bellmanLearningRateIndex] *
                      std::max(0.f, pValue - network1stQuarterValue);
         }
-#endif
 #endif
 
 #endif
@@ -81,7 +81,7 @@ void NeuralNetwork::backPropagateOutputLayer() {
 #endif
 
     }
-#ifndef LEARNING_MNIST_DATA
+#ifndef LOGIC_NETWORK
     correctChoice += rms(errorVec) < 0.5f*network1stQuarterValue;
 #endif
     rmsErrorBP = rms(errorBP[outputIndex]);

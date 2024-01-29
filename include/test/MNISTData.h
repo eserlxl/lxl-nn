@@ -1,12 +1,12 @@
-#ifndef lxl_nn_DATA_LOADER_H
-#define lxl_nn_DATA_LOADER_H
+#ifndef lxl_nn_TEST_MNISTDATA_H
+#define lxl_nn_TEST_MNISTDATA_H
 
 #include <iostream>
 #include <vector>
 #include <cstdio>
 #include <cstdint>
 
-// Source: https://github.com/yaroslavbohonos/Handwritten-Digit-Recognition
+// Derived from: https://github.com/yaroslavbohonos/Handwritten-Digit-Recognition
 
 /* Used to change the byte order. E.g., if the first two uint32_t values are 0x01080000 or 0x03080000.
 The Inline specifier improves program performance by reducing the overhead of function calls and increasing execution speed. */
@@ -128,4 +128,4 @@ private:
     uint8_t *m_pixels;
 };
 
-#endif // lxl_nn_DATA_LOADER_H
+#endif // lxl_nn_TEST_MNISTDATA_H

@@ -19,6 +19,9 @@ add_executable(lxl-nn
         include/nn/neuron.h
         include/nn/synapse.h
         include/nn/neuralNetwork.h
+        include/test/analyse.h
+        include/test/test.h
+        include/test/testResult.h
         src/nn/backPropagate.cpp
         src/nn/feedForward.cpp
         src/nn/init.cpp
@@ -27,4 +30,5 @@ add_executable(lxl-nn
         src/nn/normIO.cpp
         src/nn/train.cpp
         src/nn/weights.cpp
-        src/main.cpp include/test.h)
+        src/main.cpp)
+

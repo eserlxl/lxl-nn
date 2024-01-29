@@ -9,12 +9,14 @@
 using namespace lxl;
 
 #include "neuron.h"
-#include <dataLoader.h>
-#include "test.h"
+#include "test/test.h"
+#include "test/analyse.h"
+
 
 #define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 
 #define LEARNING_MNIST_DATA
+//#define LOGIC_NETWORK
 #define BP_BELLMAN_OPT
 #define BP_USE_BIAS
 //#define ADAPTIVE_LEARNING
@@ -64,6 +66,64 @@ public:
         outputSize = model[outputIndex];
 
         normIO(input, output);
+        create();
+        connect();
+        init();
+    }
+
+    NeuralNetwork(std::vector<uzi> model, const std::string &fileName) {
+        clock = new lxl::Timer();
+        chronometer = new lxl::Timer();
+
+        std::vector<std::vector<float>> data, input, output;
+
+        std::string delimiter;
+        lxl::detectDelimiter(fileName, &delimiter);
+        lxl::fetchData(fileName, data, delimiter);
+
+        this->model = model;
+        network.resize(model.size());
+        uzi layerIndex = 0;
+        maxLayerSize = 0;
+        for (uzi layer : model) {
+            if (maxLayerSize < layer) {
+                maxLayerSize = layer;
+            }
+            network[layerIndex++].resize(layer);
+        }
+
+        layerCount = network.size();
+        hiddenLayerSize = layerCount - 2;
+        outputIndex = layerCount - 1;
+        inputSize = model[0];
+        outputSize = model[outputIndex];
+
+        if (outputSize != data[0].size() - inputSize) {
+            std::cout << "Invalid data format! Input Size: " << inputSize << ", Output Size: " << outputSize
+                      << ", Data size in a row: " << data[0].size() << std::endl;
+            exit(-1);
+        }
+
+        for (auto &i : data) {
+            std::vector<float> temp;
+            for (uzi j = 0; j < inputSize; j++) {
+                temp.push_back(i[j]);
+            }
+            input.push_back(temp);
+
+            temp.clear();
+            for (uzi j = inputSize; j < inputSize + outputSize; j++) {
+                temp.push_back(i[j]);
+            }
+            output.push_back(temp);
+        }
+
+        /*auto *analyse = new Analyse();
+        analyse->detect(input, output);
+        safeDelete(analyse);*/
+
+        normIO(input, output);
+
         create();
         connect();
         init();

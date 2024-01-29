@@ -1,5 +1,5 @@
 #include "nn/neuralNetwork.h"
-#include "dataLoader.h"
+#include "test/MNISTData.h"
 
 int main() {
 
