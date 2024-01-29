@@ -124,48 +124,6 @@ void nn::loadWeights(uzi backupIndex) {
     }
 }
 
-void nn::predictWeights() {
-    if (weightBackup.empty() || weightBackup.size() < 4) {
-        return;
-    }
-
-    std::vector<float> tempVec;
-    uzi h = 0;
-#ifdef BP_USE_BIAS
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < P[i + 1].size(); j++) {
-
-            tempVec.clear();
-            for (uzi w = 0; w < weightBackup.size() - 1; w++) {
-                tempVec.push_back(bias[i][j] - weightBackup[w][h]);
-            }
-            bias[i][j] -= (tempVec[0] - 2 * tempVec[1] + tempVec[2]);
-            h++;
-        }
-    }
-#endif
-    for (uzi i = 0; i < P.size(); i++) {
-        for (uzi j = 0; j < P[i].size(); j++) {
-            for (uzi k = 0; k < P[i][j]->Link.size(); k++) {
-                tempVec.clear();
-                for (uzi w = 0; w < weightBackup.size() - 1; w++) {
-                    tempVec.push_back(P[i][j]->Link[k]->weight - weightBackup[w][h]);
-                }
-                P[i][j]->Link[k]->weight -= (tempVec[0] - 2 * tempVec[1] + tempVec[2]);
-                h++;
-
-                tempVec.clear();
-                for (uzi w = 0; w < weightBackup.size() - 1; w++) {
-                    tempVec.push_back(P[i][j]->Link[k]->deltaWeight - weightBackup[w][h]);
-                }
-                P[i][j]->Link[k]->deltaWeight += (tempVec[0] - 2 * tempVec[1] + tempVec[2]);
-                h++;
-            }
-        }
-    }
-
-};
-
 void nn::smoothLastWeights() {
     if (weightBackup.empty() || weightBackup.size() < 3) {
         return;

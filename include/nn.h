@@ -269,8 +269,6 @@ private:
 
     void smoothLastWeights();
 
-    void predictWeights();
-
 #endif
 
     float randomNumber();
