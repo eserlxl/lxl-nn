@@ -1,4 +1,4 @@
-## lxl-NeuralNetwork - A Simple Neural Network Architecture
+## lxl-nn - A Simple Neural Network Architecture
 
 A feedforward-backpropagation neural network model is used with small modifications.
 
@@ -37,6 +37,8 @@ MNIST database tests were conducted on a 12th Gen Intel(R) Core(TM) i7-12700H CP
 Please check results.txt for additional information.
 
 ## Usage
+You need to obtain [lxl](https://github.com/eserlxl/lxl) library before compilation.
+
 Use CMAKE for compiling, unzip the Data.zip file for the required training and testing data.
 
 Network definition: _{ Input Layer, Hidden Layer, Output Layer }_
