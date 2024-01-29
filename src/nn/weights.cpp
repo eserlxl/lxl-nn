@@ -1,6 +1,6 @@
-#include <nn.h>
+#include <nn/neuralNetwork.h>
 
-void nn::randWeights() {
+void NeuralNetwork::randWeights() {
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < model[i + 1]; j++) {
 #ifdef BP_USE_BIAS
@@ -15,7 +15,7 @@ void nn::randWeights() {
 
 #ifdef ADAPTIVE_LEARNING
 
-void nn::saveNetwork() {
+void NeuralNetwork::saveNetwork() {
     pBackup.clear();
     for (auto &p : P) {
         std::vector<float> tempVec;
@@ -26,7 +26,7 @@ void nn::saveNetwork() {
     }
 }
 
-void nn::loadNetwork() {
+void NeuralNetwork::loadNetwork() {
     if (pBackup.empty()) {
         return;
     }
@@ -37,7 +37,7 @@ void nn::loadNetwork() {
     }
 }
 
-void nn::saveWeights() {
+void NeuralNetwork::saveWeights() {
     lastWeightBackup.clear();
 #ifdef BP_USE_BIAS
     for (uzi i = 0; i < outputIndex; i++) {
@@ -56,7 +56,7 @@ void nn::saveWeights() {
     }
 }
 
-void nn::saveWeights(uzi maxBackupCount) {
+void NeuralNetwork::saveWeights(uzi maxBackupCount) {
 
     std::vector<float> tempVec;
 #ifdef BP_USE_BIAS
@@ -80,7 +80,7 @@ void nn::saveWeights(uzi maxBackupCount) {
     weightBackup.push_back(tempVec);
 }
 
-void nn::loadWeights() {
+void NeuralNetwork::loadWeights() {
     if (lastWeightBackup.empty()) {
         return;
     }
@@ -102,7 +102,7 @@ void nn::loadWeights() {
     }
 }
 
-void nn::loadWeights(uzi backupIndex) {
+void NeuralNetwork::loadWeights(uzi backupIndex) {
     if (weightBackup.empty() || weightBackup[backupIndex].empty()) {
         return;
     }
@@ -124,7 +124,7 @@ void nn::loadWeights(uzi backupIndex) {
     }
 }
 
-void nn::smoothLastWeights() {
+void NeuralNetwork::smoothLastWeights() {
     if (weightBackup.empty() || weightBackup.size() < 3) {
         return;
     }
@@ -161,7 +161,7 @@ void nn::smoothLastWeights() {
     }
 }
 
-void nn::smoothWeights(float backupRatio) {
+void NeuralNetwork::smoothWeights(float backupRatio) {
     if (weightBackup.empty()) {
         return;
     }

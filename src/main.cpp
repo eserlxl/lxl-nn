@@ -1,4 +1,4 @@
-#include <nn.h>
+#include <nn/neuralNetwork.h>
 #include "dataLoader.h"
 
 int main() {
@@ -14,7 +14,7 @@ int main() {
         return 1;
     }
 
-    auto *NN = new nn({784, 10, 10}, trainingData.input, trainingData.output);
+    auto *NN = new NeuralNetwork({784, 60, 10}, trainingData.input, trainingData.output);
 
     NN->printInfo();
 

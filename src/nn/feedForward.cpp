@@ -1,6 +1,6 @@
-#include <nn.h>
+#include <nn/neuralNetwork.h>
 
-void nn::feedForward() {
+void NeuralNetwork::feedForward() {
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < model[i + 1]; j++) {
 #ifdef BP_USE_BIAS

@@ -1,6 +1,6 @@
-#include <nn.h>
+#include <nn/neuralNetwork.h>
 
-TestResult nn::checkTestData(MNISTData *testData) {
+TestResult NeuralNetwork::checkTestData(MNISTData *testData) {
     chronometer->initTimer();
 
     uzi correct = 0;
@@ -36,7 +36,7 @@ TestResult nn::checkTestData(MNISTData *testData) {
     return test;
 }
 
-TestResult nn::checkTrainingData() {
+TestResult NeuralNetwork::checkTrainingData() {
     chronometer->initTimer();
     uzi correct = 0;
     for (uzi p = 0; p < sourceSize; p++) {
@@ -67,7 +67,7 @@ TestResult nn::checkTrainingData() {
     return ret;
 }
 
-void nn::train(uzi loopMax, MNISTData *testData) {
+void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
     float minRMSError = 1000;
 #ifdef ANALYSE_TRAINING
     double loopDuration, checkTrainingResultDuration, checkTestResultDuration, trainingDuration;

@@ -1,6 +1,6 @@
-#include <nn.h>
+#include <nn/neuralNetwork.h>
 
-void nn::create() {
+void NeuralNetwork::create() {
     uzi id = 0;
     for (uzi i : model) {
         std::vector<neuron *> tempVec;
@@ -12,7 +12,7 @@ void nn::create() {
     }
 }
 
-void nn::connect() {
+void NeuralNetwork::connect() {
     for (uzi i = 0; i < layerCount - 1; i++) {
         for (uzi j = 0; j < model[i]; j++) {
             for (uzi k = 0; k < model[i + 1]; k++) {
@@ -22,7 +22,7 @@ void nn::connect() {
     }
 }
 
-float nn::randomNumberExtended() {
+float NeuralNetwork::randomNumberExtended() {
     float x = randomNumber();
     while (std::fabs(x - 0.5f) < 1e-3) {
         x = randomNumber();
@@ -30,7 +30,7 @@ float nn::randomNumberExtended() {
     return 2.f * (x - 0.5f);
 }
 
-float nn::randomNumber() {
+float NeuralNetwork::randomNumber() {
     float x = e2() / (float) std::mt19937::max();
     while (x < 1e-3) {
         x = randomNumber();
@@ -38,7 +38,7 @@ float nn::randomNumber() {
     return x;
 }
 
-void nn::printInfo() {
+void NeuralNetwork::printInfo() {
     std::cout << "Learning MNIST Database\n" << std::endl;
     std::cout << "Network: {" << inputSize << ",";
     for (uzi i = 0; i < layerCount - 2; i++) { std::cout << model[i + 1] << ","; }

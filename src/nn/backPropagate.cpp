@@ -1,6 +1,6 @@
-#include <nn.h>
+#include <nn/neuralNetwork.h>
 
-void nn::backPropagateOutputLayer() {
+void NeuralNetwork::backPropagateOutputLayer() {
     errorBP[outputIndex].clear();
     float maxOutput = -1;
     uzi maxIndex = 0;
@@ -63,7 +63,7 @@ void nn::backPropagateOutputLayer() {
     rmsErrorBP = rms(errorBP[outputIndex]);
 }
 
-void nn::backPropagate() {
+void NeuralNetwork::backPropagate() {
 
     backPropagateOutputLayer();
 

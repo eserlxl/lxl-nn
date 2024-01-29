@@ -18,11 +18,11 @@ link_libraries(lxl)
 add_executable(lxl-nn
         include/nn/neuron.h
         include/nn/synapse.h
-        include/nn.h
+        include/nn/neuralNetwork.h
         src/nn/backPropagate.cpp
         src/nn/feedForward.cpp
         src/nn/init.cpp
-        src/nn/nn.cpp
+        src/nn/neuralNetwork.cpp
         src/nn/neuron.cpp
         src/nn/normIO.cpp
         src/nn/train.cpp

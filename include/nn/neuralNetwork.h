@@ -1,5 +1,5 @@
-#ifndef lxl_nn_NN_H_
-#define lxl_nn_NN_H_
+#ifndef lxl_nn_NeuralNetwork_H_
+#define lxl_nn_NeuralNetwork_H_
 
 #include <iostream>
 #include <random>
@@ -29,7 +29,7 @@ using namespace lxl;
 
 typedef std::size_t uzi;
 
-class nn {
+class NeuralNetwork {
 public:
     std::random_device rd;
     std::mt19937 e2;
@@ -42,8 +42,8 @@ public:
     uzi outputSize;
     std::vector<uzi> model;
 
-    nn(std::vector<uzi> model, const std::vector<std::vector<float>> &input,
-       const std::vector<std::vector<float>> &output) {
+    NeuralNetwork(std::vector<uzi> model, const std::vector<std::vector<float>> &input,
+                  const std::vector<std::vector<float>> &output) {
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
@@ -135,7 +135,7 @@ public:
 #endif
     }
 
-    ~nn() {
+    ~NeuralNetwork() {
         delete (clock);
         delete (chronometer);
     }
@@ -258,4 +258,4 @@ private:
     void normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output);
 };
 
-#endif // lxl_nn_NN_H_
+#endif // lxl_nn_NeuralNetwork_H_

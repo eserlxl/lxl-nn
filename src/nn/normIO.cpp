@@ -1,16 +1,16 @@
-#include "nn.h"
+#include "nn/neuralNetwork.h"
 
-float nn::convertSourceNorm(float x, uzi j) {
+float NeuralNetwork::convertSourceNorm(float x, uzi j) {
     return (x - networkMinValue) / (networkMaxValue - networkMinValue) * (inputStructure[j][1] - inputStructure[j][0]) +
            inputStructure[j][0];
 }
 
-float nn::convertTargetNorm(float x, uzi j) {
+float NeuralNetwork::convertTargetNorm(float x, uzi j) {
     return (x - networkMinValue) / (networkMaxValue - networkMinValue) *
            (outputStructure[j][1] - outputStructure[j][0]) + outputStructure[j][0];
 }
 
-void nn::normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output) {
+void NeuralNetwork::normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output) {
 
     float inputMinValue = lxl::min(input)[0];
     float inputMaxValue = lxl::max(input)[0];
