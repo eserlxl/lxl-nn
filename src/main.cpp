@@ -28,7 +28,7 @@ int main() {
     network->checkTestData(&testData);
     std::cout << std::endl << "Total time: " << mainClock->getElapsedTime() << " seconds" << std::endl;
 #endif
-    lxl::safeDelete (network);
-    lxl::safeDelete (mainClock);
+    safeDelete (network);
+    safeDelete (mainClock);
     return 0;
 }

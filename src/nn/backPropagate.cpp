@@ -1,7 +1,10 @@
-#include <nn/neuralNetwork.h>
+#include "nn/neuralNetwork.h"
 
 void NeuralNetwork::backPropagateOutputLayer() {
     errorBP[outputIndex].clear();
+    std::vector<float> errorVec;
+
+#ifdef LEARNING_MNIST_DATA
     float maxOutput = -1;
     uzi maxIndex = 0;
     for (uzi t = 0; t < model[outputIndex]; t++) {
@@ -26,6 +29,7 @@ void NeuralNetwork::backPropagateOutputLayer() {
             correctChoice++;
         }
         float error = pValue - network[outputIndex][j];
+        errorVec.push_back(error);
 #ifdef BP_BELLMAN_OPT
         if (maxIndex == j)
             error -= learningMatrix[bellmanLearningRateIndex] *
@@ -33,7 +37,24 @@ void NeuralNetwork::backPropagateOutputLayer() {
         else
             error -= learningMatrix[bellmanLearningRateIndex] *
                      std::max(0.f, pValue - network1stQuarterValue); // Bellman's optimality equation simulation
+#else
+        for (uzi j = 0; j < model[outputIndex]; j++) {
+        float pValue = P[outputIndex][j]->value;
+        float error = pValue - network[outputIndex][j];
+        errorVec.push_back(error);
+#ifdef BP_BELLMAN_OPT
+        if (network[outputIndex][j] > networkMidValue) {
+            error -= learningMatrix[bellmanLearningRateIndex] *
+                     std::max(0.f, network3rdQuarterValue - pValue);
+        } else {
+            error -= learningMatrix[bellmanLearningRateIndex] *
+                     std::max(0.f, pValue - network1stQuarterValue);
+        }
 #endif
+#endif
+
+#endif
+
 
 #ifdef BP_USE_PID
         error *= 2 * pValue * (1.0f - pValue);
@@ -60,6 +81,9 @@ void NeuralNetwork::backPropagateOutputLayer() {
 #endif
 
     }
+#ifndef LEARNING_MNIST_DATA
+    correctChoice += rms(errorVec) < 0.5f*network1stQuarterValue;
+#endif
     rmsErrorBP = rms(errorBP[outputIndex]);
 }
 

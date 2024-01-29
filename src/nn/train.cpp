@@ -12,6 +12,15 @@ TestResult NeuralNetwork::checkTestData(MNISTData *testData) {
         }
         feedForward();
 
+#ifdef RMS_CHECK
+        std::vector<float> errorVec;
+        for (uzi t = 0; t < model[outputIndex]; t++) {
+            errorVec.push_back(testData->output[p][t] - P[outputIndex][t]->value);
+        }
+        if (rms(errorVec) < 0.25) {
+            correct++;
+        }
+#else
         float maxOutput = -1;
         uzi maxIndex = 0;
         for (uzi t = 0; t < model[outputIndex]; t++) {
@@ -27,6 +36,7 @@ TestResult NeuralNetwork::checkTestData(MNISTData *testData) {
                 break;
             }
         }
+#endif
     }
 
     TestResult test{};
@@ -144,12 +154,13 @@ void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
 
         TestResult trainingResult{};
         trainingResult.correct = correctChoice;
-        trainingResult.errorPercentage = 100.f * (1.f - (float) correctChoice / sourceSize);
+        trainingResult.errorPercentage = 100.f * (1.f - correctChoice / sourceSize);
 
+#ifdef LEARNING_MNIST_DATA
         chronometer->initTimer();
         TestResult testResult = checkTestData(testData);
         checkTestResultDuration = chronometer->getElapsedTime();
-
+#endif
         uzi h = 0;
         std::cout << loop
                   << " > η: " << learningMatrix[h++]
@@ -167,8 +178,10 @@ void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
                   << ", Training => [ ✓: "
                   << trainingResult.correct << "/" << sourceSize << ", !: "
                   << trainingResult.errorPercentage << "% ]"
+                  #ifdef LEARNING_MNIST_DATA
                   << ", Test => [ ✓: " << testResult.correct << "/" << testData->m_imageCount
                   << ", !: " << testResult.errorPercentage << "% ]"
+                  #endif
                   << ", Time => [ Training: " << loopDuration
                   << ", ✓Test: " << checkTestResultDuration << " ]"
                   << std::endl;
@@ -197,7 +210,7 @@ void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
 
             // Rate limit
             for (uzi i = 0; i < learningSize; i++) {
-                learningMatrix[i] *= 1 - u(i, 0);
+                learningMatrix[i] *= 1 - u(i, 0) + 1e-3 * rateLimit * randomNumber();
 
                 if (learningMatrix[i] > learningMatrixPrev[i] * (1 + rateLimit)) {
                     learningMatrix[i] = learningMatrixPrev[i] * (1 + rateLimit);
