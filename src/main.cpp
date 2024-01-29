@@ -1,4 +1,4 @@
-#include <nn/neuralNetwork.h>
+#include "nn/neuralNetwork.h"
 #include "dataLoader.h"
 
 int main() {
@@ -14,21 +14,21 @@ int main() {
         return 1;
     }
 
-    auto *NN = new NeuralNetwork({784, 60, 10}, trainingData.input, trainingData.output);
+    auto *network = new NeuralNetwork({784, 60, 10}, trainingData.input, trainingData.output);
 
-    NN->printInfo();
+    network->printInfo();
 
-    NN->train(100, &testData);
+    network->train(100, &testData);
 
 #ifndef ANALYSE_TRAINING
-    TestResult trainingResult = NN->checkTrainingData();
-    TestResult testResult = NN->checkTestData(&testData);
+    TestResult trainingResult = network->checkTrainingData();
+    TestResult testResult = network->checkTestData(&testData);
     std::cout<<"Error: "<<trainingResult.errorPercentage<<"%/"<<testResult.errorPercentage<<"% Time: "<<mainClock->getElapsedTime()<<" s"<<std::endl;
 #else
-    NN->checkTestData(&testData);
+    network->checkTestData(&testData);
     std::cout << std::endl << "Total time: " << mainClock->getElapsedTime() << " seconds" << std::endl;
 #endif
-    lxl::safeDelete (NN);
+    lxl::safeDelete (network);
     lxl::safeDelete (mainClock);
     return 0;
 }

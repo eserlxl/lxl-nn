@@ -8,7 +8,7 @@
 
 using namespace lxl;
 
-#include <nn/neuron.h>
+#include "neuron.h"
 #include <dataLoader.h>
 #include "test.h"
 
@@ -27,13 +27,11 @@ using namespace lxl;
 //#define LOGIC_SWISH
 //#define LOGIC_RELU
 
-typedef std::size_t uzi;
-
 class NeuralNetwork {
 public:
     std::random_device rd;
     std::mt19937 e2;
-    std::vector<std::vector<neuron *>> P;
+    std::vector<std::vector<Neuron *>> P;
     uzi outputIndex;
     uzi sourceSize;
     uzi targetSize;

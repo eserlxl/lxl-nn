@@ -1,11 +1,11 @@
-#include <nn/neuralNetwork.h>
+#include "nn/neuralNetwork.h"
 
 void NeuralNetwork::create() {
     uzi id = 0;
     for (uzi i : model) {
-        std::vector<neuron *> tempVec;
+        std::vector<Neuron *> tempVec;
         for (uzi j = 0; j < i; j++) {
-            auto *temp = new neuron(id++, 0.f);
+            auto *temp = new Neuron(id++, 0.f);
             tempVec.push_back(temp);
         }
         P.push_back(tempVec);

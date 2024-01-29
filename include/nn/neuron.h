@@ -2,27 +2,30 @@
 #define lxl_nn_NN_NEURON_H_
 
 #include <vector>
-#include <nn/synapse.h>
+#include <lxl.h>
+#include "synapse.h"
 
-class neuron {
+using namespace lxl;
+
+class Neuron {
 public:
     uzi id;
     float value;
 
-    std::vector<synapse *> Link;
+    std::vector<Synapse *> Link;
 
     void connect(uzi outputID);
 
     template<typename Float>
-    neuron(uzi perceptronNo, Float initialValue) {
+    Neuron(uzi perceptronNo, Float initialValue) {
         id = perceptronNo;
 
         value = initialValue;
     }
 
-    ~neuron() {
+    ~Neuron() {
         for (auto &link : Link) {
-            delete (link);
+            safeDelete(link);
         }
         Link.clear();
     }

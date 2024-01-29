@@ -1,4 +1,4 @@
-#include <nn/neuralNetwork.h>
+#include "nn/neuralNetwork.h"
 
 TestResult NeuralNetwork::checkTestData(MNISTData *testData) {
     chronometer->initTimer();
@@ -70,7 +70,7 @@ TestResult NeuralNetwork::checkTrainingData() {
 void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
     float minRMSError = 1000;
 #ifdef ANALYSE_TRAINING
-    double loopDuration, checkTrainingResultDuration, checkTestResultDuration, trainingDuration;
+    double loopDuration, checkTestResultDuration, trainingDuration;
     double loopDurationSum = 0;
     double checkDataDurationSum = 0;
 #endif
@@ -133,8 +133,7 @@ void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
 #endif
         }
 #ifdef ADAPTIVE_LEARNING
-        else if(RMSE > 1.0125*minRMSError)
-        {
+        else if (RMSE > 1.0125 * minRMSError) {
             smoothWeights(0.9875);
 
         }
@@ -150,8 +149,6 @@ void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
         chronometer->initTimer();
         TestResult testResult = checkTestData(testData);
         checkTestResultDuration = chronometer->getElapsedTime();
-
-        checkDataDurationSum += checkTrainingResultDuration + checkTestResultDuration;
 
         uzi h = 0;
         std::cout << loop
@@ -173,7 +170,6 @@ void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
                   << ", Test => [ ✓: " << testResult.correct << "/" << testData->m_imageCount
                   << ", !: " << testResult.errorPercentage << "% ]"
                   << ", Time => [ Training: " << loopDuration
-                  //<< ", ✓Training: " << checkTrainingResultDuration
                   << ", ✓Test: " << checkTestResultDuration << " ]"
                   << std::endl;
 #endif

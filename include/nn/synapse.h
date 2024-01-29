@@ -1,16 +1,18 @@
 #ifndef lxl_nn_NN_SYNAPSE_H_
 #define lxl_nn_NN_SYNAPSE_H_
 
-typedef std::size_t uzi;
+#include <lxl.h>
 
-class synapse {
+using namespace lxl;
+
+class Synapse {
 public:
     uzi inputID;
     uzi outputID;
     float weight;
     float deltaWeight;
 
-    synapse(uzi inputID, uzi outputID) {
+    Synapse(uzi inputID, uzi outputID) {
 
         this->inputID = inputID;
         this->outputID = outputID;
@@ -18,8 +20,7 @@ public:
         deltaWeight = 0;
     }
 
-    ~synapse() {
-    }
+    ~Synapse() = default;
 };
 
 #endif // lxl_nn_NN_SYNAPSE_H_

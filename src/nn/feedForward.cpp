@@ -1,4 +1,4 @@
-#include <nn/neuralNetwork.h>
+#include "nn/neuralNetwork.h"
 
 void NeuralNetwork::feedForward() {
     for (uzi i = 0; i < outputIndex; i++) {

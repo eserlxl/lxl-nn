@@ -1,4 +1,4 @@
-#include <nn/neuralNetwork.h>
+#include "nn/neuralNetwork.h"
 
 void NeuralNetwork::initValues() {
     for (uzi i = 0; i < P.size(); i++) {

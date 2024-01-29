@@ -1,7 +1,7 @@
-#include <nn/neuron.h>
+#include "nn/neuron.h"
 
-void neuron::connect(uzi outputID) {
-    auto *tempLink = new synapse(id, outputID);
+void Neuron::connect(uzi outputID) {
+    auto *tempLink = new Synapse(id, outputID);
 
     Link.push_back(tempLink);
 }
