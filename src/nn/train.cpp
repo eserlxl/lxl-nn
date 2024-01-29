@@ -77,7 +77,11 @@ TestResult NeuralNetwork::checkTrainingData() {
     return ret;
 }
 
-void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
+#ifdef LEARNING_MNIST_DATA
+    void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
+#else
+    void NeuralNetwork::train(uzi loopMax) {
+#endif
     float minRMSError = 1000;
 #ifdef ANALYSE_TRAINING
     double loopDuration, checkTestResultDuration, trainingDuration;
@@ -183,7 +187,10 @@ void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
                   << ", !: " << testResult.errorPercentage << "% ]"
                   #endif
                   << ", Time => [ Training: " << loopDuration
-                  << ", ✓Test: " << checkTestResultDuration << " ]"
+            #ifdef LEARNING_MNIST_DATA
+                << ", ✓Test: " << checkTestResultDuration
+            #endif
+                  << " ]"
                   << std::endl;
 #endif
 

@@ -15,11 +15,13 @@ using namespace lxl;
 
 #define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 
-#define LEARNING_MNIST_DATA
+//#define LEARNING_MNIST_DATA
+
 //#define LOGIC_NETWORK
+
 #define BP_BELLMAN_OPT
 #define BP_USE_BIAS
-//#define ADAPTIVE_LEARNING
+#define ADAPTIVE_LEARNING
 //#define BP_USE_PID
 
 #define ANALYSE_TRAINING
@@ -150,8 +152,11 @@ public:
 
     void setIO(std::vector<float> input, std::vector<float> output);
 
+#ifdef LEARNING_MNIST_DATA
     void train(uzi loopMax, MNISTData *testData);
-
+#else
+    void train(uzi loopMax);
+#endif
     TestResult checkTrainingData();
 
     TestResult checkTestData(MNISTData *testData);

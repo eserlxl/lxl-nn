@@ -1,8 +1,12 @@
 #include "nn/neuralNetwork.h"
-#include "test/MNISTData.h"
+#ifdef LEARNING_MNIST_DATA
+    #include "test/MNISTData.h"
+#endif
 
 int main() {
 
+    auto *mainClock = new lxl::Timer();
+#ifdef LEARNING_MNIST_DATA
     MNISTData trainingData;
     MNISTData testData;
 
@@ -14,7 +18,7 @@ int main() {
         return 1;
     }
 
-    auto *network = new NeuralNetwork({784, 60, 10}, trainingData.input, trainingData.output);
+    auto *network = new NeuralNetwork({784, 300, 10}, trainingData.input, trainingData.output);
 
     network->printInfo();
 
@@ -28,6 +32,14 @@ int main() {
     network->checkTestData(&testData);
     std::cout << std::endl << "Total time: " << mainClock->getElapsedTime() << " seconds" << std::endl;
 #endif
+#else
+     auto *network = new NeuralNetwork({4, 300, 4}, "../data/sort4.txt");
+
+     network->printInfo();
+
+     network->train(1000);
+#endif
+
     safeDelete (network);
     safeDelete (mainClock);
     return 0;
