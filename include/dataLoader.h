@@ -99,9 +99,9 @@ public:
             std::vector<float> tempVec;
             for (size_t i = 0; i < 10; i++) {
                 if (i == m_labels[j]) {
-                    tempVec.push_back(i);
+                    tempVec.push_back(1);
                 } else {
-                    tempVec.push_back(-1);
+                    tempVec.push_back(0);
                 }
             }
             output.push_back(tempVec);

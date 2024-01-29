@@ -15,11 +15,6 @@ void nn::backPropagateOutputLayer() {
     for (uzi j = 0; j < model[outputIndex]; j++) {
         float pValue = P[outputIndex][j]->value;
 
-        float targetValue = 1;
-        if (network[outputIndex][j] < 0) {
-            targetValue = 0;
-        }
-
         if (maxIndex != j && pValue > 0.25) // Bellman's optimality, assume that 0.25 is enough for learning 0
         {
             skipChecking = true;
@@ -29,7 +24,7 @@ void nn::backPropagateOutputLayer() {
             pValue >= 0.75) { // Bellman's optimality, assume that 0.75 is enough for learning 1
             correctChoice++;
         }
-        float error = pValue - targetValue;
+        float error = pValue - network[outputIndex][j];
 #ifdef BP_BELLMAN_OPT
         if (maxIndex == j)
             error -= learningMatrix[bellmanLearningRateIndex] *
