@@ -155,8 +155,11 @@ public:
 #ifdef LEARNING_MNIST_DATA
     void train(uzi loopMax, MNISTData *testData);
 #else
+
     void train(uzi loopMax);
+
 #endif
+
     TestResult checkTrainingData();
 
     TestResult checkTestData(MNISTData *testData);

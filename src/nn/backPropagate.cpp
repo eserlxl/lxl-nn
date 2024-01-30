@@ -39,7 +39,7 @@ void NeuralNetwork::backPropagateOutputLayer() {
                      std::max(0.f, pValue - network1stQuarterValue); // Bellman's optimality equation simulation
 #endif
 #else
-        for (uzi j = 0; j < model[outputIndex]; j++) {
+    for (uzi j = 0; j < model[outputIndex]; j++) {
         float pValue = P[outputIndex][j]->value;
         float error = pValue - network[outputIndex][j];
         errorVec.push_back(error);
@@ -82,7 +82,7 @@ void NeuralNetwork::backPropagateOutputLayer() {
 
     }
 #ifndef LOGIC_NETWORK
-    correctChoice += rms(errorVec) < 0.5f*network1stQuarterValue;
+    correctChoice += rms(errorVec) < 0.5f * network1stQuarterValue;
 #endif
     rmsErrorBP = rms(errorBP[outputIndex]);
 }

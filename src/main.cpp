@@ -1,6 +1,7 @@
 #include "nn/neuralNetwork.h"
+
 #ifdef LEARNING_MNIST_DATA
-    #include "test/MNISTData.h"
+#include "test/MNISTData.h"
 #endif
 
 int main() {
@@ -31,16 +32,16 @@ int main() {
     std::cout << std::endl << "Total time: " << mainClock->getElapsedTime() << " seconds" << std::endl;
 #endif
 #else
-     auto *network = new NeuralNetwork({4, 300, 4}, "../data/sort4.txt");
+    auto *network = new NeuralNetwork({4, 300, 4}, "../data/sort4.txt");
 
     network->printNetworkInfo();
 
-     network->train(1000);
+    network->train(1000);
 #endif
 
     std::cout << "Elapsed time: " << mainClock->getElapsedTime() << " s" << std::endl;
 
-    safeDelete (network);
-    safeDelete (mainClock);
+    safeDelete(network);
+    safeDelete(mainClock);
     return 0;
 }
