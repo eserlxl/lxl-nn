@@ -20,7 +20,7 @@ int main() {
 
     auto *network = new NeuralNetwork({784, 300, 10}, trainingData.input, trainingData.output);
 
-    network->printInfo();
+    network->printNetworkInfo();
 
     network->train(100, &testData);
 
@@ -35,7 +35,7 @@ int main() {
 #else
      auto *network = new NeuralNetwork({4, 300, 4}, "../data/sort4.txt");
 
-     network->printInfo();
+    network->printNetworkInfo();
 
      network->train(1000);
 #endif

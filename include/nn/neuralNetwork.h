@@ -163,7 +163,7 @@ public:
 
     void initValues();
 
-    void printInfo();
+    void printNetworkInfo();
 
 private:
     uzi layerCount;

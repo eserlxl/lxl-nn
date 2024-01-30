@@ -38,7 +38,7 @@ float NeuralNetwork::randomNumber() {
     return x;
 }
 
-void NeuralNetwork::printInfo() {
+void NeuralNetwork::printNetworkInfo() {
     std::cout << "Learning MNIST Database\n" << std::endl;
     std::cout << "Network: {" << inputSize << ",";
     for (uzi i = 0; i < layerCount - 2; i++) { std::cout << model[i + 1] << ","; }
@@ -56,16 +56,16 @@ void NeuralNetwork::printInfo() {
             << "\nLearning rate of weights (η): " << learningMatrix[weightLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[weightLearningRateIndex] << ", "
             << learningMatrixUpperLimits[weightLearningRateIndex] << "]"
-#ifdef BP_USE_BIAS
+            #ifdef BP_USE_BIAS
             << "\nLearning rate of biases (ζ): " << learningMatrix[biasLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[biasLearningRateIndex] << ", "
             << learningMatrixUpperLimits[biasLearningRateIndex] << "]"
-#endif
-#ifdef BP_BELLMAN_OPT
+            #endif
+            #ifdef BP_BELLMAN_OPT
             << "\nBellman's optimality gain (γ): " << learningMatrix[bellmanLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[bellmanLearningRateIndex] << ", "
             << learningMatrixUpperLimits[bellmanLearningRateIndex] << "]"
-#endif
+            #endif
             << "\nAdaptive learning gain (α): " << learningMatrix[adaptiveLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[adaptiveLearningRateIndex] << ", "
             << learningMatrixUpperLimits[adaptiveLearningRateIndex] << "]"
