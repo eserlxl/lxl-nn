@@ -178,7 +178,7 @@ TestResult NeuralNetwork::checkTrainingData() {
                   << ", α: " << learningMatrix[h++]
                   << ", r: " << learningMatrix[h++]
                   #endif
-                  << ", RMSE: " << RMSE << "/" << minRMSError
+                  << ", RMSE: " << RMSE << " / " << minRMSError
                   << ", Training => [ ✓: "
                   << trainingResult.correct << "/" << sourceSize << ", !: "
                   << trainingResult.errorPercentage << "% ]"
