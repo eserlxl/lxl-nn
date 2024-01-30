@@ -1,21 +1,21 @@
 #include "nn/neuralNetwork.h"
 
-float NeuralNetwork::convertSourceNorm(float x, uzi j) {
-    return (x - networkMinValue) / (networkMaxValue - networkMinValue) * (inputStructure[j][1] - inputStructure[j][0]) +
-           inputStructure[j][0];
+float NeuralNetwork::convertSourceToInput(float x, uzi j) const {
+    return (x - networkMinValue) / networkRange * (inputMaxValue - inputMinValue) +
+            inputMinValue;
 }
 
-float NeuralNetwork::convertTargetNorm(float x, uzi j) {
-    return (x - networkMinValue) / (networkMaxValue - networkMinValue) *
-           (outputStructure[j][1] - outputStructure[j][0]) + outputStructure[j][0];
+float NeuralNetwork::convertTargetToOutput(float x, uzi j) const {
+    return (x - networkMinValue) / networkRange *
+           (outputMaxValue - outputMinValue) + outputMinValue;
 }
 
 void NeuralNetwork::normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output) {
 
-    float inputMinValue = lxl::min(input)[0];
-    float inputMaxValue = lxl::max(input)[0];
-    float outputMinValue = lxl::min(output)[0];
-    float outputMaxValue = lxl::max(output)[0];
+    inputMinValue = lxl::min(input)[0];
+    inputMaxValue = lxl::max(input)[0];
+    outputMinValue = lxl::min(output)[0];
+    outputMaxValue = lxl::max(output)[0];
 
     sourceSize = input.size();
     targetSize = output.size();

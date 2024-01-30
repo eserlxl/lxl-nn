@@ -233,8 +233,10 @@ private:
 
     uzi seed;
 
-    std::vector<std::vector<float>> inputStructure; // { min, max }
-    std::vector<std::vector<float>> outputStructure; // { min, max }
+    float inputMinValue;
+    float inputMaxValue;
+    float outputMinValue;
+    float outputMaxValue;
 
 #ifdef LOGIC_SIGMOID
     float networkMinValue = 0;
@@ -255,9 +257,9 @@ private:
     float network3rdQuarterValue = 0.75f * networkRange + networkMinValue;
     float network1stQuarterValue = 0.25f * networkRange + networkMinValue;
 
-    float convertSourceNorm(float x, uzi j);
+    float convertSourceToInput(float x, uzi j) const;
 
-    float convertTargetNorm(float x, uzi j);
+    float convertTargetToOutput(float x, uzi j) const;
 
     void normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output);
 };
