@@ -10,8 +10,6 @@ int main() {
     MNISTData trainingData;
     MNISTData testData;
 
-    auto *mainClock = new lxl::Timer();
-
     // Loading the MNIST data
     if (!trainingData.load(true) || !testData.load(false)) {
         std::cout << "Could not load the MNIST data!" << std::endl;
@@ -27,7 +25,7 @@ int main() {
 #ifndef ANALYSE_TRAINING
     TestResult trainingResult = network->checkTrainingData();
     TestResult testResult = network->checkTestData(&testData);
-    std::cout<<"Error: "<<trainingResult.errorPercentage<<"%/"<<testResult.errorPercentage<<"% Time: "<<mainClock->getElapsedTime()<<" s"<<std::endl;
+    std::cout<<"Error: "<<trainingResult.errorPercentage<<"%/"<<testResult.errorPercentage<<"%, Elapsed time: "<<mainClock->getElapsedTime()<<" s"<<std::endl;
 #else
     network->checkTestData(&testData);
     std::cout << std::endl << "Total time: " << mainClock->getElapsedTime() << " seconds" << std::endl;
@@ -39,6 +37,8 @@ int main() {
 
      network->train(1000);
 #endif
+
+    std::cout << "Elapsed time: " << mainClock->getElapsedTime() << " s" << std::endl;
 
     safeDelete (network);
     safeDelete (mainClock);
