@@ -106,9 +106,10 @@ void NeuralNetwork::train(uzi loopMax) {
     for (float &x : learningMatrix) {
         learningMatrixInitial.push_back(x);
     }
-    std::vector<float> learningMatrixPrev;
+    std::vector<float> learningMatrixPrev, learningMatrixBest;
     for (float &x : learningMatrix) {
         learningMatrixPrev.push_back(x);
+        learningMatrixBest.push_back(x);
     }
     float rateLimit = learningMatrix[learningSize - 1];
 #endif
@@ -145,6 +146,10 @@ void NeuralNetwork::train(uzi loopMax) {
             minRMSError = RMSE;
 #ifdef ADAPTIVE_LEARNING
             saveWeights();
+
+            for (uzi i = 0; i < learningSize; i++) {
+                learningMatrixBest[i] = learningMatrix[i];
+            }
 #endif
         }
 #ifdef ADAPTIVE_LEARNING
@@ -244,6 +249,10 @@ void NeuralNetwork::train(uzi loopMax) {
             learningMatrixPrev[i] = learningMatrix[i];
         }
 #endif
+    }
+    loadWeights();
+    for (uzi i = 0; i < learningSize; i++) {
+        learningMatrix[i] = learningMatrixBest[i];
     }
 #ifdef ANALYSE_TRAINING
     trainingDuration = clock->getElapsedTime();
