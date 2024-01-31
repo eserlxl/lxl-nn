@@ -13,7 +13,12 @@ include_directories(include)
 include_directories(/usr/include/eigen3) # Path to Eigen library
 include_directories(/usr/include/lxl) # Path to lxl library
 
-link_libraries(lxl)
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost REQUIRED COMPONENTS iostreams)
+
+include_directories(${Boost_INCLUDE_DIRS})
 
 add_executable(lxl-nn
         include/nn/neuron.h
@@ -32,3 +37,4 @@ add_executable(lxl-nn
         src/nn/weights.cpp
         src/main.cpp)
 
+target_link_libraries(lxl-nn lxl ${Boost_LIBRARIES})
