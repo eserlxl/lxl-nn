@@ -29,7 +29,7 @@ void NeuralNetwork::setInput(std::vector<float> input) {
 
 std::vector<float> NeuralNetwork::getOutput() {
     std::vector<float> tempVec;
-    for (uzi i = 0; i < target[0].size(); i++) {
+    for (uzi i = 0; i < model[outputIndex]; i++) {
         tempVec.push_back(convertTargetToOutput(P[outputIndex][i]->value));
     }
     return tempVec;
