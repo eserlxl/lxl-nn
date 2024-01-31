@@ -43,8 +43,8 @@ void NeuralNetwork::backPropagateOutputLayer() {
         float error = pValue - network[outputIndex][j];
 #ifdef BP_BELLMAN_OPT
         if (network[outputIndex][j] > networkMidValue) {
-            error -= learningMatrix[bellmanLearningRateIndex] *
-                     std::max(0.f, network3rdQuarterValue - pValue);
+            error -= learningMatrix[bellman0LearningRateIndex] *
+                     std::max(0.f, learningMatrix[bellman1LearningRateIndex] * networkMaxValue - pValue);
         } else {
             error -= learningMatrix[bellmanLearningRateIndex] *
                      std::max(0.f, pValue - network1stQuarterValue);
@@ -88,8 +88,7 @@ void NeuralNetwork::backPropagateOutputLayer() {
     rmsErrorBP = rms(tempVec);
 
 #ifndef LOGIC_NETWORK
-    for(uzi i=0;i<reqNormRMSE.size();i++)
-    {
+    for (uzi i = 0; i < reqNormRMSE.size(); i++) {
         correctChoice[i] += rmsErrorBP < reqNormRMSE[i] * outputMaxValue;
     }
 #endif

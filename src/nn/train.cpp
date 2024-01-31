@@ -99,8 +99,8 @@ void NeuralNetwork::train(uzi loopMax) {
     std::vector<float> rmseHistory;
     std::vector<std::vector<float>> coeffHistory;
     std::vector<std::vector<float>> uHistory;
-    Eigen::Matrix<float, 5, 5> aMatrix;
-    Eigen::Matrix<float, 5, 1> rmseMatrix;
+    Eigen::Matrix<float, 10, 10> aMatrix;
+    Eigen::Matrix<float, 10, 1> rmseMatrix;
 
     std::vector<float> learningMatrixInitial;
     for (float &x : learningMatrix) {
@@ -134,7 +134,7 @@ void NeuralNetwork::train(uzi loopMax) {
             rmseVec.push_back(rmsErrorBP);
         }
 
-        for(float & x : correctChoice)x--;
+        for (float &x : correctChoice)x--;
 
         feedForward();
 
@@ -155,8 +155,8 @@ void NeuralNetwork::train(uzi loopMax) {
 #endif
         }
 #ifdef ADAPTIVE_LEARNING
-        else if (RMSE > 1.0125 * minRMSError) {
-            smoothWeights(0.9875);
+        else if (RMSE > learningMatrix[adaptiveLearningSWThresholdIndex] * minRMSError) {
+            smoothWeights(learningMatrix[adaptiveLearningSWBackupRatioIndex]);
 
         }
 #endif
@@ -180,10 +180,14 @@ void NeuralNetwork::train(uzi loopMax) {
                   << ", ζ: " << learningMatrix[h++]
                   #endif
                   #ifdef BP_BELLMAN_OPT
-                  << ", γ: " << learningMatrix[h++]
+                  << ", γ0: " << learningMatrix[h++]
+                  << ", γ1: " << learningMatrix[h++]
+                  << ", γ2: " << learningMatrix[h++]
                   #endif
                   #ifdef ADAPTIVE_LEARNING
                   << ", α: " << learningMatrix[h++]
+                  << ", SWt: " << learningMatrix[h++]
+                  << ", SWr: " << learningMatrix[h++]
                   << ", r: " << learningMatrix[h++]
                   #endif
                   << ", RMSE: " << RMSE << " / " << minRMSError
@@ -219,8 +223,8 @@ void NeuralNetwork::train(uzi loopMax) {
                 rmseMatrix(i, 0) = rmseHistory[loop - i] / minRMSError;
             }
 
-            Eigen::FullPivLU<Eigen::Matrix<float, 5, 5>> lu(aMatrix);
-            Eigen::Matrix<float, 5, 1> u = lu.inverse() * rmseMatrix;
+            Eigen::FullPivLU<Eigen::Matrix<float, 10, 10>> lu(aMatrix);
+            Eigen::Matrix<float, 10, 1> u = lu.inverse() * rmseMatrix;
 
             // Rate limit
             for (uzi i = 0; i < learningSize; i++) {

@@ -62,13 +62,32 @@ void NeuralNetwork::printNetworkInfo() {
             << learningMatrixUpperLimits[biasLearningRateIndex] << "]"
             #endif
             #ifdef BP_BELLMAN_OPT
-            << "\nBellman's optimality gain (γ): " << learningMatrix[bellmanLearningRateIndex] << ", range: " << "["
-            << learningMatrixLowerLimits[bellmanLearningRateIndex] << ", "
-            << learningMatrixUpperLimits[bellmanLearningRateIndex] << "]"
+            << "\nBellman's optimality gain (γ0): " << learningMatrix[bellman0LearningRateIndex] << ", range: " << "["
+            << learningMatrixLowerLimits[bellman0LearningRateIndex] << ", "
+            << learningMatrixUpperLimits[bellman0LearningRateIndex] << "]"
+
+            << "\nBellman's optimality gain (γ1): " << learningMatrix[bellman1LearningRateIndex] << ", range: " << "["
+            << learningMatrixLowerLimits[bellman1LearningRateIndex] << ", "
+            << learningMatrixUpperLimits[bellman1LearningRateIndex] << "]"
+
+            << "\nBellman's optimality gain (γ2): " << learningMatrix[bellman2LearningRateIndex] << ", range: " << "["
+            << learningMatrixLowerLimits[bellman2LearningRateIndex] << ", "
+            << learningMatrixUpperLimits[bellman2LearningRateIndex] << "]"
             #endif
             << "\nAdaptive learning gain (α): " << learningMatrix[adaptiveLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[adaptiveLearningRateIndex] << ", "
             << learningMatrixUpperLimits[adaptiveLearningRateIndex] << "]"
+
+            << "\nAdaptive learning Smooth Weight Threshold (SWt): " << learningMatrix[adaptiveLearningSWThresholdIndex]
+            << ", range: " << "["
+            << learningMatrixLowerLimits[adaptiveLearningSWThresholdIndex] << ", "
+            << learningMatrixUpperLimits[adaptiveLearningSWThresholdIndex] << "]"
+
+            << "\nAdaptive learning Smooth Weight Backup Ratio (SWr): "
+            << learningMatrix[adaptiveLearningSWBackupRatioIndex] << ", range: " << "["
+            << learningMatrixLowerLimits[adaptiveLearningSWBackupRatioIndex] << ", "
+            << learningMatrixUpperLimits[adaptiveLearningSWBackupRatioIndex] << "]"
+
             << "\nRate limit (r): " << learningMatrix[rateLimitLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[rateLimitLearningRateIndex] << ", "
             << learningMatrixUpperLimits[rateLimitLearningRateIndex] << "]"
@@ -101,4 +120,11 @@ void NeuralNetwork::printNetworkInfo() {
 #endif
 
     std::cout << std::endl;
+
+    std::cout << "inputMinValue: " << inputMinValue << std::endl;
+    std::cout << "inputMaxValue: " << inputMaxValue << std::endl;
+    std::cout << "inputRange: " << inputRange << std::endl;
+    std::cout << "outputMinValue: " << outputMinValue << std::endl;
+    std::cout << "outputMaxValue: " << outputMaxValue << std::endl;
+    std::cout << "outputRange: " << outputRange << std::endl;
 }

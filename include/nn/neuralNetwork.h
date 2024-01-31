@@ -198,10 +198,14 @@ private:
     uzi biasLearningRateIndex;
 #endif
 #ifdef BP_BELLMAN_OPT
-    uzi bellmanLearningRateIndex;
+    uzi bellman0LearningRateIndex;
+    uzi bellman1LearningRateIndex;
+    uzi bellman2LearningRateIndex;
 #endif
 #ifdef ADAPTIVE_LEARNING
     uzi adaptiveLearningRateIndex;
+    uzi adaptiveLearningSWThresholdIndex;
+    uzi adaptiveLearningSWBackupRatioIndex;
     uzi rateLimitLearningRateIndex;
 
     std::vector<std::vector<float>> pBackup;
