@@ -99,8 +99,8 @@ void NeuralNetwork::train(uzi loopMax) {
     std::vector<float> rmseHistory;
     std::vector<std::vector<float>> coeffHistory;
     std::vector<std::vector<float>> uHistory;
-    Eigen::Matrix<float, 10, 10> aMatrix;
-    Eigen::Matrix<float, 10, 1> rmseMatrix;
+    Eigen::Matrix<float, 9, 9> aMatrix;
+    Eigen::Matrix<float, 9, 1> rmseMatrix;
 
     std::vector<float> learningMatrixInitial;
     for (float &x : learningMatrix) {
@@ -223,8 +223,8 @@ void NeuralNetwork::train(uzi loopMax) {
                 rmseMatrix(i, 0) = rmseHistory[loop - i] / minRMSError;
             }
 
-            Eigen::FullPivLU<Eigen::Matrix<float, 10, 10>> lu(aMatrix);
-            Eigen::Matrix<float, 10, 1> u = lu.inverse() * rmseMatrix;
+            Eigen::FullPivLU<Eigen::Matrix<float, 9, 9>> lu(aMatrix);
+            Eigen::Matrix<float, 9, 1> u = lu.inverse() * rmseMatrix;
 
             // Rate limit
             for (uzi i = 0; i < learningSize; i++) {
