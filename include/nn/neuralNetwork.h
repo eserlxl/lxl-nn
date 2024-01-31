@@ -190,7 +190,9 @@ private:
     std::vector<std::vector<float>> errorBP;
     std::vector<float> prevError;
 
-    float correctChoice;
+    std::vector<float> reqNormRMSE;
+
+    std::vector<float> correctChoice;
     uzi weightLearningRateIndex;
 #ifdef BP_USE_BIAS
     uzi biasLearningRateIndex;

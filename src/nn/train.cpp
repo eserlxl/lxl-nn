@@ -39,11 +39,11 @@ TestResult NeuralNetwork::checkTestData(MNISTData *testData) {
 #endif
     }
 
-    TestResult test{};
+    /*TestResult test{};
     test.correct = correct;
     test.errorPercentage = 100.f * (1.f - (float) correct / testData->m_imageCount);
     test.elapsedTime = chronometer->getElapsedTime();
-    return test;
+    return test;*/
 }
 
 TestResult NeuralNetwork::checkTrainingData() {
@@ -70,11 +70,11 @@ TestResult NeuralNetwork::checkTrainingData() {
         }
     }
 
-    TestResult ret{};
+    /*TestResult ret{};
     ret.correct = correct;
     ret.errorPercentage = 100.f * (1.f - (float) correct / sourceSize);
     ret.elapsedTime = chronometer->getElapsedTime();
-    return ret;
+    return ret;*/
 }
 
 #ifdef LEARNING_MNIST_DATA
@@ -119,7 +119,8 @@ void NeuralNetwork::train(uzi loopMax) {
         chronometer->initTimer();
 #endif
         std::vector<float> rmseVec;
-        correctChoice = 0;
+        correctChoice.clear();
+        correctChoice.resize(reqNormRMSE.size());
         for (uzi p = 0; p < sourceSize; p++) {
 
             uzi u = e2() % sourceSize;
@@ -133,7 +134,8 @@ void NeuralNetwork::train(uzi loopMax) {
             rmseVec.push_back(rmsErrorBP);
         }
 
-        correctChoice -= 1;
+        for(float & x : correctChoice)x--;
+
         feedForward();
 
         backPropagateOutputLayer();
@@ -162,9 +164,9 @@ void NeuralNetwork::train(uzi loopMax) {
         loopDuration = chronometer->getElapsedTime();
         loopDurationSum += loopDuration;
 
-        TestResult trainingResult{};
+        TestResult trainingResult(sourceSize);
         trainingResult.correct = correctChoice;
-        trainingResult.errorPercentage = 100.f * (1.f - correctChoice / sourceSize);
+        trainingResult.calcError();
 
 #ifdef LEARNING_MNIST_DATA
         chronometer->initTimer();
@@ -185,9 +187,8 @@ void NeuralNetwork::train(uzi loopMax) {
                   << ", r: " << learningMatrix[h++]
                   #endif
                   << ", RMSE: " << RMSE << " / " << minRMSError
-                  << ", Training => [ ✓: "
-                  << trainingResult.correct << "/" << sourceSize << ", !: "
-                  << trainingResult.errorPercentage << "% ]"
+                  << ", Training => "
+                  << trainingResult.print()
                   #ifdef LEARNING_MNIST_DATA
                   << ", Test => [ ✓: " << testResult.correct << "/" << testData->m_imageCount
                   << ", !: " << testResult.errorPercentage << "% ]"

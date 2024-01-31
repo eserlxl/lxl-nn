@@ -2,9 +2,8 @@
 
 void NeuralNetwork::backPropagateOutputLayer() {
     errorBP[outputIndex].clear();
-    std::vector<float> errorVec;
-
 #ifdef LOGIC_NETWORK
+    std::vector<float> errorVec;
     float maxOutput = -1;
     uzi maxIndex = 0;
     for (uzi t = 0; t < model[outputIndex]; t++) {
@@ -42,7 +41,6 @@ void NeuralNetwork::backPropagateOutputLayer() {
     for (uzi j = 0; j < model[outputIndex]; j++) {
         float pValue = P[outputIndex][j]->value;
         float error = pValue - network[outputIndex][j];
-        errorVec.push_back(error);
 #ifdef BP_BELLMAN_OPT
         if (network[outputIndex][j] > networkMidValue) {
             error -= learningMatrix[bellmanLearningRateIndex] *
@@ -81,10 +79,20 @@ void NeuralNetwork::backPropagateOutputLayer() {
 #endif
 
     }
+
+    std::vector<float> tempVec;
+    for (uzi j = 0; j < model[outputIndex]; j++) {
+        tempVec.push_back(convertTargetDiffToOutputDiff(P[outputIndex][j]->value - network[outputIndex][j]));
+    }
+
+    rmsErrorBP = rms(tempVec);
+
 #ifndef LOGIC_NETWORK
-    correctChoice += rms(errorVec) < 0.5f * network1stQuarterValue;
+    for(uzi i=0;i<reqNormRMSE.size();i++)
+    {
+        correctChoice[i] += rmsErrorBP < reqNormRMSE[i] * outputMaxValue;
+    }
 #endif
-    rmsErrorBP = rms(errorBP[outputIndex]);
 }
 
 void NeuralNetwork::backPropagate() {
