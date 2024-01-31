@@ -203,6 +203,8 @@ void NeuralNetwork::train(uzi loopMax) {
                   #endif
                   << " ]"
                   << std::endl;
+#else
+        std::cout<<"Training loop: "<<loop<<"/"<<loopMax<<"\r";
 #endif
 
 #ifdef ADAPTIVE_LEARNING
@@ -266,5 +268,7 @@ void NeuralNetwork::train(uzi loopMax) {
     std::cout << "Time loss due to measuring time: " << trainingDuration - loopDurationSum - checkDataDurationSum
               << " s" << std::endl;
     std::cout << "Final training time: " << trainingDuration << " s" << std::endl;
+#else
+    std::cout<<"\n"<<std::endl;
 #endif
 }
