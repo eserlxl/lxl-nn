@@ -46,8 +46,8 @@ void NeuralNetwork::backPropagateOutputLayer() {
             error -= learningMatrix[bellman0LearningRateIndex] *
                      std::max(0.f, learningMatrix[bellman1LearningRateIndex] * networkMaxValue - pValue);
         } else {
-            error -= learningMatrix[bellmanLearningRateIndex] *
-                     std::max(0.f, pValue - network1stQuarterValue);
+            error -= learningMatrix[bellman0LearningRateIndex] *
+                     std::max(0.f, pValue - learningMatrix[bellman2LearningRateIndex] * networkMaxValue);
         }
 #endif
 
