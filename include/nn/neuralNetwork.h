@@ -24,7 +24,7 @@ using namespace lxl;
 #define ADAPTIVE_LEARNING
 //#define BP_USE_PID
 
-#define ANALYSE_TRAINING
+//#define ANALYSE_TRAINING
 
 // LOGIC_SIGMOID, LOGIC_TANH or LOGIC_RELU
 #define LOGIC_SIGMOID [0,1]
