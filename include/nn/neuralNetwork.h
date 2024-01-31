@@ -235,8 +235,10 @@ private:
 
     float inputMinValue;
     float inputMaxValue;
+    float inputRange;
     float outputMinValue;
     float outputMaxValue;
+    float outputRange;
 
 #ifdef LOGIC_SIGMOID
     float networkMinValue = 0;
@@ -257,9 +259,13 @@ private:
     float network3rdQuarterValue = 0.75f * networkRange + networkMinValue;
     float network1stQuarterValue = 0.25f * networkRange + networkMinValue;
 
-    float convertSourceToInput(float x, uzi j) const;
+    float convertSourceToInput(float x) const;
 
-    float convertTargetToOutput(float x, uzi j) const;
+    float convertTargetToOutput(float x) const;
+
+    float convertOutputToTarget(float x) const;
+
+    float convertTargetDiffToOutputDiff(float x) const;
 
     void normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output);
 };
