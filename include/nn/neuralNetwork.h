@@ -164,8 +164,6 @@ public:
 
     TestResult checkTestData(MNISTData *testData);
 
-    void initValues();
-
     void printNetworkInfo();
 
 private:

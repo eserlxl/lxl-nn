@@ -73,14 +73,6 @@ void NeuralNetwork::init() {
 #endif
 }
 
-void NeuralNetwork::initValues() {
-    for (uzi i = 0; i < P.size(); i++) {
-        for (uzi j = 0; j < P[i].size(); j++) {
-            P[i][j]->value = network[i][j];
-        }
-    }
-}
-
 void NeuralNetwork::setIO(std::vector<float> input, std::vector<float> output) {
     if (input.size() != model[0]) {
         std::cout << "Improper network design according to inputs!" << std::endl;
