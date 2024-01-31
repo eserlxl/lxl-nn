@@ -1,28 +1,10 @@
 #include "nn/neuralNetwork.h"
 
-void NeuralNetwork::init() {
-
-    reqNormRMSE = {2.5e-3, 5e-3, 7.5e-3, 1e-2};
-
-#ifdef NO_RANDOMIZATION
-    seed = 1;
-#else
-    seed = rd();
-#endif
-    e2.seed(seed);
-#ifdef BP_USE_BIAS
-    bias.resize(outputIndex);
-
-    for (uzi k = 0; k < outputIndex; k++) {
-        bias[k].resize(model[k + 1]);
-    }
-#endif
-    errorBP.resize(layerCount);
-    prevError.resize(outputSize);
-
-    learningMatrix.push_back(10.f); // Learning Rate of weights
+void NeuralNetwork::setLearningMatrix() {
+    learningMatrix.clear();
 
     uzi learningRateIndex = 0;
+    learningMatrix.push_back(10.f); // Learning Rate of weights
     weightLearningRateIndex = learningRateIndex;
     learningRateIndex++;
 #ifdef BP_USE_BIAS
@@ -53,6 +35,12 @@ void NeuralNetwork::init() {
     learningRateIndex++;
     learningMatrix.push_back(0.025f); // Adaptive learning rate limit
     rateLimitLearningRateIndex = learningRateIndex;
+#endif
+}
+
+void NeuralNetwork::setLearningMatrixLimits() {
+    learningMatrixLowerLimits.clear();
+    learningMatrixUpperLimits.clear();
 
     learningMatrixLowerLimits.push_back(
             learningMatrix[weightLearningRateIndex] * 0.5f); // min Learning Rate of weights
@@ -74,6 +62,7 @@ void NeuralNetwork::init() {
     learningMatrixLowerLimits.push_back(0.f); // min Bellman's optimality gain 2
     learningMatrixUpperLimits.push_back(0.5f); // max Bellman's optimality gain 2
 #endif
+#ifdef ADAPTIVE_LEARNING
     learningMatrixLowerLimits.push_back(
             learningMatrix[adaptiveLearningRateIndex] * 0.75f); // min adaptive learning gain
     learningMatrixUpperLimits.push_back(learningMatrix[adaptiveLearningRateIndex] * 1.25f);// max adaptive learning gain
@@ -91,6 +80,31 @@ void NeuralNetwork::init() {
     learningMatrixUpperLimits.push_back(
             learningMatrix[rateLimitLearningRateIndex] * 1.25f);// max adaptive learning rate limit
 #endif
+}
+
+void NeuralNetwork::init() {
+
+    reqNormRMSE = {2.5e-3, 5e-3, 7.5e-3, 1e-2};
+
+#ifdef NO_RANDOMIZATION
+    seed = 1;
+#else
+    seed = rd();
+#endif
+    e2.seed(seed);
+#ifdef BP_USE_BIAS
+    bias.resize(outputIndex);
+
+    for (uzi k = 0; k < outputIndex; k++) {
+        bias[k].resize(model[k + 1]);
+    }
+#endif
+    errorBP.resize(layerCount);
+    prevError.resize(outputSize);
+
+    setLearningMatrix();
+
+    setLearningMatrixLimits();
 
 #ifdef BP_USE_PID
     errorSumBP.resize(outputSize);

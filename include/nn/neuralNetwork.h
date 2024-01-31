@@ -276,6 +276,10 @@ private:
     float convertTargetDiffToOutputDiff(float x) const;
 
     void normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output);
+
+    void setLearningMatrix();
+
+    void setLearningMatrixLimits();
 };
 
 #endif // lxl_nn_NeuralNetwork_H_
