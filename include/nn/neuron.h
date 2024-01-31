@@ -17,8 +17,8 @@ public:
     void connect(uzi outputID);
 
     template<typename Float>
-    Neuron(uzi perceptronNo, Float initialValue) {
-        id = perceptronNo;
+    Neuron(uzi neuronID, Float initialValue) {
+        id = neuronID;
 
         value = initialValue;
     }
