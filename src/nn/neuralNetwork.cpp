@@ -38,6 +38,157 @@ float NeuralNetwork::randomNumber() {
     return x;
 }
 
+/**
+ * Saves the neural network to the given text file.
+ * @param fileName
+ */
+void NeuralNetwork::save(const std::string &fileName) {
+    std::stringstream fP;
+
+    uzi precision = 8;
+
+    print(model, "model", 0, fP);
+    print(learningMatrix, "learningMatrix", precision, fP);
+
+    std::vector<float> tempVec = {
+            inputMinValue,
+            inputMaxValue,
+            inputRange,
+            outputMinValue,
+            outputMaxValue,
+            outputRange
+    };
+    print(tempVec, "iOStructure", precision, fP);
+
+    std::vector<float> valueVec;
+
+#ifdef BP_USE_BIAS
+    for (uzi i = 0; i < outputIndex; i++) {
+        for (uzi j = 0; j < P[i + 1].size(); j++) {
+            valueVec.push_back(bias[i][j]);
+        }
+    }
+#endif
+
+    for (uzi i = 0; i < model.size(); i++) {
+        for (uzi j = 0; j < model[i]; j++) {
+            valueVec.push_back(P[i][j]->value);
+            if (i < outputIndex) {
+                for (uzi k = 0; k < model[i + 1]; k++) {
+                    valueVec.push_back(P[i][j]->Link[k]->weight);
+                }
+            }
+        }
+    }
+    print(valueVec, "network", precision, fP);
+
+    Gzip::compress(fP, fileName);
+}
+
+void NeuralNetwork::load(const std::string &fileName) {
+    std::vector<std::vector<std::string>> data;
+    fetchDataGzip(fileName, data, " ");
+
+    for (uzi d = 0; d < data.size(); d++) {
+
+        uzi dim = convert<uzi>(data[d][0]);
+        std::vector<uzi> sizeVec;
+
+        for (uzi j = 0; j < dim; j++) {
+            sizeVec.push_back(convert<uzi>(data[d][1 + j]));
+        }
+
+        // Skip empty data
+        if (sizeVec.empty() || sizeVec[0] == 0) {
+            continue;
+        }
+
+        std::string text = data[d][1 + dim];
+
+        if (text == "model") {
+            model.clear();
+            for (auto &x : data[d + 1]) {
+                model.push_back(convert<uzi>(x));
+            }
+
+            network.resize(model.size());
+            uzi layerIndex = 0;
+            maxLayerSize = 0;
+            for (uzi layer : model) {
+                if (maxLayerSize < layer) {
+                    maxLayerSize = layer;
+                }
+                network[layerIndex++].resize(layer);
+            }
+
+            layerCount = network.size();
+            hiddenLayerSize = layerCount - 2;
+            outputIndex = layerCount - 1;
+            inputSize = model[0];
+            outputSize = model[outputIndex];
+        } else if (text == "learningMatrix") {
+            learningMatrix.clear();
+            for (auto &x : data[d + 1]) {
+                learningMatrix.push_back(convert<float>(x));
+            }
+        } else if (text == "iOStructure") {
+            std::vector<float> iOStructure;
+            for (auto &x : data[d + 1]) {
+                iOStructure.push_back(convert<float>(x));
+            }
+
+            uzi h = 0;
+            inputMinValue = iOStructure[h++];
+            inputMaxValue = iOStructure[h++];
+            inputRange = iOStructure[h++];
+            outputMinValue = iOStructure[h++];
+            outputMaxValue = iOStructure[h++];
+            outputRange = iOStructure[h++];
+        } else if (text == "network") {
+            std::vector<float> networkData;
+            for (auto &x : data[d + 1]) {
+                networkData.push_back(convert<float>(x));
+            }
+
+            P.clear();
+
+            uzi h = 0;
+            outputIndex = model.size() - 1;
+#ifdef BP_USE_BIAS
+            bias.resize(outputIndex);
+            for (uzi i = 0; i < outputIndex; i++) {
+                bias[i].clear();
+                for (uzi j = 0; j < model[i + 1]; j++) {
+                    bias[i].push_back(networkData[h++]);
+                }
+            }
+#endif
+            for (uzi i = 0; i < model.size(); i++) {
+                std::vector<Neuron *> tempLayer;
+                for (uzi j = 0; j < model[i]; j++) {
+                    uzi id = i * model[i] + j;
+                    auto *tempP = new Neuron(id, networkData[h++]);
+                    if (i < outputIndex) {
+                        for (uzi k = 0; k < model[i + 1]; k++) {
+                            auto *tempLink = new Synapse(id, id + 1 + k);
+                            tempLink->weight = networkData[h++];
+                            tempP->Link.push_back(tempLink);
+                        }
+                    }
+                    tempLayer.push_back(tempP);
+                }
+                P.push_back(tempLayer);
+            }
+        }
+
+        if (dim == 1) {
+            d++;
+        } else {
+            d += sizeVec[0];
+        }
+    }
+}
+
 void NeuralNetwork::printNetworkInfo() {
     std::cout << "Learning MNIST Database\n" << std::endl;
     std::cout << "Network: {" << inputSize << ",";

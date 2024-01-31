@@ -131,10 +131,68 @@ public:
         init();
     }
 
+    NeuralNetwork(const std::string &fileName) {
+        clock = new lxl::Timer();
+        chronometer = new lxl::Timer();
+
+        std::vector<std::vector<float>> data, input, output;
+
+        std::string delimiter;
+        lxl::detectDelimiter(fileName, &delimiter);
+        lxl::fetchData(fileName, data, delimiter);
+
+        load(fileName);
+
+        network.resize(model.size());
+        uzi layerIndex = 0;
+        maxLayerSize = 0;
+        for (uzi layer : model) {
+            if (maxLayerSize < layer) {
+                maxLayerSize = layer;
+            }
+            network[layerIndex++].resize(layer);
+        }
+
+        layerCount = network.size();
+        hiddenLayerSize = layerCount - 2;
+        outputIndex = layerCount - 1;
+        inputSize = model[0];
+        outputSize = model[outputIndex];
+
+        reqNormRMSE = {2.5e-3, 5e-3, 7.5e-3, 1e-2};
+
+#ifdef NO_RANDOMIZATION
+        seed = 1;
+#else
+        seed = rd();
+#endif
+        e2.seed(seed);
+
+        errorBP.resize(layerCount);
+        prevError.resize(outputSize);
+
+        setLearningMatrixLimits();
+
+#ifdef BP_USE_PID
+        errorSumBP.resize(outputSize);
+        pid_P = -.5e-3f;
+        pid_I = -0.125f / (float) sourceSize;
+        pid_D = 0;//-0.01;//0.1;//0.5f;
+#endif
+
+#ifdef ADAPTIVE_LEARNING
+        weightBackupCount = 0;
+#endif
+    }
+
     ~NeuralNetwork() {
         delete (clock);
         delete (chronometer);
     }
+
+    void save(const std::string &fileName);
+
+    void load(const std::string &fileName);
 
     void create();
 
