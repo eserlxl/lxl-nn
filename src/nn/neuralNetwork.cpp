@@ -190,7 +190,9 @@ void NeuralNetwork::load(const std::string &fileName) {
 }
 
 void NeuralNetwork::printNetworkInfo() {
+#ifdef LEARNING_MNIST_DATA
     std::cout << "Learning MNIST Database\n" << std::endl;
+#endif
     std::cout << "Network: {" << inputSize << ",";
     for (uzi i = 0; i < layerCount - 2; i++) { std::cout << model[i + 1] << ","; }
     std::cout << outputSize << "}\n" << std::endl;
