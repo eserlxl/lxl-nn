@@ -152,6 +152,10 @@ public:
 
     void setIO(std::vector<float> input, std::vector<float> output);
 
+    void setInput(std::vector<float> input);
+
+    std::vector<float> getOutput();
+
 #ifdef LEARNING_MNIST_DATA
     void train(uzi loopMax, MNISTData *testData);
 #else
