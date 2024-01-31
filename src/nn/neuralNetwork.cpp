@@ -127,4 +127,6 @@ void NeuralNetwork::printNetworkInfo() {
     std::cout << "outputMinValue: " << outputMinValue << std::endl;
     std::cout << "outputMaxValue: " << outputMaxValue << std::endl;
     std::cout << "outputRange: " << outputRange << std::endl;
+
+    std::cout << std::endl;
 }
