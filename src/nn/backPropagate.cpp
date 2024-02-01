@@ -3,7 +3,7 @@
 void NeuralNetwork::backPropagateOutputLayer() {
     errorBP[outputIndex].clear();
 #ifdef LOGIC_NETWORK
-    std::vector<float> errorVec;
+    matrixFloat1D errorVec;
     float maxOutput = -1;
     uzi maxIndex = 0;
     for (uzi t = 0; t < model[outputIndex]; t++) {
@@ -80,7 +80,7 @@ void NeuralNetwork::backPropagateOutputLayer() {
 
     }
 
-    std::vector<float> tempVec;
+    matrixFloat1D tempVec;
     for (uzi j = 0; j < model[outputIndex]; j++) {
         tempVec.push_back(convertTargetDiffToOutputDiff(P[outputIndex][j]->value - network[outputIndex][j]));
     }

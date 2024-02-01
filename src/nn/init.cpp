@@ -118,7 +118,7 @@ void NeuralNetwork::init() {
 #endif
 }
 
-void NeuralNetwork::setIO(std::vector<float> input, std::vector<float> output) {
+void NeuralNetwork::setIO(matrixFloat1D input, matrixFloat1D output) {
     if (input.size() != model[0]) {
         std::cout << "Improper network design according to inputs!" << std::endl;
         exit(-1);

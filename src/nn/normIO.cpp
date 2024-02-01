@@ -16,7 +16,7 @@ float NeuralNetwork::convertOutputToTarget(float x) const {
     return (x - outputMinValue) / outputRange * networkRange + networkMinValue;
 }
 
-void NeuralNetwork::setInput(std::vector<float> input) {
+void NeuralNetwork::setInput(matrixFloat1D input) {
     if (input.size() != model[0]) {
         std::cout << "Improper network design according to inputs!" << std::endl;
         exit(-1);
@@ -27,8 +27,8 @@ void NeuralNetwork::setInput(std::vector<float> input) {
     }
 }
 
-std::vector<float> NeuralNetwork::getOutput() {
-    std::vector<float> tempVec;
+matrixFloat1D NeuralNetwork::getOutput() {
+    matrixFloat1D tempVec;
     for (uzi i = 0; i < model[outputIndex]; i++) {
         tempVec.push_back(convertTargetToOutput(P[outputIndex][i]->value));
     }
@@ -36,7 +36,7 @@ std::vector<float> NeuralNetwork::getOutput() {
 }
 
 
-void NeuralNetwork::normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output) {
+void NeuralNetwork::normIO(matrixFloat2D input, matrixFloat2D output) {
 
     inputMinValue = lxl::min(input)[0];
     inputMaxValue = lxl::max(input)[0];

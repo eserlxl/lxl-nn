@@ -13,7 +13,7 @@ TestResult NeuralNetwork::checkTestData(MNISTData *testData) {
         feedForward();
 
 #ifdef RMS_CHECK
-        std::vector<float> errorVec;
+        matrixFloat1D errorVec;
         for (uzi t = 0; t < model[outputIndex]; t++) {
             errorVec.push_back(testData->output[p][t] - P[outputIndex][t]->value);
         }
@@ -96,17 +96,17 @@ void NeuralNetwork::train(uzi loopMax) {
 #ifdef ADAPTIVE_LEARNING
     uzi learningSize = learningMatrix.size();
     float perturbationRatio = 1e-2f;
-    std::vector<float> rmseHistory;
-    std::vector<std::vector<float>> coeffHistory;
-    std::vector<std::vector<float>> uHistory;
+    matrixFloat1D rmseHistory;
+    matrixFloat2D coeffHistory;
+    matrixFloat2D uHistory;
     Eigen::Matrix<float, 9, 9> aMatrix;
     Eigen::Matrix<float, 9, 1> rmseMatrix;
 
-    std::vector<float> learningMatrixInitial;
+    matrixFloat1D learningMatrixInitial;
     for (float &x : learningMatrix) {
         learningMatrixInitial.push_back(x);
     }
-    std::vector<float> learningMatrixPrev, learningMatrixBest;
+    matrixFloat1D learningMatrixPrev, learningMatrixBest;
     for (float &x : learningMatrix) {
         learningMatrixPrev.push_back(x);
         learningMatrixBest.push_back(x);
@@ -118,7 +118,7 @@ void NeuralNetwork::train(uzi loopMax) {
 #ifdef ANALYSE_TRAINING
         chronometer->initTimer();
 #endif
-        std::vector<float> rmseVec;
+        matrixFloat1D rmseVec;
         correctChoice.clear();
         correctChoice.resize(reqNormRMSE.size());
         for (uzi p = 0; p < sourceSize; p++) {
@@ -209,7 +209,7 @@ void NeuralNetwork::train(uzi loopMax) {
 
 #ifdef ADAPTIVE_LEARNING
         rmseHistory.push_back(RMSE);
-        std::vector<float> tempVec;
+        matrixFloat1D tempVec;
 
         for (uzi i = 0; i < learningSize; i++) {
             tempVec.push_back(learningMatrix[i] / learningMatrixInitial[i]);

@@ -8,7 +8,7 @@ using namespace lxl;
 class Analyse {
     uzi typeIndex = 0;
 
-    std::vector<std::string> knownOperations = {
+    matrixString1D knownOperations = {
             "ADDITION",
             "ADDITION & SUBTRACTION",
             "MULTIPLICATION",
@@ -19,7 +19,7 @@ class Analyse {
     };
 
 public:
-    void arithmetic(std::vector<float> &inputVec, std::vector<float> &outputVec) const {
+    void arithmetic(matrixFloat1D &inputVec, matrixFloat1D &outputVec) const {
 
         switch (typeIndex) {
             // ADDITION
@@ -101,14 +101,14 @@ public:
         }
     }
 
-    void detect(std::vector<std::vector<float>> &inputVec, std::vector<std::vector<float>> &outputVec) {
-        std::vector<uzi> knownOperationsIndex(7);
+    void detect(matrixFloat2D &inputVec, matrixFloat2D &outputVec) {
+        matrixUzi1D knownOperationsIndex(7);
 
         for (uzi i = 0; i < inputVec.size(); i++) {
 
             for (uzi j = 0; j < knownOperations.size(); j++) {
                 typeIndex = j;
-                std::vector<float> tempVec;
+                matrixFloat1D tempVec;
                 arithmetic(inputVec[i], tempVec);
                 bool check = false;
                 if (tempVec.size() == outputVec[i].size()) {

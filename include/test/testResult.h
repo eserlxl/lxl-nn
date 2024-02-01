@@ -3,9 +3,9 @@
 
 typedef struct TestResult {
     uzi domainSize;
-    std::vector<float> correct;
-    //std::vector<float> errorPercentage;
-    std::vector<float> correctPercentage;
+    matrixFloat1D correct;
+    //matrixFloat1D errorPercentage;
+    matrixFloat1D correctPercentage;
     double elapsedTime;
 
     TestResult(uzi domainSize) {

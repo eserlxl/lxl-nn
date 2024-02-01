@@ -17,8 +17,8 @@ inline uint32_t EndianSwap(uint32_t a) {
 
 class MNISTData {
 public:
-    std::vector<std::vector<float>> input;
-    std::vector<std::vector<float>> output;
+    matrixFloat2D input;
+    matrixFloat2D output;
 
     size_t m_imageCount;
 
@@ -96,7 +96,7 @@ public:
 
         // Convert the pixels from uint8 to float
         for (size_t j = 0; j < m_imageCount; j++) {
-            std::vector<float> tempVec;
+            matrixFloat1D tempVec;
             for (size_t i = 0; i < 10; i++) {
                 if (i == m_labels[j]) {
                     tempVec.push_back(1);

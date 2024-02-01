@@ -16,7 +16,7 @@ int main() {
     network->train(5000);
 
     /// Checking neural network with a given input
-    std::vector<float> inputVec = {4, 1, 3, 2};
+    matrixFloat1D inputVec = {4, 1, 3, 2};
     network->setInput(inputVec);
     std::cout<<"Input: "<<std::endl;
     print(inputVec);
@@ -25,12 +25,12 @@ int main() {
     network->feedForward();
 
     /// Output of the neural network for the given input
-    std::vector<float> outputVec = network->getOutput();
+    matrixFloat1D outputVec = network->getOutput();
     std::cout<<"\nOutput: "<<std::endl;
     print(outputVec);
 
     /// Calculating RMS error
-    std::vector<float> tempVec;
+    matrixFloat1D tempVec;
     for (uzi i = 0; i < outputVec.size(); i++) {
         tempVec.push_back(outputVec[i] - inputVec[i]);
     }

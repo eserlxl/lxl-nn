@@ -6,13 +6,14 @@
 #include "synapse.h"
 
 using namespace lxl;
+typedef std::vector<Synapse *> matrixSynapse1D;
 
 class Neuron {
 public:
     uzi id;
     float value;
 
-    std::vector<Synapse *> Link;
+    matrixSynapse1D Link;
 
     void connect(uzi outputID);
 

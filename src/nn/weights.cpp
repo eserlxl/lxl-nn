@@ -18,7 +18,7 @@ void NeuralNetwork::randWeights() {
 void NeuralNetwork::saveNetwork() {
     pBackup.clear();
     for (auto &p : P) {
-        std::vector<float> tempVec;
+        matrixFloat1D tempVec;
         for (uzi j = 0; j < p.size(); j++) {
             tempVec.push_back(p[j]->value);
         }
@@ -58,7 +58,7 @@ void NeuralNetwork::saveWeights() {
 
 void NeuralNetwork::saveWeights(uzi maxBackupCount) {
 
-    std::vector<float> tempVec;
+    matrixFloat1D tempVec;
 #ifdef BP_USE_BIAS
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < P[i + 1].size(); j++) {

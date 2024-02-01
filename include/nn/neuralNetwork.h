@@ -34,19 +34,22 @@ using namespace lxl;
 
 class NeuralNetwork {
 public:
+    typedef std::vector<Neuron *> matrixNeuron1D;
+    typedef std::vector<matrixNeuron1D> matrixNeuron2D;
+
     std::random_device rd;
     std::mt19937 e2;
-    std::vector<std::vector<Neuron *>> P;
+    matrixNeuron2D P;
     uzi outputIndex;
     uzi sourceSize;
     uzi targetSize;
     uzi hiddenLayerSize;
     uzi inputSize;
     uzi outputSize;
-    std::vector<uzi> model;
+    matrixUzi1D model;
 
-    NeuralNetwork(std::vector<uzi> model, const std::vector<std::vector<float>> &input,
-                  const std::vector<std::vector<float>> &output) {
+    NeuralNetwork(matrixUzi1D model, const matrixFloat2D &input,
+                  const matrixFloat2D &output) {
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
@@ -73,11 +76,11 @@ public:
         init();
     }
 
-    NeuralNetwork(std::vector<uzi> model, const std::string &fileName) {
+    NeuralNetwork(matrixUzi1D model, const std::string &fileName) {
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
-        std::vector<std::vector<float>> data, input, output;
+        matrixFloat2D data, input, output;
 
         std::string delimiter;
         lxl::detectDelimiter(fileName, &delimiter);
@@ -107,7 +110,7 @@ public:
         }
 
         for (auto &i : data) {
-            std::vector<float> temp;
+            matrixFloat1D temp;
             for (uzi j = 0; j < inputSize; j++) {
                 temp.push_back(i[j]);
             }
@@ -135,7 +138,7 @@ public:
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
-        std::vector<std::vector<float>> data, input, output;
+        matrixFloat2D data, input, output;
 
         std::string delimiter;
         lxl::detectDelimiter(fileName, &delimiter);
@@ -208,11 +211,11 @@ public:
 
     void backPropagate();
 
-    void setIO(std::vector<float> input, std::vector<float> output);
+    void setIO(matrixFloat1D input, matrixFloat1D output);
 
-    void setInput(std::vector<float> input);
+    void setInput(matrixFloat1D input);
 
-    std::vector<float> getOutput();
+    matrixFloat1D getOutput();
 
 #ifdef LEARNING_MNIST_DATA
     void train(uzi loopMax, MNISTData *testData);
@@ -231,13 +234,13 @@ public:
 private:
     uzi layerCount;
     uzi maxLayerSize;
-    std::vector<std::vector<float>> source;
-    std::vector<std::vector<float>> target;
-    std::vector<std::vector<float>> network;
-    std::vector<std::vector<float>> bias;
-    std::vector<float> learningMatrix;
+    matrixFloat2D source;
+    matrixFloat2D target;
+    matrixFloat2D network;
+    matrixFloat2D bias;
+    matrixFloat1D learningMatrix;
 #ifdef BP_USE_PID
-    std::vector<float> errorSumBP;
+    matrixFloat1D errorSumBP;
     float pid_P;
     float pid_I;
     float pid_D;
@@ -245,12 +248,12 @@ private:
     lxl::Timer *clock;
     lxl::Timer *chronometer;
     float rmsErrorBP;
-    std::vector<std::vector<float>> errorBP;
-    std::vector<float> prevError;
+    matrixFloat2D errorBP;
+    matrixFloat1D prevError;
 
-    std::vector<float> reqNormRMSE;
+    matrixFloat1D reqNormRMSE;
 
-    std::vector<float> correctChoice;
+    matrixFloat1D correctChoice;
     uzi weightLearningRateIndex;
 #ifdef BP_USE_BIAS
     uzi biasLearningRateIndex;
@@ -266,17 +269,17 @@ private:
     uzi adaptiveLearningSWBackupRatioIndex;
     uzi rateLimitLearningRateIndex;
 
-    std::vector<std::vector<float>> pBackup;
+    matrixFloat2D pBackup;
 
-    std::vector<float> learningMatrixUpperLimits;
-    std::vector<float> learningMatrixLowerLimits;
+    matrixFloat1D learningMatrixUpperLimits;
+    matrixFloat1D learningMatrixLowerLimits;
 
     void saveNetwork();
 
     void loadNetwork();
 
-    std::vector<std::vector<float>> weightBackup;
-    std::vector<float> lastWeightBackup;
+    matrixFloat2D weightBackup;
+    matrixFloat1D lastWeightBackup;
     uzi weightBackupCount;
 
     void saveWeights();
@@ -333,7 +336,7 @@ private:
 
     float convertTargetDiffToOutputDiff(float x) const;
 
-    void normIO(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output);
+    void normIO(matrixFloat2D input, matrixFloat2D output);
 
     void setLearningMatrix();
 

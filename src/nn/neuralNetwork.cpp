@@ -4,7 +4,7 @@
 void NeuralNetwork::create() {
     uzi id = 0;
     for (uzi i : model) {
-        std::vector<Neuron *> tempVec;
+        matrixNeuron1D tempVec;
         for (uzi j = 0; j < i; j++) {
             auto *temp = new Neuron(id++, 0.f);
             tempVec.push_back(temp);
@@ -57,7 +57,7 @@ void NeuralNetwork::save(const std::string &fileName) {
     print(model, "model", 0, fP);
     print(learningMatrix, "learningMatrix", precision, fP);
 
-    std::vector<float> tempVec = {
+    matrixFloat1D tempVec = {
             inputMinValue,
             inputMaxValue,
             inputRange,
@@ -67,7 +67,7 @@ void NeuralNetwork::save(const std::string &fileName) {
     };
     print(tempVec, "iOStructure", precision, fP);
 
-    std::vector<float> valueVec;
+    matrixFloat1D valueVec;
 
 #ifdef BP_USE_BIAS
     for (uzi i = 0; i < outputIndex; i++) {
@@ -93,13 +93,13 @@ void NeuralNetwork::save(const std::string &fileName) {
 }
 
 void NeuralNetwork::load(const std::string &fileName) {
-    std::vector<std::vector<std::string>> data;
+    matrixString2D data;
     fetchDataGzip(fileName, data, " ");
 
     for (uzi d = 0; d < data.size(); d++) {
 
         uzi dim = convert<uzi>(data[d][0]);
-        std::vector<uzi> sizeVec;
+        matrixUzi1D sizeVec;
 
         for (uzi j = 0; j < dim; j++) {
             sizeVec.push_back(convert<uzi>(data[d][1 + j]));
@@ -139,7 +139,7 @@ void NeuralNetwork::load(const std::string &fileName) {
                 learningMatrix.push_back(convert<float>(x));
             }
         } else if (text == "iOStructure") {
-            std::vector<float> iOStructure;
+            matrixFloat1D iOStructure;
             for (auto &x : data[d + 1]) {
                 iOStructure.push_back(convert<float>(x));
             }
@@ -152,7 +152,7 @@ void NeuralNetwork::load(const std::string &fileName) {
             outputMaxValue = iOStructure[h++];
             outputRange = iOStructure[h++];
         } else if (text == "network") {
-            std::vector<float> networkData;
+            matrixFloat1D networkData;
             for (auto &x : data[d + 1]) {
                 networkData.push_back(convert<float>(x));
             }
@@ -171,7 +171,7 @@ void NeuralNetwork::load(const std::string &fileName) {
             }
 #endif
             for (uzi i = 0; i < model.size(); i++) {
-                std::vector<Neuron *> tempLayer;
+                matrixNeuron1D tempLayer;
                 for (uzi j = 0; j < model[i]; j++) {
                     uzi id = i * model[i] + j;
                     auto *tempP = new Neuron(id, networkData[h++]);
