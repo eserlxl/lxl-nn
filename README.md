@@ -13,7 +13,7 @@ Network definition: _{ Input Layer, Hidden Layer, Output Layer }_
 
 _Example: {6,12,6} or {3,5,5,3} etc._
 
-#### Creating Neural Network
+#### Creating a Neural Network
 Available options to create a new neural network:
 
 <p><b>1.</b> Create from input and output vectors</p>
@@ -25,11 +25,11 @@ Available options to create a new neural network:
 <p><b>3.</b> Create from previously trained compressed library file</p>
 <code>auto *network = new NeuralNetwork(libraryFileName);</code>
 
-#### Training Neural Network
+#### Training the Neural Network
 <p>Chooes a max loop count for training</p>
 <code>network->train(maxLoopCount);</code>
 
-#### Save & Load Neural Network
+#### Save & Load the Neural Network
 Save network to a compressed library file for further usage.
 
 <code>network->save(libraryFileName);</code>
@@ -38,7 +38,7 @@ Load network from the library
 
 <code>network->load(libraryFileName);</code>
 
-#### Check Neural Network
+#### Check the Neural Network
 
 You can use setInput function to check a single input vector.
 
