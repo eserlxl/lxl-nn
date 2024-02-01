@@ -1,47 +1,72 @@
 #include "nn/neuralNetwork.h"
-
-#ifdef LEARNING_MNIST_DATA
-#include "test/MNISTData.h"
-#endif
-
 int main() {
 
-    auto *mainClock = new lxl::Timer();
-#ifdef LEARNING_MNIST_DATA
-    MNISTData trainingData;
-    MNISTData testData;
+    auto *mainClock = new Timer();
 
-    // Loading the MNIST data
-    if (!trainingData.load(true) || !testData.load(false)) {
-        std::cout << "Could not load the MNIST data!" << std::endl;
-        return 1;
+    std::cout<<"\nSorting 4 numbers from lowest to highest"<<std::endl;
+    std::cout<<"----------------------------------------------\n"<<std::endl;
+
+    /// Creating a new neural network to train data from a given file
+    auto *network = new NeuralNetwork({4, 30,120,30, 4}, "../data/sort4.txt");
+
+    /// A brief information of the created network
+    network->printNetworkInfo();
+
+    /// Training the neural network
+    network->train(5000);
+
+    /// Checking neural network with a given input
+    std::vector<float> inputVec = {4, 1, 3, 2};
+    network->setInput(inputVec);
+    std::cout<<"Input: "<<std::endl;
+    print(inputVec);
+
+    /// Running the trained neural network
+    network->feedForward();
+
+    /// Output of the neural network for the given input
+    std::vector<float> outputVec = network->getOutput();
+    std::cout<<"\nOutput: "<<std::endl;
+    print(outputVec);
+
+    /// Calculating RMS error
+    std::vector<float> tempVec;
+    for (uzi i = 0; i < outputVec.size(); i++) {
+        tempVec.push_back(outputVec[i] - inputVec[i]);
     }
+    std::cout << "\nRMSE: " << rms(tempVec) << std::endl;
 
-    auto *network = new NeuralNetwork({784, 300, 10}, trainingData.input, trainingData.output);
+    std::string libFile = "../test/lib/sort4.gz";
 
-    network->printNetworkInfo();
+    /// Saving network to a compressed library file
+    network->save(libFile);
 
-    network->train(100, &testData);
+    /// Loading from library, same class
+    network->load(libFile);
 
-#ifndef ANALYSE_TRAINING
-    TestResult trainingResult = network->checkTrainingData();
-    TestResult testResult = network->checkTestData(&testData);
-    std::cout<<"Error: "<<trainingResult.errorPercentage<<"%/"<<testResult.errorPercentage<<"%, Elapsed time: "<<mainClock->getElapsedTime()<<" s"<<std::endl;
-#else
-    network->checkTestData(&testData);
-    std::cout << std::endl << "Total time: " << mainClock->getElapsedTime() << " seconds" << std::endl;
-#endif
-#else
-    auto *network = new NeuralNetwork({4, 300, 4}, "../data/sort4.txt");
+    network->setInput(inputVec);
+    network->feedForward();
 
-    network->printNetworkInfo();
-
-    network->train(1000);
-#endif
-
-    std::cout << "Elapsed time: " << mainClock->getElapsedTime() << " s" << std::endl;
+    std::cout<<"\nOutput from library (same class): "<<std::endl;
+    print(network->getOutput());
 
     safeDelete(network);
+    /// End of loading from library
+
+    /// Loading from library, completely a new class
+    auto *networkFromLibrary = new NeuralNetwork(libFile);
+
+    networkFromLibrary->setInput(inputVec);
+    networkFromLibrary->feedForward();
+
+    std::cout<<"\nOutput from library (new class): "<<std::endl;
+    print(networkFromLibrary->getOutput());
+
+    safeDelete(networkFromLibrary);
+    /// End of loading from library
+
+    std::cout << "\nElapsed time: " << mainClock->getElapsedTime() << " s" << std::endl;
+
     safeDelete(mainClock);
     return 0;
 }
