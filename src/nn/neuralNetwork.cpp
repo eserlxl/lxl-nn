@@ -1,4 +1,4 @@
-#include <filesystem>>
+#include <filesystem>
 #include "nn/neuralNetwork.h"
 
 void NeuralNetwork::create() {
