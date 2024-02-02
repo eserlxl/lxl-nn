@@ -112,10 +112,6 @@ void NeuralNetwork::init() {
         pid_I = -0.125f / (float) sourceSize;
         pid_D = 0;//-0.01;//0.1;//0.5f;
 #endif
-
-#ifdef ADAPTIVE_LEARNING
-    weightBackupCount = 0;
-#endif
 }
 
 void NeuralNetwork::setIO(const matrixFloat1D &input, const matrixFloat1D& output) {

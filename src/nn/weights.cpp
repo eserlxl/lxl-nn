@@ -15,147 +15,42 @@ void NeuralNetwork::randWeights() {
 
 #ifdef ADAPTIVE_LEARNING
 
-void NeuralNetwork::saveNetwork() {
-    pBackup.clear();
-    for (auto &p : P) {
-        matrixFloat1D tempVec;
-        for (uzi j = 0; j < p.size(); j++) {
-            tempVec.push_back(p[j]->value);
-        }
-        pBackup.push_back(tempVec);
-    }
-}
-
-void NeuralNetwork::loadNetwork() {
-    if (pBackup.empty()) {
-        return;
-    }
-    for (uzi i = 0; i < P.size(); i++) {
-        for (uzi j = 0; j < P[i].size(); j++) {
-            P[i][j]->value = pBackup[i][j];
-        }
-    }
-}
-
 void NeuralNetwork::saveWeights() {
-    lastWeightBackup.clear();
+    weightBackup.clear();
 #ifdef BP_USE_BIAS
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < model[i + 1]; j++) {
-            lastWeightBackup.push_back(bias[i][j]);
+            weightBackup.push_back(bias[i][j]);
         }
     }
 #endif
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < model[i]; j++) {
             for (uzi k = 0; k < model[i + 1]; k++) {
-                lastWeightBackup.push_back(P[i][j]->Link[k]->weight);
-                lastWeightBackup.push_back(P[i][j]->Link[k]->deltaWeight);
+                weightBackup.push_back(P[i][j]->Link[k]->weight);
+                weightBackup.push_back(P[i][j]->Link[k]->deltaWeight);
             }
         }
     }
-}
-
-void NeuralNetwork::saveWeights(uzi maxBackupCount) {
-
-    matrixFloat1D tempVec;
-#ifdef BP_USE_BIAS
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < P[i + 1].size(); j++) {
-            tempVec.push_back(bias[i][j]);
-        }
-    }
-#endif
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < model[i]; j++) {
-            for (uzi k = 0; k < model[i + 1]; k++) {
-                tempVec.push_back(P[i][j]->Link[k]->weight);
-                tempVec.push_back(P[i][j]->Link[k]->deltaWeight);
-            }
-        }
-    }
-    if (weightBackup.size() >= maxBackupCount) {
-        weightBackup.erase(weightBackup.begin());
-    }
-    weightBackup.push_back(tempVec);
 }
 
 void NeuralNetwork::loadWeights() {
-    if (lastWeightBackup.empty()) {
+    if (weightBackup.empty()) {
         return;
     }
     uzi h = 0;
 #ifdef BP_USE_BIAS
     for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < P[i + 1].size(); j++) {
-            bias[i][j] = lastWeightBackup[h++];
+        for (uzi j = 0; j < model[i + 1]; j++) {
+            bias[i][j] = weightBackup[h++];
         }
     }
 #endif
     for (uzi i = 0; i < outputIndex; i++) {
         for (uzi j = 0; j < model[i]; j++) {
             for (uzi k = 0; k < model[i + 1]; k++) {
-                P[i][j]->Link[k]->weight = lastWeightBackup[h++];
-                P[i][j]->Link[k]->deltaWeight = lastWeightBackup[h++];
-            }
-        }
-    }
-}
-
-void NeuralNetwork::loadWeights(uzi backupIndex) {
-    if (weightBackup.empty() || weightBackup[backupIndex].empty()) {
-        return;
-    }
-    uzi h = 0;
-#ifdef BP_USE_BIAS
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < P[i + 1].size(); j++) {
-            bias[i][j] = weightBackup[backupIndex][h++];
-        }
-    }
-#endif
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < model[i]; j++) {
-            for (uzi k = 0; k < model[i + 1]; k++) {
-                P[i][j]->Link[k]->weight = weightBackup[backupIndex][h++];
-                P[i][j]->Link[k]->deltaWeight = weightBackup[backupIndex][h++];
-            }
-        }
-    }
-}
-
-void NeuralNetwork::smoothLastWeights() {
-    if (weightBackup.empty() || weightBackup.size() < 3) {
-        return;
-    }
-    uzi backupIndex1 = weightBackup.size() - 3;
-    uzi backupIndex2 = weightBackup.size() - 2;
-    uzi backupIndex3 = weightBackup.size() - 1;
-    float backupRatio1 = 0.1;
-    float backupRatio2 = 0.2;
-    float backupRatio3 = 0.4;
-    float newWeightRatio = 0.3;
-    uzi h = 0;
-#ifdef BP_USE_BIAS
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < P[i + 1].size(); j++) {
-            bias[i][j] = backupRatio1 * weightBackup[backupIndex1][h] + backupRatio2 * weightBackup[backupIndex2][h] +
-                         backupRatio3 * weightBackup[backupIndex3][h] + newWeightRatio * bias[i][j];
-            h++;
-        }
-    }
-#endif
-    for (uzi i = 0; i < P.size(); i++) {
-        for (uzi j = 0; j < P[i].size(); j++) {
-            for (uzi k = 0; k < P[i][j]->Link.size(); k++) {
-                P[i][j]->Link[k]->weight =
-                        backupRatio1 * weightBackup[backupIndex1][h] + backupRatio2 * weightBackup[backupIndex2][h] +
-                        backupRatio3 * weightBackup[backupIndex3][h] + newWeightRatio * P[i][j]->Link[k]->weight;
-                h++;
-                P[i][j]->Link[k]->deltaWeight =
-                        backupRatio1 * weightBackup[backupIndex1][h] + backupRatio2 * weightBackup[backupIndex2][h] +
-                        backupRatio3 * weightBackup[backupIndex3][h] + newWeightRatio * P[i][j]->Link[k]->deltaWeight;
-                h++;
+                P[i][j]->Link[k]->weight = weightBackup[h++];
+                P[i][j]->Link[k]->deltaWeight = weightBackup[h++];
             }
         }
     }
@@ -165,23 +60,22 @@ void NeuralNetwork::smoothWeights(float backupRatio) {
     if (weightBackup.empty()) {
         return;
     }
-    uzi backupIndex = 0;
     float newWeightRatio = 1.f - backupRatio;
     uzi h = 0;
 #ifdef BP_USE_BIAS
     for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < P[i + 1].size(); j++) {
-            bias[i][j] = backupRatio * weightBackup[backupIndex][h++] + newWeightRatio * bias[i][j];
+        for (uzi j = 0; j < model[i + 1]; j++) {
+            bias[i][j] = backupRatio * weightBackup[h++] + newWeightRatio * bias[i][j];
         }
     }
 #endif
-    for (uzi i = 0; i < P.size(); i++) {
-        for (uzi j = 0; j < P[i].size(); j++) {
-            for (uzi k = 0; k < P[i][j]->Link.size(); k++) {
+    for (uzi i = 0; i < outputIndex; i++) {
+        for (uzi j = 0; j < model[i]; j++) {
+            for (uzi k = 0; k < model[i + 1]; k++) {
                 P[i][j]->Link[k]->weight =
-                        backupRatio * weightBackup[backupIndex][h++] + newWeightRatio * P[i][j]->Link[k]->weight;
+                        backupRatio * weightBackup[h++] + newWeightRatio * P[i][j]->Link[k]->weight;
                 P[i][j]->Link[k]->deltaWeight =
-                        backupRatio * weightBackup[backupIndex][h++] + newWeightRatio * P[i][j]->Link[k]->deltaWeight;
+                        backupRatio * weightBackup[h++] + newWeightRatio * P[i][j]->Link[k]->deltaWeight;
             }
         }
     }

@@ -157,7 +157,6 @@ void NeuralNetwork::train(uzi loopMax) {
 #ifdef ADAPTIVE_LEARNING
         else if (RMSE > learningMatrix[adaptiveLearningSWThresholdIndex] * minRMSError) {
             smoothWeights(learningMatrix[adaptiveLearningSWBackupRatioIndex]);
-
         }
 #endif
 #ifdef ANALYSE_TRAINING

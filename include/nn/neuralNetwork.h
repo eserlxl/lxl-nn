@@ -185,7 +185,7 @@ public:
 #endif
 
 #ifdef ADAPTIVE_LEARNING
-        weightBackupCount = 0;
+        saveWeights();
 #endif
     }
 
@@ -270,26 +270,14 @@ private:
     uzi adaptiveLearningSWBackupRatioIndex;
     uzi rateLimitLearningRateIndex;
 
-    matrixFloat2D pBackup;
-
     matrixFloat1D learningMatrixUpperLimits;
     matrixFloat1D learningMatrixLowerLimits;
 
-    void saveNetwork();
-
-    void loadNetwork();
-
-    matrixFloat2D weightBackup;
-    matrixFloat1D lastWeightBackup;
-    uzi weightBackupCount;
+    matrixFloat1D weightBackup = {};
 
     void saveWeights();
 
-    void saveWeights(uzi maxBackupCount);
-
     void loadWeights();
-
-    void loadWeights(uzi backupIndex);
 
     void smoothWeights(float backupRatio);
 
