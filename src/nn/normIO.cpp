@@ -17,10 +17,6 @@ float NeuralNetwork::convertOutputToTarget(float x) const {
 }
 
 void NeuralNetwork::setInput(matrixFloat1D input) {
-    if (input.size() != model[0]) {
-        std::cout << "Improper network design according to inputs!" << std::endl;
-        exit(-1);
-    }
     for (uzi i = 0; i < model[0]; i++) {
         network[0][i] = convertSourceToInput(input[i]);
         P[0][i]->value = network[0][i];
