@@ -85,7 +85,7 @@ public:
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
-        matrixFloat2D data, input, output;
+        matrixFloat2D data;
 
         std::string delimiter;
         lxl::detectDelimiter(fileName, &delimiter);
