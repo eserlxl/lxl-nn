@@ -75,6 +75,8 @@ public:
         create();
         connect();
         init();
+
+        loadDataFromFile(fileName);
     }
 
     NeuralNetwork(const std::string &fileName) {

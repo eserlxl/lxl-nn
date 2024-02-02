@@ -179,6 +179,36 @@ void NeuralNetwork::load(const std::string &fileName) {
     }
 }
 
+void NeuralNetwork::loadDataFromFile(const std::string &fileName) {
+    matrixFloat2D data, input, output;
+
+    std::string delimiter;
+    lxl::detectDelimiter(fileName, &delimiter);
+    lxl::fetchData(fileName, data, delimiter);
+
+    if (outputSize != data[0].size() - inputSize) {
+        std::cout << "Invalid data format! Input Size: " << inputSize << ", Output Size: " << outputSize
+                  << ", Data size in a row: " << data[0].size() << std::endl;
+        exit(-1);
+    }
+
+    for (auto &i : data) {
+        matrixFloat1D temp;
+        for (uzi j = 0; j < inputSize; j++) {
+            temp.push_back(i[j]);
+        }
+        input.push_back(temp);
+
+        temp.clear();
+        for (uzi j = inputSize; j < inputSize + outputSize; j++) {
+            temp.push_back(i[j]);
+        }
+        output.push_back(temp);
+    }
+
+    normIO(input, output);
+}
+
 void NeuralNetwork::printNetworkInfo() {
 #ifdef LEARNING_MNIST_DATA
     std::cout << "Learning MNIST Database\n" << std::endl;
