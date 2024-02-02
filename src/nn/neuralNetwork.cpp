@@ -52,6 +52,11 @@ void NeuralNetwork::save(const std::string &fileName) {
 
     uzi precision = 8;
 
+    matrixFloat1D errorVec;
+    errorVec.push_back(NRMSEPercentage);
+#ifdef BINARY_OUTPUT_DATA
+    errorVec.push_back(binaryDataErrorPercentage);
+#endif
     print(model, "model", 0, fP);
     print(learningMatrix, "learningMatrix", precision, fP);
 
@@ -64,6 +69,8 @@ void NeuralNetwork::save(const std::string &fileName) {
             outputRange
     };
     print(tempVec, "iOStructure", precision, fP);
+
+    print(errorVec, "error", precision, fP);
 
     matrixFloat1D valueVec;
 
