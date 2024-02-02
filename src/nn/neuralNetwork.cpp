@@ -117,6 +117,7 @@ void NeuralNetwork::load(const std::string &fileName) {
             }
             preInit();
         } else if (text == "learningMatrix") {
+            setLearningMatrix(); // For getting indexes only
             learningMatrix.clear();
             for (auto &x : data[d + 1]) {
                 learningMatrix.push_back(convert<float>(x));
