@@ -211,7 +211,7 @@ public:
 
     void backPropagate();
 
-    void setIO(matrixFloat1D input, matrixFloat1D output);
+    void setIO(const matrixFloat1D &input, const matrixFloat1D& output);
 
     void setInput(matrixFloat1D input);
 

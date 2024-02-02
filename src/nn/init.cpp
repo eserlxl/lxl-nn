@@ -118,7 +118,7 @@ void NeuralNetwork::init() {
 #endif
 }
 
-void NeuralNetwork::setIO(matrixFloat1D input, matrixFloat1D output) {
+void NeuralNetwork::setIO(const matrixFloat1D &input, const matrixFloat1D& output) {
     if (input.size() != model[0]) {
         std::cout << "Improper network design according to inputs!" << std::endl;
         exit(-1);
@@ -127,11 +127,10 @@ void NeuralNetwork::setIO(matrixFloat1D input, matrixFloat1D output) {
         std::cout << "Improper network design according to outputs!" << std::endl;
         exit(-1);
     }
+    network[0] = input;
+    network[outputIndex] = output;
     for (uzi i = 0; i < model[0]; i++) {
         network[0][i] = input[i];
         P[0][i]->value = input[i];
-    }
-    for (uzi i = 0; i < model[outputIndex]; i++) {
-        network[outputIndex][i] = output[i];
     }
 }
