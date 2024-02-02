@@ -89,7 +89,10 @@ void NeuralNetwork::train(uzi loopMax) {
     double loopDurationSum = 0;
     double checkDataDurationSum = 0;
 #endif
-    randWeights();
+    if(weightBackup.empty())
+    {
+        randWeights();
+    }
 
     clock->initTimer();
 
