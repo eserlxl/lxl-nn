@@ -1,7 +1,17 @@
 #include "nn/neuralNetwork.h"
 
-float NeuralNetwork::convertSourceToInput(float x) const {
+// Input: External input data
+// Output: External output data
+
+// Source: Input normalized to network range
+// Target: Output normalized to network range
+
+float NeuralNetwork::convertInputToSource(float x) const {
     return (x - inputMinValue) / inputRange * networkRange + networkMinValue;
+}
+
+float NeuralNetwork::convertSourceToInput(float x) const {
+    return (x - networkMinValue) / networkRange * inputRange + inputMinValue;
 }
 
 float NeuralNetwork::convertTargetToOutput(float x) const {
@@ -18,7 +28,7 @@ float NeuralNetwork::convertOutputToTarget(float x) const {
 
 void NeuralNetwork::setInput(matrixFloat1D input) {
     for (uzi i = 0; i < model[0]; i++) {
-        network[0][i] = convertSourceToInput(input[i]);
+        network[0][i] = convertInputToSource(input[i]);
         P[0][i]->value = network[0][i];
     }
 }

@@ -259,6 +259,8 @@ private:
     float network3rdQuarterValue = 0.75f * networkRange + networkMinValue;
     float network1stQuarterValue = 0.25f * networkRange + networkMinValue;
 
+    float convertInputToSource(float x) const;
+
     float convertSourceToInput(float x) const;
 
     float convertTargetToOutput(float x) const;
