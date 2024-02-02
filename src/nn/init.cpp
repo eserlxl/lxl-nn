@@ -104,8 +104,6 @@ void NeuralNetwork::preInit() {
 
 void NeuralNetwork::init() {
 
-    reqNormRMSE = {2.5e-3, 5e-3, 7.5e-3, 1e-2};
-
 #ifdef NO_RANDOMIZATION
     seed = 1;
 #else

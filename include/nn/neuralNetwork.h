@@ -58,10 +58,13 @@ public:
 
         preInit();
 
-        normIO(input, output);
         create();
         connect();
         init();
+
+        if(!input.empty() && !output.empty()){
+            normIO(input, output);
+        }
     }
 
     NeuralNetwork(matrixUzi1D model, const std::string &fileName) {
@@ -162,12 +165,28 @@ public:
 
     void printNetworkInfo();
 
+    void normIO(matrixFloat2D input, matrixFloat2D output);
+
+    float calcRMSE();
+
+    float calcNormRMSE();
+
+    float calcNormRMSEPercentage();
+
+    void loadDataFromFile(const std::string &fileName);
+
+    float NRMSEPercentage;
+#ifdef BINARY_OUTPUT_DATA
+    float binaryDataErrorPercentage;
+#endif
+
 private:
     uzi layerCount;
     uzi maxLayerSize;
     matrixFloat2D source;
     matrixFloat2D target;
     matrixFloat2D network;
+    matrixFloat2D networkOutput;
     matrixFloat2D bias;
     matrixFloat1D learningMatrix;
 #ifdef BP_USE_PID
@@ -256,8 +275,6 @@ private:
     float convertOutputToTarget(float x) const;
 
     float convertTargetDiffToOutputDiff(float x) const;
-
-    void normIO(matrixFloat2D input, matrixFloat2D output);
 
     void setLearningMatrix();
 

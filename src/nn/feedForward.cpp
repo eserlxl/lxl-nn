@@ -24,3 +24,31 @@ void NeuralNetwork::feedForward() {
         }
     }
 }
+
+float NeuralNetwork::calcRMSE() {
+    matrixFloat1D tempVec;
+    for (uzi s = 0; s < sourceSize; s++) {
+
+        network[0] = source[s];
+        for (uzi i = 0; i < model[0]; i++) {
+            P[0][i]->value = network[0][i];
+        }
+        feedForward();
+
+        matrixFloat1D tempVec2;
+        for (uzi j = 0; j < model[outputIndex]; j++) {
+            tempVec2.push_back(convertTargetDiffToOutputDiff(P[outputIndex][j]->value - target[s][j]));
+        }
+        tempVec.push_back(rms(tempVec2));
+        networkOutput.push_back(getOutput());
+    }
+    return rms(tempVec);
+}
+
+float NeuralNetwork::calcNormRMSE() {
+    return calcRMSE() / outputMaxValue;
+}
+
+float NeuralNetwork::calcNormRMSEPercentage() {
+    return calcNormRMSE() * 100.f;
+}
