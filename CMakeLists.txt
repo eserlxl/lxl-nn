@@ -10,6 +10,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -fPIC -O3 -march=n
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fPIC -O0 -gdwarf-4")
 
 include_directories(include)
+include_directories(examples)
 include_directories(/usr/include/eigen3) # Path to Eigen library
 include_directories(/usr/include/lxl) # Path to lxl library
 
@@ -35,6 +36,10 @@ add_executable(lxl-nn
         src/nn/normIO.cpp
         src/nn/train.cpp
         src/nn/weights.cpp
-        src/main.cpp)
+        src/main.cpp
+        examples/examples.h
+        examples/sort4.cpp
+        examples/MNISTData.cpp
+        )
 
 target_link_libraries(lxl-nn lxl ${Boost_LIBRARIES})
