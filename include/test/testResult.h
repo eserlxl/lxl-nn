@@ -4,20 +4,25 @@
 typedef struct TestResult {
     uzi domainSize;
     matrixFloat1D correct;
-    //matrixFloat1D errorPercentage;
+    matrixFloat1D errorPercentage;
     matrixFloat1D correctPercentage;
-    double elapsedTime;
+    double elapsedTime = 0;
 
-    TestResult(uzi domainSize) {
+    explicit TestResult(uzi domainSize) {
         this->domainSize = domainSize;
     }
 
-    void calcError() {
-        //errorPercentage.clear();
+    void calcCorrect() {
         correctPercentage.clear();
         for (auto x:correct) {
-            //errorPercentage.push_back(100.f * (1.f - std::max(0.f, x) / domainSize));
             correctPercentage.push_back(100.f * (std::max(0.f, x) / domainSize));
+        }
+    }
+
+    void calcError() {
+        errorPercentage.clear();
+        for (auto x:correct) {
+            errorPercentage.push_back(100.f * (1.f - std::max(0.f, x) / domainSize));
         }
     }
 

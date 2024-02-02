@@ -168,7 +168,7 @@ void NeuralNetwork::train(uzi loopMax) {
 
         TestResult trainingResult(sourceSize);
         trainingResult.correct = correctChoice;
-        trainingResult.calcError();
+        trainingResult.calcCorrect();
 
 #ifdef LEARNING_MNIST_DATA
         chronometer->initTimer();
