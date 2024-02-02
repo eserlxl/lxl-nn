@@ -187,6 +187,10 @@ void NeuralNetwork::printNetworkInfo() {
     for (uzi i = 0; i < layerCount - 2; i++) { std::cout << model[i + 1] << ","; }
     std::cout << outputSize << "}\n" << std::endl;
 
+    if (!libFile.empty()) {
+        std::cout << "Network library file: " << libFile << "\n" << std::endl;
+    }
+
     // Listing configurations
 #ifdef NO_RANDOMIZATION
     std::cout << "Randomization is disabled!. Seed: " << seed << std::endl;
