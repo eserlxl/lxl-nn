@@ -49,8 +49,7 @@ public:
     uzi outputSize;
     matrixUzi1D model;
 
-    NeuralNetwork(matrixUzi1D model, const matrixFloat2D &input,
-                  const matrixFloat2D &output) {
+    NeuralNetwork(const matrixUzi1D &model, const matrixFloat2D &input = {{}}, const matrixFloat2D &output = {{}}) {
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
@@ -67,7 +66,7 @@ public:
         }
     }
 
-    NeuralNetwork(matrixUzi1D model, const std::string &fileName) {
+    template <typename T, typename = std::string> NeuralNetwork(const matrixUzi1D &model, const T &fileName) {
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
@@ -82,7 +81,7 @@ public:
         loadDataFromFile(fileName);
     }
 
-    NeuralNetwork(const std::string &fileName) {
+    template <typename T, typename = std::string> NeuralNetwork(const T &fileName) {
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
