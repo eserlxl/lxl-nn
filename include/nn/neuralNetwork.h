@@ -14,7 +14,7 @@ using namespace lxl;
 #include "test/analyse.h"
 
 
-#define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
+//#define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 
 #define BINARY_OUTPUT_DATA // For networks that have 0 or 1 outputs only
 
