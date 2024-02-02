@@ -240,7 +240,7 @@ void NeuralNetwork::printNetworkInfo() {
 #endif
 #ifdef ADAPTIVE_LEARNING
     std::cout
-            << "Adaptive learning is active!\nLearning rates will be updated to minimize the RMS error according to given ranges.\n"
+            << "\nAdaptive learning is active!\nLearning rates will be updated to minimize the RMS error according to given ranges.\n"
             << "\nLearning rate of weights (η): " << learningMatrix[weightLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[weightLearningRateIndex] << ", "
             << learningMatrixUpperLimits[weightLearningRateIndex] << "]"
