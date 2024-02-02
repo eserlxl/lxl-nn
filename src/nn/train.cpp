@@ -1,53 +1,7 @@
 #include "nn/neuralNetwork.h"
 
-TestResult NeuralNetwork::checkTestData(MNISTData *testData) {
-    chronometer->initTimer();
+float NeuralNetwork::checkBinaryOutputData() {
 
-    uzi correct = 0;
-    for (uzi p = 0; p < testData->m_imageCount; p++) {
-
-        for (uzi i = 0; i < model[0]; i++) {
-            network[0][i] = testData->input[p][i];
-            P[0][i]->value = testData->input[p][i];
-        }
-        feedForward();
-
-#ifdef RMS_CHECK
-        matrixFloat1D errorVec;
-        for (uzi t = 0; t < model[outputIndex]; t++) {
-            errorVec.push_back(testData->output[p][t] - P[outputIndex][t]->value);
-        }
-        if (rms(errorVec) < 0.25) {
-            correct++;
-        }
-#else
-        float maxOutput = -1;
-        uzi maxIndex = 0;
-        for (uzi t = 0; t < model[outputIndex]; t++) {
-            if (P[outputIndex][t]->value > maxOutput) {
-                maxOutput = P[outputIndex][t]->value;
-                maxIndex = t;
-            }
-        }
-
-        for (uzi t = 0; t < model[outputIndex]; t++) {
-            if (maxIndex == t && testData->output[p][t] > networkMidValue) {
-                correct++;
-                break;
-            }
-        }
-#endif
-    }
-
-    /*TestResult test{};
-    test.correct = correct;
-    test.errorPercentage = 100.f * (1.f - (float) correct / testData->m_imageCount);
-    test.elapsedTime = chronometer->getElapsedTime();
-    return test;*/
-}
-
-TestResult NeuralNetwork::checkTrainingData() {
-    chronometer->initTimer();
     uzi correct = 0;
     for (uzi p = 0; p < sourceSize; p++) {
         setIO(source[p], target[p]);
@@ -70,22 +24,14 @@ TestResult NeuralNetwork::checkTrainingData() {
         }
     }
 
-    /*TestResult ret{};
-    ret.correct = correct;
-    ret.errorPercentage = 100.f * (1.f - (float) correct / sourceSize);
-    ret.elapsedTime = chronometer->getElapsedTime();
-    return ret;*/
+    return 1.f-(float)correct/sourceSize;
 }
 
-#ifdef LEARNING_MNIST_DATA
-void NeuralNetwork::train(uzi loopMax, MNISTData *testData) {
-#else
-
 void NeuralNetwork::train(uzi loopMax) {
-#endif
+
     float minRMSError = 1000;
 #ifdef ANALYSE_TRAINING
-    double loopDuration, checkTestResultDuration, trainingDuration;
+    double loopDuration, trainingDuration;
     double loopDurationSum = 0;
     double checkDataDurationSum = 0;
 #endif
@@ -170,10 +116,10 @@ void NeuralNetwork::train(uzi loopMax) {
         trainingResult.correct = correctChoice;
         trainingResult.calcCorrect();
 
-#ifdef LEARNING_MNIST_DATA
+#ifdef BINARY_OUTPUT_DATA
         chronometer->initTimer();
-        TestResult testResult = checkTestData(testData);
-        checkTestResultDuration = chronometer->getElapsedTime();
+        float binaryDataCheckErrorPercentage = checkBinaryOutputData()*100.f;
+        checkDataDurationSum += chronometer->getElapsedTime();
 #endif
         uzi h = 0;
         std::cout << loop
@@ -192,17 +138,14 @@ void NeuralNetwork::train(uzi loopMax) {
                   << ", SWr: " << learningMatrix[h++]
                   << ", r: " << learningMatrix[h++]
                   #endif
-                  << ", RMSE: " << RMSE << " / " << minRMSError
+                  << ", E(%): " << roundStr(RMSE / outputMaxValue * 100.f, 2) << " / "
+                  << roundStr(minRMSError / outputMaxValue * 100.f, 2)
+                  #ifdef BINARY_OUTPUT_DATA
+                  << ", E-01(%) => "<<binaryDataCheckErrorPercentage
+                  #endif
                   << ", Training => "
                   << trainingResult.print()
-                  #ifdef LEARNING_MNIST_DATA
-                  << ", Test => [ ✓: " << testResult.correct << "/" << testData->m_imageCount
-                  << ", !: " << testResult.errorPercentage << "% ]"
-                  #endif
                   << ", Time => [ Training: " << loopDuration
-                  #ifdef LEARNING_MNIST_DATA
-                  << ", ✓Test: " << checkTestResultDuration
-                  #endif
                   << " ]"
                   << std::endl;
 #else
@@ -263,6 +206,16 @@ void NeuralNetwork::train(uzi loopMax) {
     for (uzi i = 0; i < learningSize; i++) {
         learningMatrix[i] = learningMatrixBest[i];
     }
+
+#ifdef BINARY_OUTPUT_DATA
+    chronometer->initTimer();
+    binaryDataErrorPercentage = checkBinaryOutputData()*100.f;
+    checkDataDurationSum += chronometer->getElapsedTime();
+#endif
+    chronometer->initTimer();
+    NRMSEPercentage=calcNormRMSEPercentage();
+    checkDataDurationSum += chronometer->getElapsedTime();
+
 #ifdef ANALYSE_TRAINING
     trainingDuration = clock->getElapsedTime();
     std::cout << std::endl << "Total training time: " << loopDurationSum << " s" << std::endl;

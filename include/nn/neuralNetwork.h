@@ -16,7 +16,7 @@ using namespace lxl;
 
 #define NO_RANDOMIZATION // Only for testing the algorithm, we need the same results for each run to compare.
 
-//#define LEARNING_MNIST_DATA
+#define BINARY_OUTPUT_DATA // For networks that have 0 or 1 outputs only
 
 //#define LOGIC_NETWORK
 
@@ -150,17 +150,9 @@ public:
 
     matrixFloat1D getOutput();
 
-#ifdef LEARNING_MNIST_DATA
-    void train(uzi loopMax, MNISTData *testData);
-#else
-
     void train(uzi loopMax);
 
-#endif
-
-    TestResult checkTrainingData();
-
-    TestResult checkTestData(MNISTData *testData);
+    float checkBinaryOutputData();
 
     void printNetworkInfo();
 

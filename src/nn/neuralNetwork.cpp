@@ -211,7 +211,7 @@ void NeuralNetwork::loadDataFromFile(const std::string &fileName) {
 }
 
 void NeuralNetwork::printNetworkInfo() {
-#ifdef LEARNING_MNIST_DATA
+#ifdef BINARY_OUTPUT_DATA
     std::cout << "Learning MNIST Database\n" << std::endl;
 #endif
     std::cout << "Network: {" << inputSize << ",";
@@ -223,6 +223,9 @@ void NeuralNetwork::printNetworkInfo() {
     }
 
     // Listing configurations
+#ifdef BINARY_OUTPUT_DATA
+    std::cout << "Binary output data!\n"<< std::endl;
+#endif
 #ifdef NO_RANDOMIZATION
     std::cout << "Randomization is disabled!. Seed: " << seed << std::endl;
 #else

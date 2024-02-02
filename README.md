@@ -62,7 +62,7 @@ _ANALYSE_TRAINING_ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Detailed training output
 
 _NO_RANDOMIZATION_ &nbsp;&nbsp;&nbsp;Disables randomization before starting to train
 
-_LEARNING_MNIST_DATA_ Testing for MNIST data only
+_BINARY_OUTPUT_DATA_ &nbsp;&nbsp;For networks that have 0 or 1 outputs only
 
 ## Installation
 You need to obtain [lxl](https://github.com/eserlxl/lxl) library before compilation.
