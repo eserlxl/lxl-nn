@@ -138,8 +138,8 @@ void NeuralNetwork::train(uzi loopMax) {
                   << ", SWr: " << learningMatrix[h++]
                   << ", r: " << learningMatrix[h++]
                   #endif
-                  << ", E(%): " << roundStr(RMSE / outputMaxValue * 100.f, 2) << " / "
-                  << roundStr(minRMSError / outputMaxValue * 100.f, 2)
+                  << ", E(%): " << RMSE / outputMaxValue * 100.f << " / "
+                  << minRMSError / outputMaxValue * 100.f
                   #ifdef BINARY_OUTPUT_DATA
                   << ", E-01(%) => "<<binaryDataCheckErrorPercentage
                   #endif
