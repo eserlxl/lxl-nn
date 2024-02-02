@@ -47,6 +47,10 @@ void NeuralNetwork::normIO(matrixFloat2D input, matrixFloat2D output) {
 
     sourceSize = input.size();
     targetSize = output.size();
+
+    source.clear();
+    target.clear();
+
     source.resize(sourceSize);
     target.resize(targetSize);
 
