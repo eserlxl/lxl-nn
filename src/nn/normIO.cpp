@@ -31,7 +31,6 @@ matrixFloat1D NeuralNetwork::getOutput() {
     return tempVec;
 }
 
-
 void NeuralNetwork::normIO(matrixFloat2D input, matrixFloat2D output) {
 
     inputMinValue = lxl::min(input)[0];
