@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <random>
+#include <filesystem>
 #include <Eigen/Dense>
 #include <lxl.h>
 

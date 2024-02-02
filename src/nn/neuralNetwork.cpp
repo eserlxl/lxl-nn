@@ -1,4 +1,3 @@
-#include <filesystem>
 #include "nn/neuralNetwork.h"
 
 void NeuralNetwork::create() {
@@ -45,8 +44,7 @@ float NeuralNetwork::randomNumber() {
  */
 void NeuralNetwork::save(const std::string &fileName) {
     std::filesystem::path path(fileName);
-    if(!std::filesystem::exists(path.parent_path()))
-    {
+    if (!std::filesystem::exists(path.parent_path())) {
         std::filesystem::create_directory(path.parent_path());
     }
 
