@@ -55,21 +55,8 @@ public:
         chronometer = new lxl::Timer();
 
         this->model = model;
-        network.resize(model.size());
-        uzi layerIndex = 0;
-        maxLayerSize = 0;
-        for (uzi layer : model) {
-            if (maxLayerSize < layer) {
-                maxLayerSize = layer;
-            }
-            network[layerIndex++].resize(layer);
-        }
 
-        layerCount = network.size();
-        hiddenLayerSize = layerCount - 2;
-        outputIndex = layerCount - 1;
-        inputSize = model[0];
-        outputSize = model[outputIndex];
+        preInit();
 
         normIO(input, output);
         create();
@@ -81,54 +68,9 @@ public:
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
-        matrixFloat2D data, input, output;
-
-        std::string delimiter;
-        lxl::detectDelimiter(fileName, &delimiter);
-        lxl::fetchData(fileName, data, delimiter);
-
         this->model = model;
-        network.resize(model.size());
-        uzi layerIndex = 0;
-        maxLayerSize = 0;
-        for (uzi layer : model) {
-            if (maxLayerSize < layer) {
-                maxLayerSize = layer;
-            }
-            network[layerIndex++].resize(layer);
-        }
 
-        layerCount = network.size();
-        hiddenLayerSize = layerCount - 2;
-        outputIndex = layerCount - 1;
-        inputSize = model[0];
-        outputSize = model[outputIndex];
-
-        if (outputSize != data[0].size() - inputSize) {
-            std::cout << "Invalid data format! Input Size: " << inputSize << ", Output Size: " << outputSize
-                      << ", Data size in a row: " << data[0].size() << std::endl;
-            exit(-1);
-        }
-
-        for (auto &i : data) {
-            matrixFloat1D temp;
-            for (uzi j = 0; j < inputSize; j++) {
-                temp.push_back(i[j]);
-            }
-            input.push_back(temp);
-
-            temp.clear();
-            for (uzi j = inputSize; j < inputSize + outputSize; j++) {
-                temp.push_back(i[j]);
-            }
-            output.push_back(temp);
-        }
-
-        /*auto *analyse = new Analyse();
-        analyse->detect(input, output);
-        safeDelete(analyse);*/
-
-        normIO(input, output);
+        preInit();
 
         create();
         connect();
@@ -147,23 +89,9 @@ public:
 
         load(fileName);
 
-        network.resize(model.size());
-        uzi layerIndex = 0;
-        maxLayerSize = 0;
-        for (uzi layer : model) {
-            if (maxLayerSize < layer) {
-                maxLayerSize = layer;
-            }
-            network[layerIndex++].resize(layer);
-        }
+        libFile = fileName;
 
-        layerCount = network.size();
-        hiddenLayerSize = layerCount - 2;
-        outputIndex = layerCount - 1;
-        inputSize = model[0];
-        outputSize = model[outputIndex];
-
-        reqNormRMSE = {2.5e-3, 5e-3, 7.5e-3, 1e-2};
+        preInit();
 
 #ifdef NO_RANDOMIZATION
         seed = 1;
@@ -281,13 +209,15 @@ private:
 
     void smoothWeights(float backupRatio);
 
-    void smoothLastWeights();
+    std::string libFile;
 
 #endif
 
     float randomNumber();
 
     float randomNumberExtended();
+
+    void preInit();
 
     uzi seed;
 

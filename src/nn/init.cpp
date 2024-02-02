@@ -82,6 +82,26 @@ void NeuralNetwork::setLearningMatrixLimits() {
 #endif
 }
 
+void NeuralNetwork::preInit() {
+    network.resize(model.size());
+    uzi layerIndex = 0;
+    maxLayerSize = 0;
+    for (uzi layer : model) {
+        if (maxLayerSize < layer) {
+            maxLayerSize = layer;
+        }
+        network[layerIndex++].resize(layer);
+    }
+
+    layerCount = network.size();
+    hiddenLayerSize = layerCount - 2;
+    outputIndex = layerCount - 1;
+    inputSize = model[0];
+    outputSize = model[outputIndex];
+
+    reqNormRMSE = {2.5e-3, 5e-3, 7.5e-3, 1e-2};
+}
+
 void NeuralNetwork::init() {
 
     reqNormRMSE = {2.5e-3, 5e-3, 7.5e-3, 1e-2};

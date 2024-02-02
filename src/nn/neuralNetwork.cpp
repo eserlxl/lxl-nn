@@ -115,22 +115,7 @@ void NeuralNetwork::load(const std::string &fileName) {
             for (auto &x : data[d + 1]) {
                 model.push_back(convert<uzi>(x));
             }
-
-            network.resize(model.size());
-            uzi layerIndex = 0;
-            maxLayerSize = 0;
-            for (uzi layer : model) {
-                if (maxLayerSize < layer) {
-                    maxLayerSize = layer;
-                }
-                network[layerIndex++].resize(layer);
-            }
-
-            layerCount = network.size();
-            hiddenLayerSize = layerCount - 2;
-            outputIndex = layerCount - 1;
-            inputSize = model[0];
-            outputSize = model[outputIndex];
+            preInit();
         } else if (text == "learningMatrix") {
             learningMatrix.clear();
             for (auto &x : data[d + 1]) {
