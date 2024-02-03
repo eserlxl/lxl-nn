@@ -37,7 +37,7 @@ void NeuralNetwork::setLearningMatrixLimits() {
     learningMatrixUpperLimits.clear();
 
     learningMatrixLowerLimits.push_back(
-            learningMatrix[weightLearningRateIndex] * 0.5f); // min Learning Rate of weights
+            learningMatrix[weightLearningRateIndex] * 0.99f); // min Learning Rate of weights
     learningMatrixUpperLimits.push_back(learningMatrix[weightLearningRateIndex] * 1.5f); // max Learning Rate of weights
 
 #ifdef BP_USE_BIAS
