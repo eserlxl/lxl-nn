@@ -3,6 +3,8 @@
 void example_sort4() {
     auto *mainClock = new Timer();
 
+    float minNRMSEPercentage = 1e6;
+
     std::cout << "\nSorting 4 numbers from lowest to highest" << std::endl;
     std::cout << "----------------------------------------------\n" << std::endl;
 
@@ -23,7 +25,8 @@ void example_sort4() {
         network->loadDataFromFile(dataFile);
 
         /// Normalized Root Mean Square Error Percentage of the library
-        std::cout << "Library NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
+        minNRMSEPercentage = network->calcNormRMSEPercentage();
+        std::cout << "Library NRMSE(%): " << minNRMSEPercentage << "\n" << std::endl;
     } else {
         network = new NeuralNetwork({4, 30, 120, 30, 4}, dataFile);
 
@@ -37,14 +40,19 @@ void example_sort4() {
         network->save(libFile);
 
         /// Normalized Root Mean Square Error Percentage
-        std::cout << "\nTraining NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
+        std::cout << "\nTraining NRMSE(%): " << network->NRMSEPercentage << "\n" << std::endl;
     }
 
     /// Checking Re-training
-    network->train(1);
+    network->train(500);
 
     /// Normalized Root Mean Square Error Percentage after Re-training
-    std::cout << "\nRe-Training NRMSE(%): " << network->calcNormRMSEPercentage() << std::endl;
+    std::cout << "\nRe-Training NRMSE(%): " << network->NRMSEPercentage << std::endl;
+
+    /// Saving network to a compressed library file
+    if (network->NRMSEPercentage < minNRMSEPercentage) {
+        network->save(libFile);
+    }
 
     /// Checking neural network with a given input
     matrixFloat1D inputVec = {4, 1, 3, 2};

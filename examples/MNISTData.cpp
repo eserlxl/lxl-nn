@@ -53,7 +53,7 @@ void example_MNISTData() {
         network->save(libFile);
 
         /// Normalized Root Mean Square Error Percentage
-        std::cout << "\nTraining NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
+        std::cout << "\nTraining NRMSE(%): " << network->NRMSEPercentage << "\n" << std::endl;
 
         /// Get error percentage
         std::cout << "Training error: " << network->checkBinaryOutputData() * 100.f << "%\n" << std::endl;
@@ -63,7 +63,7 @@ void example_MNISTData() {
     network->train(1);
 
     /// Normalized Root Mean Square Error Percentage after Re-training
-    std::cout << "\nRe-Training NRMSE(%): " << network->calcNormRMSEPercentage() << std::endl;
+    std::cout << "\nRe-Training NRMSE(%): " << network->NRMSEPercentage << std::endl;
 
     /// Loading Test data to network. Check: http://yann.lecun.com/exdb/mnist/ for more information.
     network->normIO(testData.input, testData.output);
