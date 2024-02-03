@@ -111,7 +111,7 @@ void NeuralNetwork::train(uzi loopMax) {
         trainingResult.correct = correctChoice;
         trainingResult.calcCorrect();
 
-#ifdef BINARY_OUTPUT_DATA
+#ifdef BINARY_OUTPUT_DATA_CHECK
         chronometer->initTimer();
         float binaryDataCheckErrorPercentage = checkBinaryOutputData()*100.f;
         checkDataDurationSum += chronometer->getElapsedTime();
@@ -133,7 +133,7 @@ void NeuralNetwork::train(uzi loopMax) {
                   #endif
                   << ", E(%): " << RMSE / outputMaxValue * 100.f << " / "
                   << minRMSError / outputMaxValue * 100.f
-                  #ifdef BINARY_OUTPUT_DATA
+                  #ifdef BINARY_OUTPUT_DATA_CHECK
                   << ", E-01(%) => "<<binaryDataCheckErrorPercentage
                   #endif
                   << ", Training => "
