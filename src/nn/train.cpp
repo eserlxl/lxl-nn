@@ -24,7 +24,7 @@ float NeuralNetwork::checkBinaryOutputData() {
         }
     }
 
-    return 1.f-(float)correct/sourceSize;
+    return 1.f - (float) correct / sourceSize;
 }
 
 void NeuralNetwork::train(uzi loopMax) {
@@ -35,8 +35,7 @@ void NeuralNetwork::train(uzi loopMax) {
     double loopDurationSum = 0;
     double checkDataDurationSum = 0;
 #endif
-    if(weightBackup.empty())
-    {
+    if (weightBackup.empty()) {
         randWeights();
     }
 

@@ -22,8 +22,7 @@ void example_MNISTData() {
 
     /// Creating a new neural network to train data from a given file
     NeuralNetwork *network;
-    if(std::filesystem::exists(libFile))
-    {
+    if (std::filesystem::exists(libFile)) {
         network = new NeuralNetwork(libFile);
 
         /// A brief information of the created network
@@ -32,9 +31,8 @@ void example_MNISTData() {
         network->normIO(trainingData.input, trainingData.output);
 
         /// Normalized Root Mean Square Error Percentage of the library
-        std::cout << "Library NRMSE(%): " << network->calcNormRMSEPercentage() <<"\n"<< std::endl;
-    }
-    else {
+        std::cout << "Library NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
+    } else {
         network = new NeuralNetwork({784, 300, 10});
 
         network->normIO(trainingData.input, trainingData.output);
@@ -49,7 +47,7 @@ void example_MNISTData() {
         network->save(libFile);
 
         /// Normalized Root Mean Square Error Percentage
-        std::cout << "\nTraining NRMSE(%): " << network->calcNormRMSEPercentage() <<"\n"<< std::endl;
+        std::cout << "\nTraining NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
     }
 
     /// Checking Re-training
@@ -62,7 +60,7 @@ void example_MNISTData() {
     network->normIO(testData.input, testData.output);
 
     /// Normalized Root Mean Square Error Percentage of the Test Data
-    std::cout << "\nTest Data NRMSE(%): " << network->calcNormRMSEPercentage() <<std::endl;
+    std::cout << "\nTest Data NRMSE(%): " << network->calcNormRMSEPercentage() << std::endl;
 
     /// Delete network class
     safeDelete(network);

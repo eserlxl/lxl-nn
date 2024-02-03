@@ -14,8 +14,7 @@ void example_sort4() {
 
     /// Creating a new neural network to train data from a given file
     NeuralNetwork *network;
-    if(std::filesystem::exists(libFile))
-    {
+    if (std::filesystem::exists(libFile)) {
         network = new NeuralNetwork(libFile);
 
         /// A brief information of the created network
@@ -24,9 +23,8 @@ void example_sort4() {
         network->loadDataFromFile(dataFile);
 
         /// Normalized Root Mean Square Error Percentage of the library
-        std::cout << "Library NRMSE(%): " << network->calcNormRMSEPercentage() <<"\n"<< std::endl;
-    }
-    else {
+        std::cout << "Library NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
+    } else {
         network = new NeuralNetwork({4, 30, 120, 30, 4}, dataFile);
 
         /// A brief information of the created network
@@ -39,7 +37,7 @@ void example_sort4() {
         network->save(libFile);
 
         /// Normalized Root Mean Square Error Percentage
-        std::cout << "\nTraining NRMSE(%): " << network->calcNormRMSEPercentage() <<"\n"<< std::endl;
+        std::cout << "\nTraining NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
     }
 
     /// Checking Re-training

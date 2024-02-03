@@ -62,12 +62,13 @@ public:
         connect();
         init();
 
-        if(!input.empty() && !output.empty()){
+        if (!input.empty() && !output.empty()) {
             normIO(input, output);
         }
     }
 
-    template <typename T, typename = std::string> NeuralNetwork(const matrixUzi1D &model, const T &fileName) {
+    template<typename T, typename = std::string>
+    NeuralNetwork(const matrixUzi1D &model, const T &fileName) {
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
@@ -82,7 +83,8 @@ public:
         loadDataFromFile(fileName);
     }
 
-    template <typename T, typename = std::string> NeuralNetwork(const T &fileName) {
+    template<typename T, typename = std::string>
+    NeuralNetwork(const T &fileName) {
         clock = new lxl::Timer();
         chronometer = new lxl::Timer();
 
@@ -145,7 +147,7 @@ public:
 
     void backPropagate();
 
-    void setIO(const matrixFloat1D &input, const matrixFloat1D& output);
+    void setIO(const matrixFloat1D &input, const matrixFloat1D &output);
 
     void setInput(matrixFloat1D input);
 
