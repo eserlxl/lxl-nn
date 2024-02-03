@@ -37,10 +37,10 @@ void example_MNISTData() {
     else {
         network = new NeuralNetwork({784, 300, 10});
 
+        network->normIO(trainingData.input, trainingData.output);
+
         /// A brief information of the created network
         network->printNetworkInfo();
-
-        network->normIO(trainingData.input, trainingData.output);
 
         /// Training the neural network
         network->train(100);
