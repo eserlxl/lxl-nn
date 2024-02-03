@@ -27,12 +27,6 @@ void NeuralNetwork::setLearningMatrix() {
     learningMatrix.push_back(0.05f); // Adaptive learning gain
     adaptiveLearningRateIndex = learningRateIndex;
     learningRateIndex++;
-    learningMatrix.push_back(0.0125f); // % RMSE increase to call smoothWeights
-    adaptiveLearningSWThresholdIndex = learningRateIndex;
-    learningRateIndex++;
-    learningMatrix.push_back(0.875f); // % smoothWeights backup ratio
-    adaptiveLearningSWBackupRatioIndex = learningRateIndex;
-    learningRateIndex++;
     learningMatrix.push_back(0.025f); // Adaptive learning rate limit
     rateLimitLearningRateIndex = learningRateIndex;
 #endif
@@ -66,15 +60,6 @@ void NeuralNetwork::setLearningMatrixLimits() {
     learningMatrixLowerLimits.push_back(
             learningMatrix[adaptiveLearningRateIndex] * 0.75f); // min adaptive learning gain
     learningMatrixUpperLimits.push_back(learningMatrix[adaptiveLearningRateIndex] * 1.25f);// max adaptive learning gain
-
-    learningMatrixLowerLimits.push_back(
-            learningMatrix[adaptiveLearningSWThresholdIndex] * 0.5f); // min smoothWeights trigger threshold ratio
-    learningMatrixUpperLimits.push_back(
-            learningMatrix[adaptiveLearningSWThresholdIndex] * 1.5f); // max  smoothWeights trigger threshold ratio
-
-    learningMatrixLowerLimits.push_back(0.f); // min smoothWeights backup ratio
-    learningMatrixUpperLimits.push_back(1.f); // max smoothWeights backup ratio
-
     learningMatrixLowerLimits.push_back(
             learningMatrix[rateLimitLearningRateIndex] * 0.75f); // min adaptive learning rate limit
     learningMatrixUpperLimits.push_back(

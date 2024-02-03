@@ -56,29 +56,4 @@ void NeuralNetwork::loadWeights() {
     }
 }
 
-void NeuralNetwork::smoothWeights(float backupRatio) {
-    if (weightBackup.empty()) {
-        return;
-    }
-    float newWeightRatio = 1.f - backupRatio;
-    uzi h = 0;
-#ifdef BP_USE_BIAS
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < model[i + 1]; j++) {
-            bias[i][j] = backupRatio * weightBackup[h++] + newWeightRatio * bias[i][j];
-        }
-    }
-#endif
-    for (uzi i = 0; i < outputIndex; i++) {
-        for (uzi j = 0; j < model[i]; j++) {
-            for (uzi k = 0; k < model[i + 1]; k++) {
-                P[i][j]->Link[k]->weight =
-                        backupRatio * weightBackup[h++] + newWeightRatio * P[i][j]->Link[k]->weight;
-                P[i][j]->Link[k]->deltaWeight =
-                        backupRatio * weightBackup[h++] + newWeightRatio * P[i][j]->Link[k]->deltaWeight;
-            }
-        }
-    }
-}
-
 #endif

@@ -48,8 +48,8 @@ void NeuralNetwork::train(uzi loopMax) {
     matrixFloat1D rmseHistory;
     matrixFloat2D coeffHistory;
     matrixFloat2D uHistory;
-    Eigen::Matrix<float, 9, 9> aMatrix;
-    Eigen::Matrix<float, 9, 1> rmseMatrix;
+    Eigen::Matrix<float, 7, 7> aMatrix;
+    Eigen::Matrix<float, 7, 1> rmseMatrix;
 
     matrixFloat1D learningMatrixInitial;
     for (float &x : learningMatrix) {
@@ -103,11 +103,6 @@ void NeuralNetwork::train(uzi loopMax) {
             }
 #endif
         }
-#ifdef ADAPTIVE_LEARNING
-        else if (RMSE > learningMatrix[adaptiveLearningSWThresholdIndex] * minRMSError) {
-            smoothWeights(learningMatrix[adaptiveLearningSWBackupRatioIndex]);
-        }
-#endif
 #ifdef ANALYSE_TRAINING
         loopDuration = chronometer->getElapsedTime();
         loopDurationSum += loopDuration;
@@ -134,8 +129,6 @@ void NeuralNetwork::train(uzi loopMax) {
                   #endif
                   #ifdef ADAPTIVE_LEARNING
                   << ", α: " << learningMatrix[h++]
-                  << ", SWt: " << learningMatrix[h++]
-                  << ", SWr: " << learningMatrix[h++]
                   << ", r: " << learningMatrix[h++]
                   #endif
                   << ", E(%): " << RMSE / outputMaxValue * 100.f << " / "
@@ -170,8 +163,8 @@ void NeuralNetwork::train(uzi loopMax) {
                 rmseMatrix(i, 0) = rmseHistory[loop - i] / minRMSError;
             }
 
-            Eigen::FullPivLU<Eigen::Matrix<float, 9, 9>> lu(aMatrix);
-            Eigen::Matrix<float, 9, 1> u = lu.inverse() * rmseMatrix;
+            Eigen::FullPivLU<Eigen::Matrix<float, 7, 7>> lu(aMatrix);
+            Eigen::Matrix<float, 7, 1> u = lu.inverse() * rmseMatrix;
 
             // Rate limit
             for (uzi i = 0; i < learningSize; i++) {

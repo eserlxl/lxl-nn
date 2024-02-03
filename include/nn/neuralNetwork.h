@@ -219,8 +219,6 @@ private:
 
     void loadWeights();
 
-    void smoothWeights(float backupRatio);
-
     std::string libFile;
 
 #endif
