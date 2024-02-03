@@ -36,8 +36,10 @@ void example_MNISTData() {
         minNRMSEPercentage = network->NRMSEPercentage;
         std::cout << "Library NRMSE(%): " << minNRMSEPercentage << "\n" << std::endl;
 
+#ifdef BINARY_OUTPUT_DATA
         /// Get error percentage
-        std::cout << "Training error (library): " << network->checkBinaryOutputData() * 100.f << "%\n" << std::endl;
+        std::cout << "Training error (library): " << network->binaryDataErrorPercentage << "%\n" << std::endl;
+#endif
     } else {
         network = new NeuralNetwork({784, 300, 10});
 
