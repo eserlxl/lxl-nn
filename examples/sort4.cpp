@@ -25,7 +25,7 @@ void example_sort4() {
         network->loadDataFromFile(dataFile);
 
         /// Normalized Root Mean Square Error Percentage of the library
-        minNRMSEPercentage = network->calcNormRMSEPercentage();
+        minNRMSEPercentage = network->NRMSEPercentage;
         std::cout << "Library NRMSE(%): " << minNRMSEPercentage << "\n" << std::endl;
     } else {
         network = new NeuralNetwork({4, 30, 120, 30, 4}, dataFile);

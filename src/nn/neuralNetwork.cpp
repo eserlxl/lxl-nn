@@ -142,6 +142,15 @@ void NeuralNetwork::load(const std::string &fileName) {
             outputMinValue = iOStructure[h++];
             outputMaxValue = iOStructure[h++];
             outputRange = iOStructure[h++];
+        } else if (text == "error") {
+            if (!data[d + 1].empty()) {
+                NRMSEPercentage = convert<float>(data[d + 1][0]);
+#ifdef BINARY_OUTPUT_DATA
+                if (data[d + 1].size() > 1) {
+                    binaryDataErrorPercentage = convert<float>(data[d + 1][1]);
+                }
+#endif
+            }
         } else if (text == "network") {
             matrixFloat1D networkData;
             for (auto &x : data[d + 1]) {

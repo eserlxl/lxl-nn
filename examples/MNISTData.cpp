@@ -33,7 +33,7 @@ void example_MNISTData() {
         network->normIO(trainingData.input, trainingData.output);
 
         /// Normalized Root Mean Square Error Percentage of the library
-        minNRMSEPercentage = network->calcNormRMSEPercentage();
+        minNRMSEPercentage = network->NRMSEPercentage;
         std::cout << "Library NRMSE(%): " << minNRMSEPercentage << "\n" << std::endl;
 
         /// Get error percentage
@@ -55,8 +55,10 @@ void example_MNISTData() {
         /// Normalized Root Mean Square Error Percentage
         std::cout << "\nTraining NRMSE(%): " << network->NRMSEPercentage << "\n" << std::endl;
 
+#ifdef BINARY_OUTPUT_DATA
         /// Get error percentage
-        std::cout << "Training error: " << network->checkBinaryOutputData() * 100.f << "%\n" << std::endl;
+        std::cout << "Training error: " << network->binaryDataErrorPercentage << "%\n" << std::endl;
+#endif
     }
 
     /// Checking Re-training
