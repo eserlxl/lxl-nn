@@ -26,7 +26,7 @@ Available options to create a new neural network:
 <code>auto *network = new NeuralNetwork(libraryFileName);</code>
 
 #### Training the Neural Network
-<p>Chooes a max loop count for training</p>
+<p>Choose a max loop count for training</p>
 <code>network->train(maxLoopCount);</code>
 
 #### Save & Load the Neural Network
