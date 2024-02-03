@@ -266,16 +266,6 @@ void NeuralNetwork::printNetworkInfo() {
             << learningMatrixLowerLimits[adaptiveLearningRateIndex] << ", "
             << learningMatrixUpperLimits[adaptiveLearningRateIndex] << "]"
 
-            << "\nAdaptive learning Smooth Weight Threshold (SWt): " << learningMatrix[adaptiveLearningSWThresholdIndex]
-            << ", range: " << "["
-            << learningMatrixLowerLimits[adaptiveLearningSWThresholdIndex] << ", "
-            << learningMatrixUpperLimits[adaptiveLearningSWThresholdIndex] << "]"
-
-            << "\nAdaptive learning Smooth Weight Backup Ratio (SWr): "
-            << learningMatrix[adaptiveLearningSWBackupRatioIndex] << ", range: " << "["
-            << learningMatrixLowerLimits[adaptiveLearningSWBackupRatioIndex] << ", "
-            << learningMatrixUpperLimits[adaptiveLearningSWBackupRatioIndex] << "]"
-
             << "\nRate limit (r): " << learningMatrix[rateLimitLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[rateLimitLearningRateIndex] << ", "
             << learningMatrixUpperLimits[rateLimitLearningRateIndex] << "]"
