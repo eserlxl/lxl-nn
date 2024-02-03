@@ -115,7 +115,7 @@ void NeuralNetwork::backPropagate() {
 #elif defined(LOGIC_SWISH)
             bPValue *= pValue + logit(pValue) * (pValue * (1.f - pValue)); // (x*sigmoid(x))' = x'*sigmoid(x)+x*sigmoid(x)', inv(sigmoid) = logit
 #elif defined(LOGIC_RELU)
-             bPValue *= dReLU(pValue);
+            bPValue *= dReLU(pValue);
 #endif
             errorBP[i].push_back(bPValue);
 
