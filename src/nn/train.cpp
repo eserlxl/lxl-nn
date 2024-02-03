@@ -200,16 +200,16 @@ void NeuralNetwork::train(uzi loopMax) {
         learningMatrix[i] = learningMatrixBest[i];
     }
 
+#ifdef ANALYSE_TRAINING
 #ifdef BINARY_OUTPUT_DATA
     chronometer->initTimer();
-    binaryDataErrorPercentage = checkBinaryOutputData()*100.f;
+    binaryDataErrorPercentage = checkBinaryOutputData() * 100.f;
     checkDataDurationSum += chronometer->getElapsedTime();
 #endif
     chronometer->initTimer();
-    NRMSEPercentage=calcNormRMSEPercentage();
+    NRMSEPercentage = calcNormRMSEPercentage();
     checkDataDurationSum += chronometer->getElapsedTime();
 
-#ifdef ANALYSE_TRAINING
     trainingDuration = clock->getElapsedTime();
     std::cout << std::endl << "Total training time: " << loopDurationSum << " s" << std::endl;
     std::cout << "Time loss due to checking data: " << checkDataDurationSum << " s" << std::endl;
