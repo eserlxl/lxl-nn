@@ -4,6 +4,8 @@
 void example_MNISTData() {
     auto *mainClock = new Timer();
 
+    float minNRMSEPercentage = 1e6;
+
     std::cout << "\nLearning handwritten digits from MNIST Data" << std::endl;
     std::cout << "----------------------------------------------\n" << std::endl;
 
@@ -31,7 +33,11 @@ void example_MNISTData() {
         network->normIO(trainingData.input, trainingData.output);
 
         /// Normalized Root Mean Square Error Percentage of the library
-        std::cout << "Library NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
+        minNRMSEPercentage = network->calcNormRMSEPercentage();
+        std::cout << "Library NRMSE(%): " << minNRMSEPercentage << "\n" << std::endl;
+
+        /// Get error percentage
+        std::cout << "Training error (library): " << network->checkBinaryOutputData() * 100.f << "%\n" << std::endl;
     } else {
         network = new NeuralNetwork({784, 300, 10});
 
@@ -48,6 +54,9 @@ void example_MNISTData() {
 
         /// Normalized Root Mean Square Error Percentage
         std::cout << "\nTraining NRMSE(%): " << network->calcNormRMSEPercentage() << "\n" << std::endl;
+
+        /// Get error percentage
+        std::cout << "Training error: " << network->checkBinaryOutputData() * 100.f << "%\n" << std::endl;
     }
 
     /// Checking Re-training
@@ -61,6 +70,14 @@ void example_MNISTData() {
 
     /// Normalized Root Mean Square Error Percentage of the Test Data
     std::cout << "\nTest Data NRMSE(%): " << network->calcNormRMSEPercentage() << std::endl;
+
+    /// Get error percentage
+    std::cout << "Test Data error: " << network->checkBinaryOutputData() * 100.f << "%\n" << std::endl;
+
+    /// Saving network to a compressed library file
+    if (network->NRMSEPercentage < minNRMSEPercentage) {
+        network->save(libFile);
+    }
 
     /// Delete network class
     safeDelete(network);
