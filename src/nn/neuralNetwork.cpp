@@ -99,7 +99,7 @@ void NeuralNetwork::save(const std::string &fileName) {
 
 void NeuralNetwork::load(const std::string &fileName) {
     matrixString2D data;
-    fetchDataGzip(fileName, data, " ");
+    loadFromGzip(fileName, data, " ");
 
     for (uzi d = 0; d < data.size(); d++) {
 
@@ -199,9 +199,7 @@ void NeuralNetwork::load(const std::string &fileName) {
 void NeuralNetwork::loadDataFromFile(const std::string &fileName) {
     matrixFloat2D data, input, output;
 
-    std::string delimiter;
-    lxl::detectDelimiter(fileName, &delimiter);
-    lxl::fetchData(fileName, data, delimiter);
+    lxl::load(fileName, data);
 
     if (outputSize != data[0].size() - inputSize) {
         std::cout << "Invalid data format! Input Size: " << inputSize << ", Output Size: " << outputSize
