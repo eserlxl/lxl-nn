@@ -24,7 +24,6 @@ using namespace lxl;
 #define BP_BELLMAN_OPT
 #define BP_USE_BIAS
 #define ADAPTIVE_LEARNING
-//#define BP_USE_PID
 
 //#define ANALYSE_TRAINING
 
@@ -106,13 +105,6 @@ public:
 
         setLearningMatrixLimits();
 
-#ifdef BP_USE_PID
-        errorSumBP.resize(outputSize);
-        pid_P = -.5e-3f;
-        pid_I = -0.125f / (float) sourceSize;
-        pid_D = 0;//-0.01;//0.1;//0.5f;
-#endif
-
 #ifdef ADAPTIVE_LEARNING
         saveWeights();
 #endif
@@ -177,12 +169,6 @@ private:
     matrixFloat2D networkOutput;
     matrixFloat2D bias;
     matrixFloat1D learningMatrix;
-#ifdef BP_USE_PID
-    matrixFloat1D errorSumBP;
-    float pid_P;
-    float pid_I;
-    float pid_D;
-#endif
     lxl::Timer *clock;
     lxl::Timer *chronometer;
     float rmsErrorBP;

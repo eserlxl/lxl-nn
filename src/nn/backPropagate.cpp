@@ -53,18 +53,6 @@ void NeuralNetwork::backPropagateOutputLayer() {
 
 #endif
 
-
-#ifdef BP_USE_PID
-        error *= 2 * pValue * (1.0f - pValue);
-        errorSumBP[j] += error;
-        if(std::fabs(errorSumBP[j])>10)
-        {
-            errorSumBP[j]*=0.9;
-        }
-        float pidValue = (pid_P+1) * error + pid_I * errorSumBP[j] + pid_D * (error - prevError[j]);
-        errorBP[outputIndex].push_back(pidValue);
-        prevError[j] = error;
-#else
         float dLogic = 1;
 #ifdef LOGIC_SIGMOID
         dLogic = pValue * (1.0f - pValue);

@@ -299,11 +299,6 @@ void NeuralNetwork::printNetworkInfo() {
     std::cout << "Logic function: reLU" << std::endl;
 #endif
 
-#ifdef BP_USE_PID
-    std::cout << "Using PID for backpropagation. Kp: " << pid_P << ", Ki:" << pid_I << ", Kd: "
-              << pid_D << std::endl;
-#endif
-
     std::cout << std::endl;
 
     std::cout << "inputMinValue: " << inputMinValue << std::endl;
