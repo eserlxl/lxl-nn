@@ -31,7 +31,7 @@ void NeuralNetwork::setLearningMatrix() {
     rateLimitLearningRateIndex = learningRateIndex;
 #endif
 }
-
+#ifdef ADAPTIVE_LEARNING
 void NeuralNetwork::setLearningMatrixLimits() {
     learningMatrixLowerLimits.clear();
     learningMatrixUpperLimits.clear();
@@ -56,7 +56,7 @@ void NeuralNetwork::setLearningMatrixLimits() {
     learningMatrixLowerLimits.push_back(0.f); // min Bellman's optimality gain 2
     learningMatrixUpperLimits.push_back(0.5f); // max Bellman's optimality gain 2
 #endif
-#ifdef ADAPTIVE_LEARNING
+
     learningMatrixLowerLimits.push_back(
             learningMatrix[adaptiveLearningRateIndex] * 0.95f); // min adaptive learning gain
     learningMatrixUpperLimits.push_back(learningMatrix[adaptiveLearningRateIndex] * 1.05f);// max adaptive learning gain
@@ -64,8 +64,9 @@ void NeuralNetwork::setLearningMatrixLimits() {
             learningMatrix[rateLimitLearningRateIndex] * 0.95f); // min adaptive learning rate limit
     learningMatrixUpperLimits.push_back(
             learningMatrix[rateLimitLearningRateIndex] * 1.05f);// max adaptive learning rate limit
-#endif
+
 }
+#endif
 
 void NeuralNetwork::preInit() {
     network.resize(model.size());
@@ -106,8 +107,9 @@ void NeuralNetwork::init() {
     prevError.resize(outputSize);
 
     setLearningMatrix();
-
+#ifdef ADAPTIVE_LEARNING
     setLearningMatrixLimits();
+#endif
 }
 
 void NeuralNetwork::setIO(const matrixFloat1D &input, const matrixFloat1D &output) {

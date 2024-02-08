@@ -103,9 +103,9 @@ public:
         errorBP.resize(layerCount);
         prevError.resize(outputSize);
 
+#ifdef ADAPTIVE_LEARNING
         setLearningMatrixLimits();
 
-#ifdef ADAPTIVE_LEARNING
         saveWeights();
 #endif
     }
@@ -179,6 +179,8 @@ private:
 
     matrixFloat1D correctChoice;
     uzi weightLearningRateIndex;
+    std::string libFile;
+    matrixFloat1D weightBackup = {};
 #ifdef BP_USE_BIAS
     uzi biasLearningRateIndex;
 #endif
@@ -196,17 +198,11 @@ private:
     matrixFloat1D learningMatrixUpperLimits;
     matrixFloat1D learningMatrixLowerLimits;
 
-    matrixFloat1D weightBackup = {};
-
+    void smoothWeights(float backupRatio);
+#endif
     void saveWeights();
 
     void loadWeights();
-
-    void smoothWeights(float backupRatio);
-
-    std::string libFile;
-
-#endif
 
     float randomNumber();
 
@@ -253,8 +249,9 @@ private:
     float convertTargetDiffToOutputDiff(float x) const;
 
     void setLearningMatrix();
-
+#ifdef ADAPTIVE_LEARNING
     void setLearningMatrixLimits();
+#endif
 };
 
 #endif // lxl_nn_NeuralNetwork_H_

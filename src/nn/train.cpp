@@ -41,16 +41,7 @@ void NeuralNetwork::train(uzi loopMax) {
 
     clock->initTimer();
 
-#ifdef ADAPTIVE_LEARNING
     uzi learningSize = learningMatrix.size();
-    float perturbationRatio = 1e-2f;
-    matrixFloat1D rmseHistory;
-    matrixFloat2D coeffHistory;
-    matrixFloat2D uHistory;
-    Eigen::Matrix<float, 7, 7> aMatrix;
-    Eigen::Matrix<float, 7, 1> rmseMatrix;
-    float lastSavedRMSE=100;
-
     matrixFloat1D learningMatrixInitial;
     for (float &x : learningMatrix) {
         learningMatrixInitial.push_back(x);
@@ -60,6 +51,14 @@ void NeuralNetwork::train(uzi loopMax) {
         learningMatrixPrev.push_back(x);
         learningMatrixBest.push_back(x);
     }
+#ifdef ADAPTIVE_LEARNING
+    float perturbationRatio = 1e-2f;
+    matrixFloat1D rmseHistory;
+    matrixFloat2D coeffHistory;
+    matrixFloat2D uHistory;
+    Eigen::Matrix<float, 7, 7> aMatrix;
+    Eigen::Matrix<float, 7, 1> rmseMatrix;
+    float lastSavedRMSE=100;
     float rateLimit = learningMatrix[learningSize - 1];
 #endif
     for (uzi loop = 0; loop < loopMax; loop++) {
@@ -106,13 +105,13 @@ void NeuralNetwork::train(uzi loopMax) {
                 save(libFile);
                 lastSavedRMSE = RMSE;
             }
-#endif
         }
         else if (RMSE > 1.25*minRMSError){
             smoothWeights(1e-2);
             for (uzi i = 0; i < learningSize; i++) {
                 learningMatrix[i] = learningMatrixBest[i];
             }
+#endif
         }
 #ifdef ANALYSE_TRAINING
         loopDuration = chronometer->getElapsedTime();

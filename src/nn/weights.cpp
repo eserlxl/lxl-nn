@@ -13,8 +13,6 @@ void NeuralNetwork::randWeights() {
     }
 }
 
-#ifdef ADAPTIVE_LEARNING
-
 void NeuralNetwork::saveWeights() {
     weightBackup.clear();
 #ifdef BP_USE_BIAS
@@ -56,6 +54,7 @@ void NeuralNetwork::loadWeights() {
     }
 }
 
+#ifdef ADAPTIVE_LEARNING
 void NeuralNetwork::smoothWeights(float backupRatio) {
     if (weightBackup.empty()) {
         return;
