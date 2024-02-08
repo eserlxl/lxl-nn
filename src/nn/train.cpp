@@ -49,6 +49,7 @@ void NeuralNetwork::train(uzi loopMax) {
     matrixFloat2D uHistory;
     Eigen::Matrix<float, 7, 7> aMatrix;
     Eigen::Matrix<float, 7, 1> rmseMatrix;
+    float lastSavedRMSE=100;
 
     matrixFloat1D learningMatrixInitial;
     for (float &x : learningMatrix) {
@@ -99,6 +100,11 @@ void NeuralNetwork::train(uzi loopMax) {
 
             for (uzi i = 0; i < learningSize; i++) {
                 learningMatrixBest[i] = learningMatrix[i];
+            }
+
+            if(!libFile.empty() && (RMSE < 0.9*lastSavedRMSE || RMSE / outputMaxValue<1e-2)){
+                save(libFile);
+                lastSavedRMSE = RMSE;
             }
 #endif
         }
