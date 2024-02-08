@@ -40,6 +40,17 @@ void example_MNISTData() {
         /// Get error percentage
         std::cout << "Training error (library): " << network->binaryDataErrorPercentage << "%\n" << std::endl;
 #endif
+
+        /// Loading Test data to network. Check: http://yann.lecun.com/exdb/mnist/ for more information.
+        network->normIO(testData.input, testData.output);
+
+        /// Normalized Root Mean Square Error Percentage of the Test Data
+        std::cout << "\nTest Data NRMSE(%) (library): " << network->calcNormRMSEPercentage() << std::endl;
+
+#ifdef BINARY_OUTPUT_DATA
+        /// Get error percentage
+        std::cout << "Test Data error (library): " << network->checkBinaryOutputData() * 100.f << "%\n" << std::endl;
+#endif
     } else {
         network = new NeuralNetwork({784, 300, 10});
 
@@ -61,7 +72,19 @@ void example_MNISTData() {
         /// Get error percentage
         std::cout << "Training error: " << network->binaryDataErrorPercentage << "%\n" << std::endl;
 #endif
+        /// Loading Test data to network. Check: http://yann.lecun.com/exdb/mnist/ for more information.
+        network->normIO(testData.input, testData.output);
+
+        /// Normalized Root Mean Square Error Percentage of the Test Data
+        std::cout << "\nTest Data NRMSE(%): " << network->calcNormRMSEPercentage() << std::endl;
+
+#ifdef BINARY_OUTPUT_DATA
+        /// Get error percentage
+        std::cout << "Test Data error: " << network->checkBinaryOutputData() * 100.f << "%\n" << std::endl;
+#endif
     }
+
+    network->normIO(trainingData.input, trainingData.output);
 
     /// Checking Re-training
     network->train(1);
