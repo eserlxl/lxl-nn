@@ -108,6 +108,12 @@ void NeuralNetwork::train(uzi loopMax) {
             }
 #endif
         }
+        else if (RMSE > 1.25*minRMSError){
+            smoothWeights(1e-2);
+            for (uzi i = 0; i < learningSize; i++) {
+                learningMatrix[i] = learningMatrixBest[i];
+            }
+        }
 #ifdef ANALYSE_TRAINING
         loopDuration = chronometer->getElapsedTime();
         loopDurationSum += loopDuration;
