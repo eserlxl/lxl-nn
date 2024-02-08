@@ -31,6 +31,7 @@ void NeuralNetwork::setLearningMatrix() {
     rateLimitLearningRateIndex = learningRateIndex;
 #endif
 }
+
 #ifdef ADAPTIVE_LEARNING
 void NeuralNetwork::setLearningMatrixLimits() {
     learningMatrixLowerLimits.clear();
