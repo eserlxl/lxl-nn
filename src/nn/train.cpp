@@ -94,6 +94,7 @@ void NeuralNetwork::train(uzi loopMax) {
 
         if (RMSE < minRMSError) {
             minRMSError = RMSE;
+            saveWeights();
 #ifdef ADAPTIVE_LEARNING
             saveWeights();
 
