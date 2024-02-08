@@ -64,8 +64,6 @@ void NeuralNetwork::backPropagateOutputLayer() {
         dLogic = dReLU(pValue);
 #endif
         errorBP[outputIndex].push_back(2 * error * dLogic);
-#endif
-
     }
 
     matrixFloat1D tempVec;
