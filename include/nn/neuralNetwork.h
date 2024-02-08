@@ -191,8 +191,6 @@ private:
 #endif
 #ifdef ADAPTIVE_LEARNING
     uzi adaptiveLearningRateIndex;
-    uzi adaptiveLearningSWThresholdIndex;
-    uzi adaptiveLearningSWBackupRatioIndex;
     uzi rateLimitLearningRateIndex;
 
     matrixFloat1D learningMatrixUpperLimits;
