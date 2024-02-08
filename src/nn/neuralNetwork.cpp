@@ -251,12 +251,12 @@ void NeuralNetwork::printNetworkInfo() {
             << "\nLearning rate of weights (η): " << learningMatrix[weightLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[weightLearningRateIndex] << ", "
             << learningMatrixUpperLimits[weightLearningRateIndex] << "]"
-            #ifdef BP_USE_BIAS
+#ifdef BP_USE_BIAS
             << "\nLearning rate of biases (ζ): " << learningMatrix[biasLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[biasLearningRateIndex] << ", "
             << learningMatrixUpperLimits[biasLearningRateIndex] << "]"
-            #endif
-            #ifdef BP_BELLMAN_OPT
+#endif
+#ifdef BP_BELLMAN_OPT
             << "\nBellman's optimality gain (γ0): " << learningMatrix[bellman0LearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[bellman0LearningRateIndex] << ", "
             << learningMatrixUpperLimits[bellman0LearningRateIndex] << "]"
@@ -268,7 +268,7 @@ void NeuralNetwork::printNetworkInfo() {
             << "\nBellman's optimality gain (γ2): " << learningMatrix[bellman2LearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[bellman2LearningRateIndex] << ", "
             << learningMatrixUpperLimits[bellman2LearningRateIndex] << "]"
-            #endif
+#endif
             << "\nAdaptive learning gain (α): " << learningMatrix[adaptiveLearningRateIndex] << ", range: " << "["
             << learningMatrixLowerLimits[adaptiveLearningRateIndex] << ", "
             << learningMatrixUpperLimits[adaptiveLearningRateIndex] << "]"
@@ -277,13 +277,21 @@ void NeuralNetwork::printNetworkInfo() {
             << learningMatrixLowerLimits[rateLimitLearningRateIndex] << ", "
             << learningMatrixUpperLimits[rateLimitLearningRateIndex] << "]"
             << "\n" << std::endl;
+
+#ifdef TRAINING_USE_PID
+    std::cout << "Using PID for training. Kp: " << pid_P << ", Ki:" << pid_I << ", Kd: "
+              << pid_D <<"\n"<< std::endl;
+#endif
 #else
     std::cout << "Learning rate of weights (η): " << learningMatrix[weightLearningRateIndex] << std::endl;
 #ifdef BP_USE_BIAS
     std::cout << "Learning rate of biases (ζ): " << learningMatrix[biasLearningRateIndex] << std::endl;
 #endif
 #ifdef BP_BELLMAN_OPT
-    std::cout << "Using Bellman's optimization for backpropagation. Bellman's gain (γ): " << learningMatrix[bellmanLearningRateIndex]
+    std::cout << "Using Bellman's optimization for backpropagation."
+              << "\nBellman's optimality gain (γ0): " << learningMatrix[bellman0LearningRateIndex]
+              << "\nBellman's optimality gain (γ1): " << learningMatrix[bellman1LearningRateIndex]
+              << "\nBellman's optimality gain (γ2): " << learningMatrix[bellman2LearningRateIndex]
               << std::endl;
 #endif
 #endif
