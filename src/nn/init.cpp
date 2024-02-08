@@ -38,17 +38,17 @@ void NeuralNetwork::setLearningMatrixLimits() {
 
     learningMatrixLowerLimits.push_back(
             learningMatrix[weightLearningRateIndex] * 0.99f); // min Learning Rate of weights
-    learningMatrixUpperLimits.push_back(learningMatrix[weightLearningRateIndex] * 1.5f); // max Learning Rate of weights
+    learningMatrixUpperLimits.push_back(learningMatrix[weightLearningRateIndex] * 1.01f); // max Learning Rate of weights
 
 #ifdef BP_USE_BIAS
-    learningMatrixLowerLimits.push_back(learningMatrix[biasLearningRateIndex] * 0.5f); // min Learning Rate of biases
-    learningMatrixUpperLimits.push_back(learningMatrix[biasLearningRateIndex] * 1.5f); // max Learning Rate of biases
+    learningMatrixLowerLimits.push_back(learningMatrix[biasLearningRateIndex] * 0.95f); // min Learning Rate of biases
+    learningMatrixUpperLimits.push_back(learningMatrix[biasLearningRateIndex] * 1.05f); // max Learning Rate of biases
 #endif
 #ifdef BP_BELLMAN_OPT
     learningMatrixLowerLimits.push_back(
-            learningMatrix[bellman0LearningRateIndex] * 0.5f); // min Bellman's optimality gain 0
+            learningMatrix[bellman0LearningRateIndex] * 0.95f); // min Bellman's optimality gain 0
     learningMatrixUpperLimits.push_back(
-            learningMatrix[bellman0LearningRateIndex] * 1.5f); // max Bellman's optimality gain 0
+            learningMatrix[bellman0LearningRateIndex] * 1.05f); // max Bellman's optimality gain 0
 
     learningMatrixLowerLimits.push_back(0.5f); // min Bellman's optimality gain 1
     learningMatrixUpperLimits.push_back(1.f); // max Bellman's optimality gain 1
@@ -58,12 +58,12 @@ void NeuralNetwork::setLearningMatrixLimits() {
 #endif
 #ifdef ADAPTIVE_LEARNING
     learningMatrixLowerLimits.push_back(
-            learningMatrix[adaptiveLearningRateIndex] * 0.75f); // min adaptive learning gain
-    learningMatrixUpperLimits.push_back(learningMatrix[adaptiveLearningRateIndex] * 1.25f);// max adaptive learning gain
+            learningMatrix[adaptiveLearningRateIndex] * 0.95f); // min adaptive learning gain
+    learningMatrixUpperLimits.push_back(learningMatrix[adaptiveLearningRateIndex] * 1.05f);// max adaptive learning gain
     learningMatrixLowerLimits.push_back(
-            learningMatrix[rateLimitLearningRateIndex] * 0.75f); // min adaptive learning rate limit
+            learningMatrix[rateLimitLearningRateIndex] * 0.95f); // min adaptive learning rate limit
     learningMatrixUpperLimits.push_back(
-            learningMatrix[rateLimitLearningRateIndex] * 1.25f);// max adaptive learning rate limit
+            learningMatrix[rateLimitLearningRateIndex] * 1.05f);// max adaptive learning rate limit
 #endif
 }
 
